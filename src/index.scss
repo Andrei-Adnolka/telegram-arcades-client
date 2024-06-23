@@ -1,0 +1,111 @@
+#root {
+  height: 100vh;
+  background-color: lightgrey;
+  user-select: none;
+}
+body {
+  margin: 0px;
+  overflow: hidden;
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: monospace;
+  width: 358px;
+  margin: 0 auto;
+}
+
+.elements {
+  display: flex;
+  position: relative;
+  border: 2px solid black;
+  background-color: rgb(174 207 180);
+}
+
+h1 {
+  text-align: center;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  border: 6px double rgb(174 207 180);
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  background-color: black;
+  &.hidden {
+    visibility: hidden;
+  }
+  &.Empty {
+    background-color: rgb(131 157 136);
+  }
+}
+
+.info_block {
+  > div:last-of-type {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  &::after {
+    display: block;
+    height: 1px;
+    width: 80%;
+    content: '';
+    border-bottom: 1px solid black;
+    margin: 0 auto;
+    padding-top: 8px;
+  }
+  &> div:first-of-type {
+    padding-bottom: 4px;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 90px;
+  gap: 20px;
+  padding-top: 20px;
+  position: relative;
+}
+
+.new_game_with_upcoming {
+  background-color: rgb(150 183 156);
+  height: 80px;
+  padding: 8px 0px;
+  margin: 0 4px;
+}
+
+.pause_popup {
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.start_game, 
+.game_over_popup {
+  border: 1px solid black;
+  padding: 4px 8px;
+  background-color: rgb(150, 183, 156);
+}
+
+.game_over_popup {
+  top: 30%;
+  background-color:   rgb(250 0 0);
+}
+
+.pause_button {
+  height: 22px;
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translate(-50%);
+}

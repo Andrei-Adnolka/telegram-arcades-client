@@ -1,0 +1,26 @@
+.upcoming {
+  &_title {
+    margin-bottom: 4px;
+  }
+  &_blocks {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    >div {
+      padding: 8px;
+      width: 100%;
+      height: 30px;
+      .row {
+        justify-content: center;
+      }
+
+      .cell {
+        width: 16px;
+        height: 16px;
+        border: 6px double rgb(131, 157, 136);
+      }
+    }
+  }
+
+
+}

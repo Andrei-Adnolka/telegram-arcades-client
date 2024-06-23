@@ -1,0 +1,8 @@
+.board {
+  user-select: none;
+  margin: auto;
+  border-right: 4px solid black;
+  &.paused {
+    opacity: .6;
+  }
+}
