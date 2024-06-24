@@ -1,4 +1,4 @@
-import { Block, SHAPES } from "../../types";
+import { Block, SHAPES } from "../../types/tetris";
 
 import "./style.scss";
 
@@ -9,7 +9,7 @@ interface Props {
 function UpcomingBlocks({ upcomingBlocks }: Props) {
   return (
     <div className="upcoming">
-      <div  className="upcoming_title">NEXT</div>
+      <div className="upcoming_title">NEXT</div>
       <div className="upcoming_blocks">
         {upcomingBlocks.map((block, blockIndex) => {
           const shape = SHAPES[block].shape.filter((row) =>

@@ -1,5 +1,11 @@
 import { useReducer, Dispatch } from "react";
-import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from "../types";
+import {
+  Block,
+  BlockShape,
+  BoardShape,
+  EmptyCell,
+  SHAPES,
+} from "../types/tetris";
 
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 16;

@@ -1,4 +1,4 @@
-import { CellOptions } from "../types";
+import { CellOptions } from "../types/tetris";
 
 interface Props {
   type: CellOptions;
