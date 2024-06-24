@@ -82,6 +82,10 @@
       position: absolute;
       bottom: -20px;
       padding-top: 2px;
+
+      &:active {
+        bottom: -14px;
+      }
       > svg {
         margin-top: 8px;
         transform: rotate(90deg);
@@ -91,6 +95,9 @@
     .top {
       position: absolute;
       top: -70px;
+      &:active {
+        top: -64px;
+      }
       > svg {
         transform: rotate(-90deg);
       }
@@ -107,6 +114,9 @@
     &__turn[class] {
       width: 100px;
       height: 100px;
+      > svg {
+        margin-top: 10px;
+      }
     }
   }
 }

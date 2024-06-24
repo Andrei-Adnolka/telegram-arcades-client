@@ -81,7 +81,7 @@ h1 {
   margin: 0 4px;
 }
 
-.pause_popup {
+.popup {
   position: absolute;
   top: 50%;
   left: 35%;
@@ -94,11 +94,11 @@ h1 {
 .game_over_popup {
   border: 1px solid black;
   padding: 4px 8px;
+  top: 30%;
   background-color: rgb(150, 183, 156);
 }
 
 .game_over_popup {
-  top: 30%;
   background-color:   rgb(250 0 0);
 }
 

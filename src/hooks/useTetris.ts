@@ -41,6 +41,7 @@ export function useTetris() {
   const startGame = useCallback(() => {
     const startingBlocks = [getRandomBlock()];
     setIsFinished(false);
+    setIsPause(false);
     setScore(0);
     setUpcomingBlocks(startingBlocks);
     setIsCommitting(false);
@@ -162,7 +163,7 @@ export function useTetris() {
           isPressingLeft,
           isPressingRight,
         });
-      }, 200);
+      }, 130);
     };
 
     const handleTouchDown = (event: TouchEvent) => {

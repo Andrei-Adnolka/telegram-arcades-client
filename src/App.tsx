@@ -31,16 +31,16 @@ function App() {
           isPaused={!isPlaying || isPause || isFinished}
         />
         {isFinished ? (
-          <div className="pause_popup game_over_popup">GAME OVER</div>
+          <div className="popup game_over_popup">GAME OVER</div>
         ) : null}
         {isPause ? (
-          <div className="pause_popup" onClick={pauseGame}>
+          <div className="popup" onClick={pauseGame}>
             PAUSED
           </div>
         ) : null}
-        {isStoppedGame ? null : (
-          <div onClick={startGame} className="start_game pause_popup">
-            START
+        {isPlaying ? null : (
+          <div onClick={startGame} className="start_game popup">
+            {isPause ? "NEW GAME" : "START"}
           </div>
         )}
         <div className="controls">

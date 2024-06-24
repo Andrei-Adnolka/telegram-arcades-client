@@ -2,6 +2,7 @@ import { memo } from "react";
 import { ButtonIds } from "../../constants";
 
 import { ContinueSvg } from "../../svg/continue";
+import { RotateSvg } from "../../svg/rotate";
 
 import "./style.scss";
 
@@ -26,7 +27,9 @@ function ButtonsUI() {
         <button
           id={ButtonIds.Rotate}
           className="button buttons__right__turn gray"
-        ></button>
+        >
+          <RotateSvg />
+        </button>
       </div>
     </div>
   );
