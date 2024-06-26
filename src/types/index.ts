@@ -24,7 +24,7 @@ export type BlockShape = boolean[][];
 
 export type CellOptions = Block | EmptyCell | SnakeCell | FoodCell;
 export type BoardShape = CellOptions[][];
-export type SnapeShape = number[][];
+export type SnakeShape = number[][];
 
 type ShapesObj = {
   [key in Block]: {

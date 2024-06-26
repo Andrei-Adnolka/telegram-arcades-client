@@ -1,23 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
-import { SnapeShape, BoardShape, SnakeCell, FoodCell } from "../../../types";
-import { useInterval } from "../../../hooks/useInterval";
-import {
-  useSnakeBoard,
-  hasCollisions,
-  BOARD_HEIGHT,
-  getEmptyBoard,
-  getRandomFood,
-  eating,
-} from "./useSnakeBoard";
-import { useLevel } from "./useLevel";
-import { ButtonIds } from "../../../constants";
-// import { ButtonIds } from "../constants";
-// import { useLevel } from "./useLevel";
+import { useCallback, useState } from "react";
 
-enum TickSpeed {
-  Sliding = 100,
-  Fast = 20,
-}
+import { SnakeShape, BoardShape, SnakeCell } from "../../../types";
+import { useInterval } from "../../../hooks/useInterval";
+import { ButtonIds } from "../../../constants";
+
+import { useSnakeBoard } from "./useSnakeBoard";
+import { isEating, hasCollisions, isEatingHerself } from "./helpers";
+import { useLevel } from "./useLevel";
+
 const getDirection = (direction: string) => {
   switch (direction) {
     case "right": {
@@ -40,18 +30,17 @@ const getDirection = (direction: string) => {
 
 export function useSnake() {
   const [score, setScore] = useState(0);
-  const [isEating, setIsEating] = useState(false);
   const [isStart, setIsStart] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPause, setIsPause] = useState(false);
-  const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
+  const [snakeSpeed, setSnakeSpeed] = useState<number>(0);
   const [direction, setDirection] = useState("right");
 
   const { level, speed } = useLevel(score);
 
   const [
-    { board, snakesHeadColumn, snakesHeadRow, snake, food },
+    { board, snakesHeadColumn, snakesHeadRow, snake },
     dispatchBoardState,
   ] = useSnakeBoard();
 
@@ -59,10 +48,9 @@ export function useSnake() {
     setIsGameOver(false);
     setIsPause(false);
     setScore(0);
-    setIsEating(false);
     setIsPlaying(true);
     setIsStart(true);
-    setTickSpeed(speed);
+    setSnakeSpeed(speed);
     setDirection("right");
     dispatchBoardState({ type: "start" });
   }, [dispatchBoardState, speed]);
@@ -79,13 +67,16 @@ export function useSnake() {
     const newRow = snakesHeadRow + row;
     const newColumn = snakesHeadColumn + column;
 
-    if (hasCollisions(board, newRow, newColumn)) {
+    if (
+      hasCollisions(board, newRow, newColumn) ||
+      isEatingHerself(snake, newRow, newColumn)
+    ) {
       setIsGameOver(true);
       setIsPlaying(false);
       return;
     }
 
-    if (eating(board, newRow, newColumn)) {
+    if (isEating(board, newRow, newColumn)) {
       const newSnake = structuredClone(snake);
       newSnake.push([newRow, newColumn]);
       const newBoard = structuredClone(board) as BoardShape;
@@ -110,22 +101,12 @@ export function useSnake() {
       return;
     }
     gameTick();
-  }, tickSpeed);
+  }, snakeSpeed);
 
-  useEffect(() => {
-    if (!isPlaying) {
-      return;
-    }
-
-    const handleTouchDown = (event: TouchEvent) => {
-      const id = (event.target as HTMLElement).id;
-      if (!id || id === "paused") {
+  const handleTouchDown = useCallback(
+    (id: ButtonIds, isTouchStart?: boolean) => {
+      if (!isPlaying) {
         return;
-      }
-      event?.preventDefault?.();
-
-      if (id === ButtonIds.Rotate) {
-        setTickSpeed(speed);
       }
       if (id === ButtonIds.Top && direction !== "bottom") {
         setDirection("top");
@@ -139,13 +120,12 @@ export function useSnake() {
       if (id === ButtonIds.Right && direction !== "left") {
         setDirection("right");
       }
-    };
-
-    document.addEventListener("touchstart", handleTouchDown);
-    return () => {
-      document.removeEventListener("touchstart", handleTouchDown);
-    };
-  }, [direction, dispatchBoardState, isPlaying, speed]);
+      if (id === ButtonIds.Rotate) {
+        setSnakeSpeed(isTouchStart ? speed / 2 : speed);
+      }
+    },
+    [direction, isPlaying, speed]
+  );
 
   const renderedBoard = structuredClone(board) as BoardShape;
 
@@ -155,6 +135,7 @@ export function useSnake() {
 
   return {
     board: renderedBoard,
+    handleTouchDown,
     startGame,
     pauseGame,
     isPlaying,
@@ -167,7 +148,7 @@ export function useSnake() {
   };
 }
 
-function addShapeToBoard(board: BoardShape, snake: SnapeShape) {
+function addShapeToBoard(board: BoardShape, snake: SnakeShape) {
   snake.forEach(([row, column]) => {
     board[row][column] = SnakeCell.Snake;
   });

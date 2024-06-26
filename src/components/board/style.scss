@@ -4,5 +4,9 @@
   border-right: 4px solid black;
   &.paused {
     opacity: .6;
+    .Food {
+      background-color: rgb(131, 157, 136);
+      animation-name: none;
+    }
   }
 }

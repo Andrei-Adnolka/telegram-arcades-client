@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
 import Board from "../../components/board";
 import ButtonsUI from "../../components/buttons";
 import { PauseSvg } from "../../svg/pause";
@@ -15,9 +14,9 @@ const SnakeGame = () => {
     isGameOver,
     pauseGame,
     startGame,
+    handleTouchDown,
     isStart,
     level,
-    speed,
     score,
   } = useSnake();
 
@@ -60,7 +59,7 @@ const SnakeGame = () => {
           </div>
         </div>
       </div>
-      <ButtonsUI />
+      <ButtonsUI onClick={handleTouchDown} />
     </div>
   );
 };
