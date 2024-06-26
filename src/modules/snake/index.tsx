@@ -1,38 +1,34 @@
 import Board from "../../components/board";
-import UpcomingBlocks from "../../components/upcoming-blocks";
 import ButtonsUI from "../../components/buttons";
-import { useTetris } from "../../hooks/useTetris";
-
 import { PauseSvg } from "../../svg/pause";
 import { ContinueSvg } from "../../svg/continue";
 
+import { useSnake } from "./hooks/useSnake";
 import "./styles.scss";
 
-function Tetris() {
+const SnakeGame = () => {
   const {
     board,
-    startGame,
-    pauseGame,
     isPlaying,
     isPause,
-    isFinished,
+    isGameOver,
+    pauseGame,
+    startGame,
+    handleTouchDown,
     isStart,
-    score,
-    upcomingBlocks,
     level,
-  } = useTetris();
-
-  const isStoppedGame = isPlaying || isPause;
+    score,
+  } = useSnake();
 
   return (
     <div className="app">
-      <h1>TETRIS</h1>
+      <h1>SNAKE</h1>
       <div className="elements">
         <Board
           currentBoard={board}
-          isPaused={!isPlaying || isPause || isFinished}
+          isPaused={!isPlaying || isPause || isGameOver}
         />
-        {isFinished ? (
+        {isGameOver ? (
           <div className="popup game_over_popup">GAME OVER</div>
         ) : null}
         {isPause ? (
@@ -54,13 +50,8 @@ function Tetris() {
             <div>LEVEL</div>
             <div>{level}</div>
           </div>
-          <div className="new_game_with_upcoming">
-            {isStoppedGame ? (
-              <UpcomingBlocks upcomingBlocks={upcomingBlocks} />
-            ) : null}
-          </div>
           <div className="pause_button">
-            {isStart && !isFinished ? (
+            {isStart && !isGameOver ? (
               <div onClick={pauseGame} id="paused">
                 {isPause ? <ContinueSvg /> : <PauseSvg />}
               </div>
@@ -68,9 +59,9 @@ function Tetris() {
           </div>
         </div>
       </div>
-      <ButtonsUI />
+      <ButtonsUI onClick={handleTouchDown} />
     </div>
   );
-}
+};
 
-export default Tetris;
+export default SnakeGame;

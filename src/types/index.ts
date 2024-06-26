@@ -1,22 +1,30 @@
 export enum Block {
-  I = 'I',
-  J = 'J',
-  L = 'L',
-  O = 'O',
-  S = 'S',
-  T = 'T',
-  Z = 'Z',
+  I = "I",
+  J = "J",
+  L = "L",
+  O = "O",
+  S = "S",
+  T = "T",
+  Z = "Z",
+}
+
+export enum FoodCell {
+  Food = "Food",
+}
+
+export enum SnakeCell {
+  Snake = "Snake",
 }
 
 export enum EmptyCell {
-  Empty = 'Empty',
+  Empty = "Empty",
 }
 
-export type CellOptions = Block | EmptyCell;
-
-export type BoardShape = CellOptions[][];
-
 export type BlockShape = boolean[][];
+
+export type CellOptions = Block | EmptyCell | SnakeCell | FoodCell;
+export type BoardShape = CellOptions[][];
+export type SnakeShape = number[][];
 
 type ShapesObj = {
   [key in Block]: {

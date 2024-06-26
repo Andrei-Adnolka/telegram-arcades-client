@@ -25,6 +25,12 @@ h1 {
   &.Empty {
     background-color: rgb(131 157 136);
   }
+  &.Food {
+    animation-name: blink;
+    animation-timing-function: linear;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+  }
 }
 
 .info_block {
@@ -56,13 +62,6 @@ h1 {
   position: relative;
 }
 
-.new_game_with_upcoming {
-  background-color: rgb(150 183 156);
-  height: 80px;
-  padding: 8px 0px;
-  margin: 0 4px;
-}
-
 .popup {
   position: absolute;
   top: 50%;
@@ -80,7 +79,8 @@ h1 {
   background-color: rgb(150, 183, 156);
 }
 
-.game_over_popup {
+.game_over_popup[class] {
+  top: 50%;
   background-color:   rgb(250 0 0);
 }
 
@@ -90,4 +90,10 @@ h1 {
   bottom: 34px;
   left: 50%;
   transform: translate(-50%);
+}
+
+@keyframes blink {
+  50% {
+    opacity: .5;
+  }
 }

@@ -1,5 +1,5 @@
 import Cell from "../Cell";
-import { BoardShape } from "../../types/tetris";
+import { BoardShape } from "../../types";
 
 import "./style.scss";
 

@@ -5,8 +5,8 @@ import {
   BoardShape,
   EmptyCell,
   SHAPES,
-} from "../types/tetris";
-import { useInterval } from "./useInterval";
+} from "../../../types";
+import { useInterval } from "../../../hooks/useInterval";
 import {
   useTetrisBoard,
   hasCollisions,
@@ -87,7 +87,6 @@ export function useTetris() {
     newUpcomingBlocks.unshift(getRandomBlock());
 
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
-      console.log("asdasdasds");
       setIsFinished(true);
       setIsPlaying(false);
       setTickSpeed(null);
@@ -167,50 +166,40 @@ export function useTetris() {
     };
 
     const handleTouchDown = (event: TouchEvent) => {
-      // @ts-ignore
-      if (!event?.target || event.target.id === "paused") {
+      const id = (event.target as HTMLElement).id;
+      if (!id || id === "paused") {
         return;
       }
       event?.preventDefault?.();
 
-      // @ts-ignore
-      if (event?.target?.id === ButtonIds.Bottom) {
+      if (id === ButtonIds.Bottom) {
         setTickSpeed(TickSpeed.Fast);
       }
-      // @ts-ignore
-      if (event?.target?.id === ButtonIds.Rotate) {
+      if (id === ButtonIds.Rotate) {
         dispatchBoardState({ type: "move", isRotating: true });
       }
-
-      // @ts-ignore
-      if (event?.target?.id === ButtonIds.Left) {
+      if (id === ButtonIds.Left) {
         isPressingLeft = true;
         updateMovementInterval();
       }
-
-      // @ts-ignore
-      if (event?.target?.id === ButtonIds.Right) {
+      if (id === ButtonIds.Right) {
         isPressingRight = true;
         updateMovementInterval();
       }
     };
     const handleTouchUp = (event: TouchEvent) => {
-      // @ts-ignore
-      if (!event?.target || event.target.id === "paused") {
+      const id = (event.target as HTMLElement).id;
+      if (!id || id === "paused") {
         return;
       }
-      //@ts-ignore
-      if (event?.target?.id === ButtonIds.Bottom) {
+      if (id === ButtonIds.Bottom) {
         setTickSpeed(speed);
       }
-      //@ts-ignore
-      if (event?.target?.id === ButtonIds.Left) {
+      if (id === ButtonIds.Left) {
         isPressingLeft = false;
         updateMovementInterval();
       }
-
-      //@ts-ignore
-      if (event?.target?.id === ButtonIds.Right) {
+      if (id === ButtonIds.Right) {
         isPressingRight = false;
         updateMovementInterval();
       }

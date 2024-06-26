@@ -5,7 +5,7 @@ import {
   BoardShape,
   EmptyCell,
   SHAPES,
-} from "../types/tetris";
+} from "../../../types";
 
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 16;
