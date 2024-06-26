@@ -80,7 +80,8 @@ h1 {
   background-color: rgb(150, 183, 156);
 }
 
-.game_over_popup {
+.game_over_popup[class] {
+  top: 50%;
   background-color:   rgb(250 0 0);
 }
 

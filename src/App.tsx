@@ -1,6 +1,7 @@
-import Tetris from "./module/tetris";
-import { Route, Routes } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+
+import Tetris from "./modules/tetris";
+import Snake from "./modules/snake";
 
 function App() {
   const { pathname } = useLocation();
@@ -12,10 +13,12 @@ function App() {
         <div className="home_page">
           <h2>MENU</h2>
           <a href="/tetris">TETRIS</a>
+          <a href="/snake">SNAKE</a>
         </div>
       )}
       <Routes>
         <Route path="/tetris" element={<Tetris />} />
+        <Route path="/snake" element={<Snake />} />
       </Routes>
     </div>
   );

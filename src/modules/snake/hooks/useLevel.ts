@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { LEVELS } from "../constants";
+import { LEVELS } from "../../../constants";
 
 export const useLevel = (score: number) => {
   const [level, setLevel] = useState(1);

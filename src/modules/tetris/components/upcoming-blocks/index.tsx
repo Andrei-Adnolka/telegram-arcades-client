@@ -1,4 +1,4 @@
-import { Block, SHAPES } from "../../types/tetris";
+import { Block, SHAPES } from "../../../../types";
 
 import "./style.scss";
 
