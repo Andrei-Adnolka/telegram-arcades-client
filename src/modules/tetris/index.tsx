@@ -23,12 +23,14 @@ function Tetris() {
     hightScore,
     isContinue,
     onContinue,
+    getItem,
   } = useTetris();
 
   const isStoppedGame = isPlaying || isPause;
   return (
     <div className="app">
       <h1>TETRIS</h1>
+      <h1>{JSON.stringify(getItem())}</h1>
       <div className="elements">
         <Board
           currentBoard={board}
