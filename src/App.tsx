@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Tetris from "./modules/tetris";
 import Snake from "./modules/snake";
 import Arkanoid from "./modules/arkanoid";
-import { LocationProvider } from "./provider/location";
 
 function App() {
   const { pathname } = useLocation();
@@ -19,13 +18,11 @@ function App() {
           {/* <a href="/arkanoid">ARKANOID</a> */}
         </div>
       )}
-      <LocationProvider>
-        <Routes>
-          <Route path="/tetris" element={<Tetris />} />
-          <Route path="/snake" element={<Snake />} />
-          <Route path="/arkanoid" element={<Arkanoid />} />
-        </Routes>
-      </LocationProvider>
+      <Routes>
+        <Route path="/tetris" element={<Tetris />} />
+        <Route path="/snake" element={<Snake />} />
+        <Route path="/arkanoid" element={<Arkanoid />} />
+      </Routes>
     </div>
   );
 }
