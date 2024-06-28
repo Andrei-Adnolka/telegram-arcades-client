@@ -19,7 +19,7 @@ export const LocationProvider: FC<LocationProviderProps> = ({ children }) => {
   }, [navigate]);
 
   useEffect(() => {
-    if (location.key === "/") redirectToLastPage();
+    if (location.key === "default") redirectToLastPage();
 
     Cookies.set("location_app", location.pathname, {
       expires: new Date(new Date().getTime() + 30 * 60 * 1000),
