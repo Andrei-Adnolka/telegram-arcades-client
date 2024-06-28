@@ -12,12 +12,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <LocationProvider>
-      <TelegramProvider>
+    <TelegramProvider>
+      <LocationProvider>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </TelegramProvider>
-    </LocationProvider>
+      </LocationProvider>
+    </TelegramProvider>
   </React.StrictMode>
 );
