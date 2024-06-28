@@ -2,22 +2,22 @@ import { useState, useEffect, useCallback } from "react";
 import Cookies from "js-cookie";
 
 export const useHightScore = (name: string) => {
-  const [hightScore, setHightScore] = useState("0");
-  const score = Cookies.get(name);
+  const [hightScore, setHightScore] = useState(0);
+  const score = Cookies.get(name) || 0;
 
   const onSendHightScore = useCallback(
-    (value: string) => {
-      if (!score || +score > +value) {
+    (value: number) => {
+      if (!+score || +score < value) {
         setHightScore(value);
-        Cookies.set(name, value, { expires: 30 });
+        Cookies.set(name, value.toString(), { expires: 30 });
       }
     },
     [name, score]
   );
 
   useEffect(() => {
-    if (score) {
-      setHightScore(score);
+    if (+score) {
+      setHightScore(+score);
     }
   }, [name, score]);
 

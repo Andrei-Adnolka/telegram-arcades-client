@@ -78,7 +78,7 @@ export function useSnake() {
     ) {
       setIsGameOver(true);
       setIsPlaying(false);
-      onSendHightScore(score.toString());
+      onSendHightScore(score);
       return;
     }
 

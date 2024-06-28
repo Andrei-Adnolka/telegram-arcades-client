@@ -101,7 +101,7 @@ export function useTetris() {
       setIsFinished(true);
       setIsPlaying(false);
       setTickSpeed(null);
-      onSendHightScore(score.toString());
+      onSendHightScore(score);
     } else {
       setTickSpeed(speed);
     }
