@@ -98,8 +98,10 @@ export function useSnake() {
     snakesHeadRow,
     snakesHeadColumn,
     board,
-    dispatchBoardState,
     snake,
+    onSendHightScore,
+    score,
+    dispatchBoardState,
   ]);
 
   useInterval(() => {
