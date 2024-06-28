@@ -8,7 +8,6 @@ import {
   SHAPES,
 } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
-import { useCookiesStorage } from "../../../hooks/useCookiesStorage";
 import { useTetrisBoard } from "./useTetrisBoard";
 import {
   BOARD_HEIGHT,
@@ -19,6 +18,8 @@ import {
 import { useLevel } from "./useLevel";
 import { useHightScore } from "../../../hooks/useHighScore";
 import { getEmptyBoard, getRandomBlock, hasCollisions } from "./helpers";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useBeforeUnload } from "react-router-dom";
 
 enum TickSpeed {
   Sliding = 100,
@@ -45,7 +46,7 @@ export function useTetris() {
     dispatchBoardState,
   ] = useTetrisBoard();
 
-  const { getItem, setItem, removeItem } = useCookiesStorage(STORAGE_NAME);
+  const { getItem, setItem, removeItem } = useLocalStorage(STORAGE_NAME);
 
   const startGame = useCallback(() => {
     const startingBlocks = [getRandomBlock()];
@@ -153,17 +154,6 @@ export function useTetris() {
     }
 
     gameTick();
-    setItem({
-      board,
-      droppingColumn,
-      droppingBlock,
-      droppingRow,
-      droppingShape,
-      isCommitting,
-      score,
-      speed,
-      upcomingBlocks,
-    });
   }, tickSpeed);
 
   useEffect(() => {
@@ -171,7 +161,8 @@ export function useTetris() {
     if (data) {
       setIsContinue(true);
     }
-  }, [getItem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onContinue = useCallback(() => {
     const { score, isCommitting, upcomingBlocks, speed, ...rest } = getItem();
@@ -200,19 +191,19 @@ export function useTetris() {
     setIsContinue(false);
   }, [dispatchBoardState, getItem, setLevel]);
 
-  // useBeforeUnload(() => {
-  //   setItem({
-  //     board,
-  //     droppingColumn,
-  //     droppingBlock,
-  //     droppingRow,
-  //     droppingShape,
-  //     isCommitting,
-  //     score,
-  //     speed,
-  //     upcomingBlocks,
-  //   });
-  // });
+  useBeforeUnload(() => {
+    setItem({
+      board,
+      droppingColumn,
+      droppingBlock,
+      droppingRow,
+      droppingShape,
+      isCommitting,
+      score,
+      speed,
+      upcomingBlocks,
+    });
+  });
 
   useEffect(() => {
     if (!isPlaying) {
