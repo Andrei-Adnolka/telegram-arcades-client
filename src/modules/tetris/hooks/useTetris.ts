@@ -9,7 +9,7 @@ import {
   SHAPES,
 } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
-import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useCookiesStorage } from "../../../hooks/useCookiesStorage";
 import { useTetrisBoard } from "./useTetrisBoard";
 import {
   BOARD_HEIGHT,
@@ -46,7 +46,7 @@ export function useTetris() {
     dispatchBoardState,
   ] = useTetrisBoard();
 
-  const { getItem, setItem, removeItem } = useLocalStorage(STORAGE_NAME);
+  const { getItem, setItem, removeItem } = useCookiesStorage(STORAGE_NAME);
 
   const startGame = useCallback(() => {
     const startingBlocks = [getRandomBlock()];
