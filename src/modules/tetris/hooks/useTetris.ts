@@ -315,7 +315,6 @@ export function useTetris() {
     hightScore,
     isContinue,
     onContinue,
-    getItem,
   };
 }
 
