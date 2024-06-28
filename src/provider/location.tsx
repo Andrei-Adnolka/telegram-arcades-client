@@ -1,4 +1,4 @@
-import { useEffect, FC, useCallback } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
