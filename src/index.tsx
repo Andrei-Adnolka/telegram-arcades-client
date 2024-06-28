@@ -13,11 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <TelegramProvider>
-      <LocationProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <LocationProvider>
           <App />
-        </BrowserRouter>
-      </LocationProvider>
+        </LocationProvider>
+      </BrowserRouter>
     </TelegramProvider>
   </React.StrictMode>
 );
