@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useBeforeUnload } from "react-router-dom";
 
 import {
   Block,
@@ -191,33 +192,19 @@ export function useTetris() {
     setIsContinue(false);
   }, [dispatchBoardState, getItem, setLevel]);
 
-  useEffect(() => {
-    window.addEventListener("beforeunload", () => {
-      setItem({
-        board,
-        droppingColumn,
-        droppingBlock,
-        droppingRow,
-        droppingShape,
-        isCommitting,
-        score,
-        speed,
-        upcomingBlocks,
-      });
+  useBeforeUnload(() => {
+    setItem({
+      board,
+      droppingColumn,
+      droppingBlock,
+      droppingRow,
+      droppingShape,
+      isCommitting,
+      score,
+      speed,
+      upcomingBlocks,
     });
-  }, [
-    board,
-    droppingBlock,
-    droppingColumn,
-    droppingRow,
-    droppingShape,
-    isCommitting,
-    level,
-    score,
-    setItem,
-    speed,
-    upcomingBlocks,
-  ]);
+  });
 
   useEffect(() => {
     if (!isPlaying) {
