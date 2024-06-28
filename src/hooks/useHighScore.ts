@@ -9,7 +9,7 @@ export const useHightScore = (name: string) => {
     (value: number) => {
       if (!+score || +score < value) {
         setHightScore(value);
-        Cookies.set(name, value.toString(), { expires: 30 });
+        Cookies.set(name, value.toString(), { expires: 7 });
       }
     },
     [name, score]

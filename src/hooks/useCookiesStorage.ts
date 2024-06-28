@@ -10,7 +10,7 @@ export function useCookiesStorage(name: string) {
   };
 
   const setItem = (value: Record<string, any>) => {
-    Cookies.set(name, JSON.stringify(value), { expires: 30 });
+    Cookies.set(name, JSON.stringify(value), { expires: 7 });
   };
 
   const removeItem = () => {

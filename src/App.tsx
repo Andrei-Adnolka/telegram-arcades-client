@@ -1,12 +1,19 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useBeforeUnload } from "react-router-dom";
 
 import Tetris from "./modules/tetris";
 import Snake from "./modules/snake";
 import Arkanoid from "./modules/arkanoid";
 
+const NAME = "app-storge";
+
 function App() {
   const { pathname } = useLocation();
   const isLoadedGame = pathname !== "/";
+  const Hello = window.localStorage.getItem(NAME);
+
+  useBeforeUnload(() => {
+    window.localStorage.setItem(NAME, "hello");
+  });
 
   return (
     <div className="app">
@@ -15,6 +22,7 @@ function App() {
           <h2>MENU</h2>
           <a href="/tetris">TETRIS</a>
           <a href="/snake">SNAKE</a>
+          <div>{Hello}</div>
           {/* <a href="/arkanoid">ARKANOID</a> */}
         </div>
       )}
