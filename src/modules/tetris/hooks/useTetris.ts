@@ -167,12 +167,10 @@ export function useTetris() {
   }, tickSpeed);
 
   useEffect(() => {
-    window.addEventListener("load", () => {
-      const data = getItem();
-      if (data) {
-        setIsContinue(true);
-      }
-    });
+    const data = getItem();
+    if (data) {
+      setIsContinue(true);
+    }
   }, [getItem]);
 
   const onContinue = useCallback(() => {
