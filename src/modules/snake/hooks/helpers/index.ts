@@ -11,8 +11,8 @@ export function isEatingHerself(
   let isEatingHerself = false;
 
   if (snake.length > 2) {
-    snake.forEach(([elRow, elCol], i) => {
-      if (elRow === newRow && elCol === newColumn && i !== 1) {
+    snake.forEach(([elRow, elCol]) => {
+      if (elRow === newRow && elCol === newColumn) {
         isEatingHerself = true;
       }
     });

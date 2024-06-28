@@ -3,10 +3,9 @@ import ButtonsUI from "../../components/buttons";
 import { PauseSvg } from "../../svg/pause";
 import { ContinueSvg } from "../../svg/continue";
 
-import { useSnake } from "./hooks/useSnake";
-import "./styles.scss";
+import { useSpaceship } from "./hooks/useSpaceship";
 
-const SnakeGame = () => {
+const ArkanoidGame = () => {
   const {
     board,
     isPlaying,
@@ -18,12 +17,11 @@ const SnakeGame = () => {
     isStart,
     level,
     score,
-    hightScore,
-  } = useSnake();
+  } = useSpaceship();
 
   return (
     <div className="app">
-      <h1>SNAKE</h1>
+      <h1>ARKANOID</h1>
       <div className="elements">
         <Board
           currentBoard={board}
@@ -43,10 +41,6 @@ const SnakeGame = () => {
           </div>
         )}
         <div className="controls">
-          <div className="info_block">
-            <div>HIGH SCORE</div>
-            <div>{hightScore}</div>
-          </div>
           <div className="info_block">
             <div>SCORE</div>
             <div>{score}</div>
@@ -69,4 +63,4 @@ const SnakeGame = () => {
   );
 };
 
-export default SnakeGame;
+export default ArkanoidGame;

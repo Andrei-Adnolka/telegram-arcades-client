@@ -2,11 +2,12 @@ import { useCallback, useState } from "react";
 
 import { SnakeShape, BoardShape, SnakeCell } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
-import { ButtonIds } from "../../../constants";
+import { ButtonIds, COOKIES_HIGHT_SCORE_NAME } from "../../../constants";
 
 import { useSnakeBoard } from "./useSnakeBoard";
 import { isEating, hasCollisions, isEatingHerself } from "./helpers";
 import { useLevel } from "./useLevel";
+import { useHightScore } from "../../../hooks/useHighScore";
 
 const getDirection = (direction: string) => {
   switch (direction) {
@@ -36,6 +37,10 @@ export function useSnake() {
   const [isPause, setIsPause] = useState(false);
   const [snakeSpeed, setSnakeSpeed] = useState<number>(0);
   const [direction, setDirection] = useState("right");
+
+  const { hightScore, onSendHightScore } = useHightScore(
+    COOKIES_HIGHT_SCORE_NAME
+  );
 
   const { level, speed } = useLevel(score);
 
@@ -73,6 +78,7 @@ export function useSnake() {
     ) {
       setIsGameOver(true);
       setIsPlaying(false);
+      onSendHightScore(score.toString());
       return;
     }
 
@@ -145,6 +151,7 @@ export function useSnake() {
     isGameOver,
     score,
     speed,
+    hightScore,
   };
 }
 

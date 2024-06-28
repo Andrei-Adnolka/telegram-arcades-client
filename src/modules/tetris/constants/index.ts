@@ -16,3 +16,9 @@ export const LEVELS = [
   { speed: 150, score: { start: 20000, end: 25000 } },
   { speed: 110, score: { start: 25000, end: 1000000000 } },
 ];
+
+export const COOKIES_HIGHT_SCORE_NAME = "tetris-hight-score";
+export const STORAGE_NAME = "tetris-return-data";
+
+export const BOARD_WIDTH = 10;
+export const BOARD_HEIGHT = 16;

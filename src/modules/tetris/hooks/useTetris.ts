@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+
 import {
   Block,
   BlockShape,
@@ -7,15 +8,17 @@ import {
   SHAPES,
 } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useTetrisBoard } from "./useTetrisBoard";
 import {
-  useTetrisBoard,
-  hasCollisions,
   BOARD_HEIGHT,
-  getEmptyBoard,
-  getRandomBlock,
-} from "./useTetrisBoard";
-import { ButtonIds } from "../constants";
+  ButtonIds,
+  COOKIES_HIGHT_SCORE_NAME,
+  STORAGE_NAME,
+} from "../constants";
 import { useLevel } from "./useLevel";
+import { useHightScore } from "../../../hooks/useHighScore";
+import { getEmptyBoard, getRandomBlock, hasCollisions } from "./helpers";
 
 enum TickSpeed {
   Sliding = 100,
@@ -31,17 +34,24 @@ export function useTetris() {
   const [isPause, setIsPause] = useState(false);
   const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
   const [isFinished, setIsFinished] = useState(false);
-  const { level, speed } = useLevel(score);
+  const [isContinue, setIsContinue] = useState(false);
+  const { level, speed, setLevel } = useLevel(score);
+  const { hightScore, onSendHightScore } = useHightScore(
+    COOKIES_HIGHT_SCORE_NAME
+  );
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
     dispatchBoardState,
   ] = useTetrisBoard();
 
+  const { getItem, setItem, removeItem } = useLocalStorage(STORAGE_NAME);
+
   const startGame = useCallback(() => {
     const startingBlocks = [getRandomBlock()];
     setIsFinished(false);
     setIsPause(false);
+    setIsContinue(false);
     setScore(0);
     setUpcomingBlocks(startingBlocks);
     setIsCommitting(false);
@@ -49,7 +59,8 @@ export function useTetris() {
     setIsStart(true);
     setTickSpeed(speed);
     dispatchBoardState({ type: "start" });
-  }, [dispatchBoardState, speed]);
+    removeItem();
+  }, [dispatchBoardState, speed, removeItem]);
 
   const pauseGame = useCallback(() => {
     if (isStart) {
@@ -90,6 +101,7 @@ export function useTetris() {
       setIsFinished(true);
       setIsPlaying(false);
       setTickSpeed(null);
+      onSendHightScore(score.toString());
     } else {
       setTickSpeed(speed);
     }
@@ -103,13 +115,15 @@ export function useTetris() {
     setIsCommitting(false);
   }, [
     board,
-    speed,
-    dispatchBoardState,
-    droppingBlock,
-    droppingColumn,
-    droppingRow,
     droppingShape,
+    droppingRow,
+    droppingColumn,
+    droppingBlock,
     upcomingBlocks,
+    dispatchBoardState,
+    speed,
+    onSendHightScore,
+    score,
   ]);
 
   const gameTick = useCallback(() => {
@@ -137,8 +151,73 @@ export function useTetris() {
     if (!isPlaying) {
       return;
     }
+
     gameTick();
   }, tickSpeed);
+
+  useEffect(() => {
+    window.addEventListener("load", () => {
+      const data = getItem();
+      if (data) {
+        setIsContinue(true);
+      }
+    });
+  }, [getItem]);
+
+  const onContinue = useCallback(() => {
+    const { score, isCommitting, upcomingBlocks, speed, ...rest } = getItem();
+
+    setScore(score);
+    setLevel(score);
+    setIsCommitting(isCommitting);
+    setUpcomingBlocks(upcomingBlocks);
+    setTickSpeed(speed);
+
+    setIsPause(false);
+    setIsStart(true);
+    setIsPlaying(true);
+
+    dispatchBoardState({ type: "setState", ...rest });
+
+    const newBoard = structuredClone(rest.board) as BoardShape;
+    addShapeToBoard(
+      newBoard,
+      rest.droppingBlock,
+      rest.droppingShape,
+      rest.droppingRow,
+      rest.droppingColumn
+    );
+
+    setIsContinue(false);
+  }, [dispatchBoardState, getItem, setLevel]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      setItem({
+        board,
+        droppingColumn,
+        droppingBlock,
+        droppingRow,
+        droppingShape,
+        isCommitting,
+        score,
+        speed,
+        upcomingBlocks,
+      });
+    });
+  }, [
+    board,
+    droppingBlock,
+    droppingColumn,
+    droppingRow,
+    droppingShape,
+    isCommitting,
+    level,
+    score,
+    setItem,
+    speed,
+    upcomingBlocks,
+  ]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -238,6 +317,9 @@ export function useTetris() {
     isStart,
     score,
     upcomingBlocks,
+    hightScore,
+    isContinue,
+    onContinue,
   };
 }
 

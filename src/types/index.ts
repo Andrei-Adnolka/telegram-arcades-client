@@ -16,15 +16,26 @@ export enum SnakeCell {
   Snake = "Snake",
 }
 
+export enum SpaceshipCell {
+  Spaceship = "Spaceship",
+  Ball = "Ball",
+}
+
 export enum EmptyCell {
   Empty = "Empty",
 }
 
 export type BlockShape = boolean[][];
 
-export type CellOptions = Block | EmptyCell | SnakeCell | FoodCell;
+export type CellOptions =
+  | Block
+  | EmptyCell
+  | SnakeCell
+  | FoodCell
+  | SpaceshipCell;
 export type BoardShape = CellOptions[][];
 export type SnakeShape = number[][];
+export type SpaceshipShape = number[][];
 
 type ShapesObj = {
   [key in Block]: {

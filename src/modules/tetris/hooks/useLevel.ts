@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const LEVELS = [
   { speed: 800, score: { start: 0, end: 2000 } },
@@ -16,20 +16,24 @@ export const useLevel = (score: number) => {
   const [level, setLevel] = useState(1);
   const [speed, setSpeed] = useState(LEVELS[1].speed);
 
+  const setToState = useCallback((arg: number) => {
+    LEVELS.forEach((l) => {
+      if (l.score.start < arg && l.score.end <= arg) {
+        setLevel((prev) => prev + 1);
+        setSpeed(l.speed);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     const handler = setTimeout(() => {
-      LEVELS.forEach((l, i) => {
-        if (l.score.start < score && l.score.end <= score) {
-          setLevel((prev) => prev + 1);
-          setSpeed(l.speed);
-        }
-      });
+      setToState(score);
     }, 2000);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [speed, score]);
+  }, [speed, score, setToState]);
 
-  return { level, speed };
+  return { level, speed, setLevel: setToState };
 };

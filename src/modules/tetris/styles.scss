@@ -3,6 +3,8 @@
   position: relative;
   border: 2px solid black;
   background-color: rgb(174 207 180);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 h1 {
@@ -51,14 +53,14 @@ h1 {
   flex-direction: column;
   text-align: center;
   width: 90px;
-  gap: 20px;
-  padding-top: 20px;
+  gap: 16px;
+  padding-top: 16px;
   position: relative;
 }
 
 .new_game_with_upcoming {
   background-color: rgb(150 183 156);
-  height: 80px;
+  height: 70px;
   padding: 8px 0px;
   margin: 0 4px;
 }
@@ -88,7 +90,7 @@ h1 {
 .pause_button {
   height: 22px;
   position: absolute;
-  bottom: 34px;
+  bottom: 16px;
   left: 50%;
   transform: translate(-50%);
 }

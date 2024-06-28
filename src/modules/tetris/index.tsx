@@ -20,6 +20,9 @@ function Tetris() {
     score,
     upcomingBlocks,
     level,
+    hightScore,
+    isContinue,
+    onContinue,
   } = useTetris();
 
   const isStoppedGame = isPlaying || isPause;
@@ -39,12 +42,21 @@ function Tetris() {
             PAUSED
           </div>
         ) : null}
+        {isContinue ? (
+          <div className="popup" onClick={onContinue}>
+            CONTINUE?
+          </div>
+        ) : null}
         {isPlaying ? null : (
           <div onClick={startGame} className="start_game popup">
             {isPause ? "NEW GAME" : "START"}
           </div>
         )}
         <div className="controls">
+          <div className="info_block">
+            <div>HIGH SCORE</div>
+            <div>{hightScore}</div>
+          </div>
           <div className="info_block">
             <div>SCORE</div>
             <div>{score}</div>
