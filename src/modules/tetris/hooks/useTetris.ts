@@ -137,30 +137,14 @@ export function useTetris() {
     } else {
       dispatchBoardState({ type: "drop" });
     }
-    setItem({
-      board,
-      droppingColumn,
-      droppingBlock,
-      droppingRow,
-      droppingShape,
-      isCommitting,
-      score,
-      speed,
-      upcomingBlocks,
-    });
   }, [
     board,
     commitPosition,
     dispatchBoardState,
-    droppingBlock,
     droppingColumn,
     droppingRow,
     droppingShape,
     isCommitting,
-    score,
-    setItem,
-    speed,
-    upcomingBlocks,
   ]);
 
   useInterval(() => {
