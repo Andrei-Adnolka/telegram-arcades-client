@@ -25,7 +25,7 @@ export const LocationProvider: FC<LocationProviderProps> = ({ children }) => {
       expires: new Date(new Date().getTime() + 30 * 60 * 1000),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location.key]);
 
   return <>{children}</>;
 };
