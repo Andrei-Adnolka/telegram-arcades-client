@@ -12,8 +12,9 @@ export const LocationProvider: FC<LocationProviderProps> = ({ children }) => {
 
   const redirectToLastPage = useCallback(() => {
     const currentLocation = Cookies.get("location_app");
-    console.log("currentLocation", currentLocation);
+
     if (!currentLocation) return;
+
     navigate(currentLocation);
   }, [navigate]);
 
@@ -23,7 +24,8 @@ export const LocationProvider: FC<LocationProviderProps> = ({ children }) => {
     Cookies.set("location_app", location.pathname, {
       expires: new Date(new Date().getTime() + 30 * 60 * 1000),
     });
-  }, [location.key, location.pathname, redirectToLastPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <>{children}</>;
 };
