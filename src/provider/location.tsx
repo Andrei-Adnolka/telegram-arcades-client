@@ -6,29 +6,37 @@ interface LocationProviderProps {
   children: React.ReactNode;
 }
 
-export const LocationProvider: FC<LocationProviderProps> = ({ children }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
+export const LocationProvider: React.FC<LocationProviderProps> = ({ children }) => {
+  // @ts-ignore
+  if (!window?.Telegram?.WebApp?.initData?.length) {
+    return <>{children}</>
+  } else {
+    return <LocationProviderInner>{children}</LocationProviderInner>
+  }
+}
 
-  const redirectToLastPage = useCallback(() => {
-    const currentLocation = Cookies.get("location_app");
+const LocationProviderInner: React.FC<LocationProviderProps> = ({
+  children,
+}) => {
+  const location = useLocation()
+  const navigate = useNavigate()
 
-    if (!currentLocation) return;
+  const redirectToLastPage = () => {
+    const currentLocation = Cookies.get("location_app")
+    if (!currentLocation) return
+    navigate(currentLocation)
+  }
 
-    navigate(currentLocation);
-  }, [navigate]);
+  React.useEffect(() => {
+    if (location.key === "default") redirectToLastPage()
 
-  useEffect(() => {
     Cookies.set("location_app", location.pathname, {
-      expires: new Date(new Date().getTime() + 1 * 60 * 1000),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.key]);
+      expires: new Date(new Date().getTime() + 10 * 60 * 1000), // 10 min
+    })
+  }, [location.key])
 
-  useEffect(() => {
-    if (location.key === "default") redirectToLastPage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  return <>{children}</>
+}
 
   return <>{children}</>;
 };
