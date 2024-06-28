@@ -14,11 +14,12 @@ import {
   ButtonIds,
   COOKIES_HIGHT_SCORE_NAME,
   STORAGE_NAME,
+  LEVELS,
 } from "../constants";
-import { useLevel } from "./useLevel";
 import { useHightScore } from "../../../hooks/useHighScore";
 import { getEmptyBoard, getRandomBlock, hasCollisions } from "./helpers";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
+import { useLevel } from "../../../hooks/useLevel";
 
 enum TickSpeed {
   Sliding = 100,
@@ -35,7 +36,7 @@ export function useTetris() {
   const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [isContinue, setIsContinue] = useState(false);
-  const { level, speed, setLevel } = useLevel(score);
+  const { level, speed, setLevel } = useLevel(score, LEVELS);
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
   );

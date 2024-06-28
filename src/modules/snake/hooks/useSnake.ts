@@ -5,9 +5,9 @@ import { useInterval } from "../../../hooks/useInterval";
 import { ButtonIds, COOKIES_HIGHT_SCORE_NAME } from "../../../constants";
 
 import { useSnakeBoard } from "./useSnakeBoard";
-import { isEating, hasCollisions, isEatingHerself } from "./helpers";
-import { useLevel } from "./useLevel";
+import { isEating, hasCollisions, isEatingHerself, LEVELS } from "./helpers";
 import { useHightScore } from "../../../hooks/useHighScore";
+import { useLevel } from "../../../hooks/useLevel";
 
 const getDirection = (direction: string) => {
   switch (direction) {
@@ -42,7 +42,7 @@ export function useSnake() {
     COOKIES_HIGHT_SCORE_NAME
   );
 
-  const { level, speed } = useLevel(score);
+  const { level, speed } = useLevel(score, LEVELS);
 
   const [
     { board, snakesHeadColumn, snakesHeadRow, snake },

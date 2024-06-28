@@ -3,6 +3,18 @@ import { BoardShape, EmptyCell, FoodCell, SnakeShape } from "../../../../types";
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 16;
 
+export const LEVELS = [
+  { level: 1, speed: 630, score: { start: 0, end: 500 } },
+  { level: 2, speed: 580, score: { start: 500, end: 1500 } },
+  { level: 3, speed: 500, score: { start: 1500, end: 3000 } },
+  { level: 4, speed: 450, score: { start: 3000, end: 5000 } },
+  { level: 5, speed: 400, score: { start: 5000, end: 7500 } },
+  { level: 6, speed: 300, score: { start: 7500, end: 10000 } },
+  { level: 7, speed: 200, score: { start: 10000, end: 12500 } },
+  { level: 8, speed: 150, score: { start: 12500, end: 14500 } },
+  { level: 9, speed: 110, score: { start: 14500, end: 20000 } },
+];
+
 export function isEatingHerself(
   snake: SnakeShape,
   newRow: number,
