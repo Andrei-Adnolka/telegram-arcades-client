@@ -19,7 +19,6 @@ import { useLevel } from "./useLevel";
 import { useHightScore } from "../../../hooks/useHighScore";
 import { getEmptyBoard, getRandomBlock, hasCollisions } from "./helpers";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
-import { useBeforeUnload } from "react-router-dom";
 
 enum TickSpeed {
   Sliding = 100,
@@ -190,20 +189,33 @@ export function useTetris() {
 
     setIsContinue(false);
   }, [dispatchBoardState, getItem, setLevel]);
-
-  useBeforeUnload(() => {
-    setItem({
-      board,
-      droppingColumn,
-      droppingBlock,
-      droppingRow,
-      droppingShape,
-      isCommitting,
-      score,
-      speed,
-      upcomingBlocks,
-    });
-  });
+  useEffect(() => {
+    window.onbeforeunload = (e) => {
+      e.preventDefault();
+      setItem({
+        board,
+        droppingColumn,
+        droppingBlock,
+        droppingRow,
+        droppingShape,
+        isCommitting,
+        score,
+        speed,
+        upcomingBlocks,
+      });
+    };
+  }, [
+    board,
+    droppingBlock,
+    droppingColumn,
+    droppingRow,
+    droppingShape,
+    isCommitting,
+    score,
+    setItem,
+    speed,
+    upcomingBlocks,
+  ]);
 
   useEffect(() => {
     if (!isPlaying) {
