@@ -169,6 +169,7 @@ export function useTetris() {
   useEffect(() => {
     window.addEventListener("load", () => {
       const data = getItem();
+      alert(`data ${data}`);
       if (data) {
         setIsContinue(true);
       }
