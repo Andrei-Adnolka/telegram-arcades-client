@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import Cookies from "js-cookie";
 
 import type { ITelegramUser, IWebApp } from "../types/telegram";
 
@@ -20,9 +19,6 @@ export const TelegramProvider = ({ children }: Props) => {
       app.ready();
       setWebApp(app);
       app.expand();
-      app.onEvent("beforeunload", () => {
-        Cookies.set("exitPage", "i will back", { expires: 1 });
-      });
     }
   }, []);
 
