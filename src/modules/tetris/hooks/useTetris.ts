@@ -137,14 +137,30 @@ export function useTetris() {
     } else {
       dispatchBoardState({ type: "drop" });
     }
+    setItem({
+      board,
+      droppingColumn,
+      droppingBlock,
+      droppingRow,
+      droppingShape,
+      isCommitting,
+      score,
+      speed,
+      upcomingBlocks,
+    });
   }, [
     board,
     commitPosition,
     dispatchBoardState,
+    droppingBlock,
     droppingColumn,
     droppingRow,
     droppingShape,
     isCommitting,
+    score,
+    setItem,
+    speed,
+    upcomingBlocks,
   ]);
 
   useInterval(() => {
@@ -189,33 +205,6 @@ export function useTetris() {
 
     setIsContinue(false);
   }, [dispatchBoardState, getItem, setLevel]);
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      e.preventDefault();
-      setItem({
-        board,
-        droppingColumn,
-        droppingBlock,
-        droppingRow,
-        droppingShape,
-        isCommitting,
-        score,
-        speed,
-        upcomingBlocks,
-      });
-    };
-  }, [
-    board,
-    droppingBlock,
-    droppingColumn,
-    droppingRow,
-    droppingShape,
-    isCommitting,
-    score,
-    setItem,
-    speed,
-    upcomingBlocks,
-  ]);
 
   useEffect(() => {
     if (!isPlaying) {
