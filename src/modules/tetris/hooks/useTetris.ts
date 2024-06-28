@@ -54,6 +54,7 @@ export function useTetris() {
     setIsPause(false);
     setIsContinue(false);
     setScore(0);
+    setLevel(0);
     setUpcomingBlocks(startingBlocks);
     setIsCommitting(false);
     setIsPlaying(true);

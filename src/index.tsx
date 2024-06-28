@@ -1,4 +1,4 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
@@ -10,11 +10,11 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <TelegramProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </TelegramProvider>
-  </React.StrictMode>
+  </StrictMode>
 );
