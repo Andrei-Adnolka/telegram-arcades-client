@@ -1,8 +1,12 @@
 #root {
   height: 100vh;
   background-color: #009688;
+}
+
+* {
   user-select: none;
 }
+
 body {
   margin: 0px;
   overflow: hidden;
