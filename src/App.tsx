@@ -12,10 +12,12 @@ function App() {
     <div className="app">
       {isLoadedGame ? null : (
         <div className="home_page">
-          <h2>MENU</h2>
-          <a href="/tetris">TETRIS</a>
-          <a href="/snake">SNAKE</a>
-          {/* <a href="/arkanoid">ARKANOID</a> */}
+          <h2>BRICK GAMES</h2>
+          <div className="home_page_links">
+            <a href="/tetris">01 TETRIS</a>
+            <a href="/snake">02 SNAKE</a>
+            {/* <a href="/arkanoid">ARKANOID</a> */}
+          </div>
         </div>
       )}
       <Routes>

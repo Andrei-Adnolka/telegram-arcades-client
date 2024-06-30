@@ -27,7 +27,7 @@ function Tetris() {
 
   const isStoppedGame = isPlaying || isPause;
   return (
-    <div className="app">
+    <div className="wrapper">
       <h1>TETRIS</h1>
       <div className="elements">
         <Board
@@ -38,13 +38,13 @@ function Tetris() {
           <div className="popup game_over_popup">GAME OVER</div>
         ) : null}
         {isPause ? (
-          <div className="popup" onClick={pauseGame}>
+          <div className="popup paused_popup" onClick={pauseGame}>
             PAUSED
           </div>
         ) : null}
         {isContinue ? (
-          <div className="popup" onClick={onContinue}>
-            CONTINUE?
+          <div className="popup paused_popup" onClick={onContinue}>
+            CONTINUE
           </div>
         ) : null}
         {isPlaying ? null : (

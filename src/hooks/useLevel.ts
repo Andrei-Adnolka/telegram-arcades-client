@@ -14,7 +14,7 @@ export const LEVELS = [
 
 const DEFAULT_LEVEL = LEVELS[0];
 
-export const useLevel = (score: number, levels: typeof DEFAULT_LEVEL[]) => {
+export const useLevel = (score: number, levels: (typeof DEFAULT_LEVEL)[]) => {
   const [level, setLevel] = useState(DEFAULT_LEVEL.level);
   const [speed, setSpeed] = useState(DEFAULT_LEVEL.speed);
 

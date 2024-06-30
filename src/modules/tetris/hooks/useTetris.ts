@@ -54,7 +54,7 @@ export function useTetris() {
     setIsPause(false);
     setIsContinue(false);
     setScore(0);
-    setLevel(0);
+    setLevel(1);
     setUpcomingBlocks(startingBlocks);
     setIsCommitting(false);
     setIsPlaying(true);
@@ -62,7 +62,7 @@ export function useTetris() {
     setTickSpeed(speed);
     dispatchBoardState({ type: "start" });
     removeItem();
-  }, [dispatchBoardState, speed, removeItem]);
+  }, [dispatchBoardState, speed, removeItem, setLevel]);
 
   const pauseGame = useCallback(() => {
     if (isStart) {

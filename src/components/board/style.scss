@@ -2,6 +2,10 @@
   user-select: none;
   margin: auto;
   border-right: 4px solid black;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  overflow: hidden;
+
   &.paused {
     opacity: .6;
     .Food {
