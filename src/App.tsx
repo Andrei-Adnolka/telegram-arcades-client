@@ -12,7 +12,7 @@ function App() {
     <div className="app">
       {isLoadedGame ? null : (
         <div className="home_page">
-          <h2>BRICK GAMES</h2>
+          <h1>BRICK GAMES</h1>
           <div className="home_page_links">
             <a href="/tetris">01 TETRIS</a>
             <a href="/snake">02 SNAKE</a>
