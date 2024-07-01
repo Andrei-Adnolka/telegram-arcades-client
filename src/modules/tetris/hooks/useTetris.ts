@@ -34,7 +34,7 @@ export function useTetris() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPause, setIsPause] = useState(false);
   const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
-  const [isFinished, setIsFinished] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
   const [isContinue, setIsContinue] = useState(false);
   const { level, speed, setLevel } = useLevel(score, LEVELS);
   const { hightScore, onSendHightScore } = useHightScore(
@@ -50,7 +50,7 @@ export function useTetris() {
 
   const startGame = useCallback(() => {
     const startingBlocks = [getRandomBlock()];
-    setIsFinished(false);
+    setIsGameOver(false);
     setIsPause(false);
     setIsContinue(false);
     setScore(0);
@@ -100,7 +100,7 @@ export function useTetris() {
     newUpcomingBlocks.unshift(getRandomBlock());
 
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
-      setIsFinished(true);
+      setIsGameOver(true);
       setIsPlaying(false);
       setTickSpeed(null);
       onSendHightScore(score);
@@ -301,7 +301,7 @@ export function useTetris() {
     pauseGame,
     isPlaying,
     isPause,
-    isFinished,
+    isGameOver,
     level,
     isStart,
     score,

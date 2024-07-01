@@ -1,13 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { SnakeShape, BoardShape, SnakeCell } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
-import { ButtonIds, COOKIES_HIGHT_SCORE_NAME } from "../../../constants";
+import {
+  ButtonIds,
+  COOKIES_HIGHT_SCORE_NAME,
+  STORAGE_NAME,
+} from "../../../constants";
 
 import { useSnakeBoard } from "./useSnakeBoard";
 import { isEating, hasCollisions, isEatingHerself, LEVELS } from "./helpers";
 import { useHightScore } from "../../../hooks/useHighScore";
 import { useLevel } from "../../../hooks/useLevel";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
 
 const getDirection = (direction: string) => {
   switch (direction) {
@@ -37,17 +42,46 @@ export function useSnake() {
   const [isPause, setIsPause] = useState(false);
   const [snakeSpeed, setSnakeSpeed] = useState<number>(0);
   const [direction, setDirection] = useState("right");
+  const [isContinue, setIsContinue] = useState(false);
 
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
   );
+  const { level, speed, setLevel } = useLevel(score, LEVELS);
+  const { getItem, setItem, removeItem } = useLocalStorage(STORAGE_NAME);
 
-  const { level, speed } = useLevel(score, LEVELS);
+  useEffect(() => {
+    const data = getItem();
+    if (data) {
+      setIsContinue(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [
     { board, snakesHeadColumn, snakesHeadRow, snake },
     dispatchBoardState,
   ] = useSnakeBoard();
+
+  const onContinue = useCallback(() => {
+    const { score, speed, ...rest } = getItem();
+
+    setScore(score);
+    setLevel(score);
+    setSnakeSpeed(speed);
+
+    setIsPause(false);
+    setIsStart(true);
+    setIsPlaying(true);
+
+    dispatchBoardState({ type: "setState", ...rest });
+
+    const newBoard = structuredClone(rest.board) as BoardShape;
+    addShapeToBoard(newBoard, rest.snake);
+
+    setIsContinue(false);
+    removeItem();
+  }, [dispatchBoardState, getItem, removeItem, setLevel]);
 
   const startGame = useCallback(() => {
     setIsGameOver(false);
@@ -58,7 +92,9 @@ export function useSnake() {
     setSnakeSpeed(speed);
     setDirection("right");
     dispatchBoardState({ type: "start" });
-  }, [dispatchBoardState, speed]);
+    removeItem();
+    setIsContinue(false);
+  }, [dispatchBoardState, removeItem, speed]);
 
   const pauseGame = useCallback(() => {
     if (isStart) {
@@ -93,14 +129,17 @@ export function useSnake() {
     } else {
       dispatchBoardState({ type: "move", ...getDirection(direction) });
     }
+    setItem({ board, score, speed, direction, snake });
   }, [
     direction,
     snakesHeadRow,
     snakesHeadColumn,
     board,
     snake,
-    onSendHightScore,
+    setItem,
     score,
+    speed,
+    onSendHightScore,
     dispatchBoardState,
   ]);
 
@@ -154,6 +193,8 @@ export function useSnake() {
     score,
     speed,
     hightScore,
+    isContinue,
+    onContinue,
   };
 }
 

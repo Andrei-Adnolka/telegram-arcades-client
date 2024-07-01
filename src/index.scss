@@ -1,10 +1,13 @@
+$main-background-color: #FF5722;
+
 #root {
   height: 100vh;
-  background-color: #009688;
+  background-color: $main-background-color;
 }
 
 * {
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -38,7 +41,7 @@ body {
     position: absolute;
     top: -16px;
     padding: 0px 8px;
-    background-color: #009688;
+    background-color: $main-background-color;
     color: white;
   }
   .home_page_links {

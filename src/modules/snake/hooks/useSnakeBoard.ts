@@ -36,11 +36,12 @@ export function useSnakeBoard(): [BoardState, Dispatch<Action>] {
 }
 
 type Action = {
-  type: "start" | "eat" | "move";
+  type: "start" | "eat" | "move" | "setState";
   newBoard?: BoardShape;
   row?: number;
   column?: number;
   snake?: SnakeShape;
+  board?: BoardShape;
 };
 
 function boardReducer(state: BoardState, action: Action): BoardState {
@@ -69,6 +70,11 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       return {
         board: getBoardWithFood(newEatedSnake),
         ...getSnakeData(newEatedSnake),
+      };
+    case "setState":
+      return {
+        board: action.board || [],
+        ...getSnakeData(action.snake || []),
       };
     default:
       const unhandledType: string = action.type;
