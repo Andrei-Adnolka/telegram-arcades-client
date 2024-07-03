@@ -1,7 +1,7 @@
 $main-color: #ffe900;
 $main-color-two: #edd905;
 
-@mixin buttonsHint($text, $bottom: -36%) {
+@mixin buttonsHint($text, $bottom: -30%) {
   content: $text;
   position: absolute;
   left: 50%;
@@ -9,7 +9,7 @@ $main-color-two: #edd905;
   transform: translate(-50%);
   color: white;
   text-shadow: none;
-  font-size: 16px;
+  font-size: 13px;
   font-family: monospace;
 }
 
@@ -145,7 +145,7 @@ $main-color-two: #edd905;
       width: 110px;
       height: 110px;
       &::after {
-        @include buttonsHint("ROTATE/SPEED", -28%);
+        @include buttonsHint("ROTATE/SPEED", -22%);
       }
 
       >svg {
