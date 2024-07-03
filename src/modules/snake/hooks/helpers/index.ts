@@ -106,3 +106,23 @@ export function hasCollisions(
   }
   return hasCollision;
 }
+
+export const getDirection = (direction: string) => {
+  switch (direction) {
+    case "right": {
+      return { column: 1 };
+    }
+    case "left": {
+      return { column: -1 };
+    }
+    case "top": {
+      return { row: -1 };
+    }
+    case "bottom": {
+      return { row: 1 };
+    }
+    default: {
+      return { row: 0, column: 0 };
+    }
+  }
+};

@@ -1,6 +1,18 @@
 $main-color: #ffe900;
 $main-color-two: #edd905;
 
+@mixin buttonsHint($text, $bottom: -36%) {
+  content: $text;
+  position: absolute;
+  left: 50%;
+  bottom: $bottom;
+  transform: translate(-50%);
+  color: white;
+  text-shadow: none;
+  font-size: 16px;
+  font-family: monospace;
+}
+
 .buttons {
   display: flex;
   justify-content: space-between;
@@ -49,7 +61,6 @@ $main-color-two: #edd905;
     }
 
     &:active {
-      bottom: 6px;
       border: 1px solid #CF9D42;
       border-top: 1px solid #A77F35;
       border-bottom: 1px solid #E2AC48;
@@ -67,16 +78,25 @@ $main-color-two: #edd905;
     width: 65%;
 
     .left {
-      > svg {
+      >svg {
         transform: rotate(180deg);
         margin-top: 4px;
         margin-right: 4px;
+        position: relative;
+      }
+      &::after {
+        @include buttonsHint("LEFT");
       }
     }
+
     .right {
-      > svg {
+      >svg {
         margin-top: 4px;
         margin-left: 4px;
+      }
+
+      &::after {
+        @include buttonsHint("RIGHT");
       }
     }
 
@@ -86,22 +106,31 @@ $main-color-two: #edd905;
       padding-top: 2px;
 
       &:active {
-        bottom: -14px;
+        bottom: -20px;
       }
-      > svg {
+
+      >svg {
         margin-top: 8px;
         transform: rotate(90deg);
+      }
+      &::after {
+        @include buttonsHint("DOWN/SPEED");
       }
     }
 
     .top {
       position: absolute;
       top: -70px;
+
       &:active {
-        top: -64px;
+        top: -70px;
       }
-      > svg {
+
+      >svg {
         transform: rotate(-90deg);
+      }
+      &::after {
+        @include buttonsHint("UP");
       }
     }
   }
@@ -115,7 +144,11 @@ $main-color-two: #edd905;
     &__turn[class] {
       width: 110px;
       height: 110px;
-      > svg {
+      &::after {
+        @include buttonsHint("ROTATE/SPEED", -28%);
+      }
+
+      >svg {
         margin-top: 10px;
       }
     }

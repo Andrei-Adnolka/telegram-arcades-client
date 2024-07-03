@@ -9,30 +9,16 @@ import {
 } from "../../../constants";
 
 import { useSnakeBoard } from "./useSnakeBoard";
-import { isEating, hasCollisions, isEatingHerself, LEVELS } from "./helpers";
+import {
+  isEating,
+  hasCollisions,
+  isEatingHerself,
+  LEVELS,
+  getDirection,
+} from "./helpers";
 import { useHightScore } from "../../../hooks/useHighScore";
 import { useLevel } from "../../../hooks/useLevel";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
-
-const getDirection = (direction: string) => {
-  switch (direction) {
-    case "right": {
-      return { column: 1 };
-    }
-    case "left": {
-      return { column: -1 };
-    }
-    case "top": {
-      return { row: -1 };
-    }
-    case "bottom": {
-      return { row: 1 };
-    }
-    default: {
-      return { row: 0, column: 0 };
-    }
-  }
-};
 
 export function useSnake() {
   const [score, setScore] = useState(0);
@@ -43,6 +29,7 @@ export function useSnake() {
   const [snakeSpeed, setSnakeSpeed] = useState<number>(0);
   const [direction, setDirection] = useState("right");
   const [isContinue, setIsContinue] = useState(false);
+  const [isButtonClick, setIsButtonClick] = useState(false);
 
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
@@ -103,75 +90,94 @@ export function useSnake() {
     }
   }, [isStart]);
 
-  const gameTick = useCallback(() => {
-    const { column = 0, row = 0 } = getDirection(direction);
-    const newRow = snakesHeadRow + row;
-    const newColumn = snakesHeadColumn + column;
+  const gameTick = useCallback(
+    (d: string) => {
+      if (isButtonClick) {
+        setIsButtonClick(false);
+        setSnakeSpeed(speed);
+        return;
+      }
 
-    if (
-      hasCollisions(board, newRow, newColumn) ||
-      isEatingHerself(snake, newRow, newColumn)
-    ) {
-      setIsGameOver(true);
-      setIsPlaying(false);
-      onSendHightScore(score);
-      return;
-    }
+      const { column = 0, row = 0 } = getDirection(d);
+      const newRow = snakesHeadRow + row;
+      const newColumn = snakesHeadColumn + column;
 
-    if (isEating(board, newRow, newColumn)) {
-      const newSnake = structuredClone(snake);
-      newSnake.push([newRow, newColumn]);
-      const newBoard = structuredClone(board) as BoardShape;
-      addShapeToBoard(newBoard, newSnake);
-      setScore((prev) => prev + 100);
+      if (
+        hasCollisions(board, newRow, newColumn) ||
+        isEatingHerself(snake, newRow, newColumn)
+      ) {
+        setIsGameOver(true);
+        setIsPlaying(false);
+        onSendHightScore(score);
+        return;
+      }
 
-      dispatchBoardState({ type: "eat", snake: newSnake });
-    } else {
-      dispatchBoardState({ type: "move", ...getDirection(direction) });
-    }
-    setItem({ board, score, speed, direction, snake });
-  }, [
-    direction,
-    snakesHeadRow,
-    snakesHeadColumn,
-    board,
-    snake,
-    setItem,
-    score,
-    speed,
-    onSendHightScore,
-    dispatchBoardState,
-  ]);
+      if (isEating(board, newRow, newColumn)) {
+        const newSnake = structuredClone(snake);
+        newSnake.push([newRow, newColumn]);
+        const newBoard = structuredClone(board) as BoardShape;
+        addShapeToBoard(newBoard, newSnake);
+        setScore((prev) => prev + 100);
+
+        dispatchBoardState({ type: "eat", snake: newSnake });
+      } else {
+        dispatchBoardState({ type: "move", row, column });
+      }
+      setItem({ board, score, speed, direction: d, snake });
+      if (direction !== d) setDirection(d);
+    },
+    [
+      isButtonClick,
+      snakesHeadRow,
+      snakesHeadColumn,
+      board,
+      snake,
+      setItem,
+      score,
+      speed,
+      direction,
+      onSendHightScore,
+      dispatchBoardState,
+    ]
+  );
 
   useInterval(() => {
     if (!isPlaying) {
       return;
     }
-    gameTick();
+    gameTick(direction);
   }, snakeSpeed);
+
+  const clickToButton = useCallback(
+    (newDirection: string) => {
+      setIsButtonClick(true);
+      setSnakeSpeed(speed / 10);
+      gameTick(newDirection);
+    },
+    [gameTick, speed]
+  );
 
   const handleTouchDown = useCallback(
     (id: ButtonIds, isTouchStart?: boolean) => {
-      if (!isPlaying) {
-        return;
+      if (!isPlaying) return;
+
+      if (id === ButtonIds.Top && !["bottom", "top"].includes(direction)) {
+        clickToButton("top");
       }
-      if (id === ButtonIds.Top && direction !== "bottom") {
-        setDirection("top");
+      if (id === ButtonIds.Bottom && !["bottom", "top"].includes(direction)) {
+        clickToButton("bottom");
       }
-      if (id === ButtonIds.Bottom && direction !== "top") {
-        setDirection("bottom");
+      if (id === ButtonIds.Left && !["right", "left"].includes(direction)) {
+        clickToButton("left");
       }
-      if (id === ButtonIds.Left && direction !== "right") {
-        setDirection("left");
-      }
-      if (id === ButtonIds.Right && direction !== "left") {
-        setDirection("right");
+      if (id === ButtonIds.Right && !["right", "left"].includes(direction)) {
+        clickToButton("right");
       }
       if (id === ButtonIds.Rotate) {
         setSnakeSpeed(isTouchStart ? speed / 2 : speed);
       }
     },
-    [direction, isPlaying, speed]
+    [clickToButton, direction, isPlaying, speed]
   );
 
   const renderedBoard = structuredClone(board) as BoardShape;

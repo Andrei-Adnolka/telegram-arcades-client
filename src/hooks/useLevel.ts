@@ -12,11 +12,9 @@ export const LEVELS = [
   { level: 9, speed: 110, score: { start: 25000, end: 1000000000 } },
 ];
 
-const DEFAULT_LEVEL = LEVELS[0];
-
-export const useLevel = (score: number, levels: (typeof DEFAULT_LEVEL)[]) => {
-  const [level, setLevel] = useState(DEFAULT_LEVEL.level);
-  const [speed, setSpeed] = useState(DEFAULT_LEVEL.speed);
+export const useLevel = (score: number, levels: (typeof LEVELS)[0][]) => {
+  const [level, setLevel] = useState(levels[0].level);
+  const [speed, setSpeed] = useState(levels[0].speed);
 
   const setToState = useCallback(
     (arg: number) => {
