@@ -15,7 +15,6 @@ export function useRace() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPause, setIsPause] = useState(false);
   const [carSpeed, setCarSpeed] = useState<number>(0);
-  const [isBallStarted, setIsBallStarted] = useState(false);
 
   const [
     {
@@ -38,7 +37,6 @@ export function useRace() {
   );
 
   const startGame = useCallback(() => {
-    setIsBallStarted(false);
     setIsGameOver(false);
     setIsPause(false);
     setIsPlaying(true);
@@ -93,14 +91,10 @@ export function useRace() {
         dispatchBoardState({ type: "carMove", isLeft: false });
       }
       if (id === ButtonIds.Rotate) {
-        if (!isBallStarted) {
-          setIsBallStarted(true);
-        } else {
-          setCarSpeed(isTouchStart ? speed / 3 : speed);
-        }
+        setCarSpeed(isTouchStart ? speed / 3 : speed);
       }
     },
-    [dispatchBoardState, isBallStarted, speed, stopGame]
+    [dispatchBoardState, speed, stopGame]
   );
 
   const renderedBoard = structuredClone(board) as BoardShape;
