@@ -61,6 +61,16 @@ h1 {
     animation-duration: 1.2s;
     animation-iteration-count: infinite;
   }
+  &.CrashFire {
+    animation-name: crash;
+    animation-duration: .1s;
+    animation-iteration-count: infinite;
+  }
+  &.CrashEmpty {
+    animation-name: crashEmpty;
+    animation-duration: .1s;
+    animation-iteration-count: infinite;
+  }
 }
 
 .info_block {
@@ -144,5 +154,23 @@ h1 {
 @keyframes blink {
   50% {
     opacity: .5;
+  }
+}
+
+@keyframes crash {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes crashEmpty {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

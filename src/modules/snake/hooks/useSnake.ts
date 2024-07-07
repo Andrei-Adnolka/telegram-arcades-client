@@ -2,11 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { SnakeShape, BoardShape, SnakeCell } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
-import {
-  ButtonIds,
-  COOKIES_HIGHT_SCORE_NAME,
-  STORAGE_NAME,
-} from "../../../constants";
+import { ButtonIds } from "../../../constants";
+import { COOKIES_HIGHT_SCORE_NAME, STORAGE_NAME } from "../constants";
 
 import { useSnakeBoard } from "./useSnakeBoard";
 import {

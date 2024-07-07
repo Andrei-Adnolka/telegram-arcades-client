@@ -5,11 +5,10 @@ import { SoundOff } from "../../svg/sound-off";
 const Sound = new Audio("./music.mp3");
 
 export function AudioComponent() {
-  const [isPlay, setIsPlay] = useState(true);
+  const [isPlay, setIsPlay] = useState(false);
 
   useEffect(() => {
     Sound.load();
-    Sound.play();
     Sound.loop = true;
   }, []);
 

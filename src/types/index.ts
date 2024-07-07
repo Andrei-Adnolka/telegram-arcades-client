@@ -15,6 +15,11 @@ export enum FoodCell {
 export enum SnakeCell {
   Snake = "Snake",
 }
+export enum RaceCell {
+  Block = "Block",
+  CrashFire = "CrashFire",
+  CrashEmpty = "CrashEmpty",
+}
 
 export enum SpaceshipCell {
   Spaceship = "Spaceship",
@@ -32,10 +37,12 @@ export type CellOptions =
   | EmptyCell
   | SnakeCell
   | FoodCell
-  | SpaceshipCell;
+  | SpaceshipCell
+  | RaceCell;
 export type BoardShape = CellOptions[][];
 export type SnakeShape = number[][];
 export type SpaceshipShape = number[][];
+export type DefaultShape = number[][];
 
 type ShapesObj = {
   [key in Block]: {

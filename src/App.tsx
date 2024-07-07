@@ -3,6 +3,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Tetris from "./modules/tetris";
 import Snake from "./modules/snake";
 import Arkanoid from "./modules/arkanoid";
+import Race from "./modules/race";
 import { AudioComponent } from "./components/audio";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <div className="home_page_links">
             <a href="/tetris">01 TETRIS</a>
             <a href="/snake">02 SNAKE</a>
+            <a href="/race">03 RACE</a>
             {/* <a href="/arkanoid">ARKANOID</a> */}
           </div>
         </div>
@@ -34,6 +36,7 @@ function App() {
         <Route path="/tetris" element={<Tetris />} />
         <Route path="/snake" element={<Snake />} />
         <Route path="/arkanoid" element={<Arkanoid />} />
+        <Route path="/race" element={<Race />} />
       </Routes>
     </div>
   );
