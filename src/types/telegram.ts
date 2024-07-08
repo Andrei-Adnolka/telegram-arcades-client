@@ -35,6 +35,8 @@ export interface IWebApp {
   BackButton: {
     isVisible: boolean;
     onClick: (callback: () => void) => void;
+    show: () => void;
+    hide: () => void;
   };
   MainButton: {
     text: string;

@@ -19,12 +19,8 @@ function App() {
   useEffect(() => {
     const callback = () => navigate(-1);
     if (webApp) {
-      if (isLoadedGame) {
-        webApp.BackButton.isVisible = true;
-        webApp.onEvent("backButtonClicked", callback);
-      } else {
-        webApp.BackButton.isVisible = false;
-      }
+      isLoadedGame ? webApp.BackButton.show() : webApp.BackButton.hide()
+      webApp.onEvent("backButtonClicked", callback);
     }
     return () => webApp && webApp.offEvent("backButtonClicked", callback);
   }, [isLoadedGame, webApp, navigate]);
