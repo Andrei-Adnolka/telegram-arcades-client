@@ -15,11 +15,15 @@ function App() {
   const isLoadedGame = pathname !== "/";
 
   const { webApp } = useTelegram();
-
+  console.log("isLoadedGame", isLoadedGame);
   useEffect(() => {
-    const callback = () => navigate(-1);
+    const callback = () => {
+      navigate(-1);
+      webApp?.BackButton?.hide?.();
+    };
+
     if (webApp) {
-      isLoadedGame ? webApp.BackButton.show() : webApp.BackButton.hide()
+      webApp.BackButton.isVisible = isLoadedGame;
       webApp.onEvent("backButtonClicked", callback);
     }
     return () => webApp && webApp.offEvent("backButtonClicked", callback);
