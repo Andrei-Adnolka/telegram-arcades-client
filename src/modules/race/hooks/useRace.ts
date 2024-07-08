@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { BoardShape, RaceCell, DefaultShape } from "../../../types";
+import { BoardShape } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
 import { useHightScore } from "../../../hooks/useHighScore";
+import { useLevel } from "../../../hooks/useLevel";
 import { ButtonIds } from "../../../constants";
 
+import { COOKIES_HIGHT_SCORE_NAME, LEVELS } from "../constants";
+
 import { useRaceBoard } from "./useRaceBoard";
-import { useLevel } from "./useLevel";
-import { COOKIES_HIGHT_SCORE_NAME } from "../constants";
+import { addShapeToBoard } from "./helpers";
 
 export function useRace() {
   const [isStart, setIsStart] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPause, setIsPause] = useState(false);
-  const [carSpeed, setCarSpeed] = useState<number>(0);
+  const [carSpeed, setCarSpeed] = useState(0);
 
   const [
     {
@@ -23,14 +25,14 @@ export function useRace() {
       score,
       isCrash,
       crashBlock,
-      otherCars = [],
+      otherCars,
       leftBoard,
       rightBoard,
     },
     dispatchBoardState,
   ] = useRaceBoard();
 
-  const { level, speed } = useLevel(score);
+  const { level, speed } = useLevel(score, LEVELS);
 
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
@@ -58,6 +60,10 @@ export function useRace() {
   }, [dispatchBoardState]);
 
   const stopGame = !isPlaying || isCrash;
+
+  useEffect(() => {
+    setCarSpeed(speed);
+  }, [speed]);
 
   useEffect(() => {
     if (isCrash) {
@@ -91,7 +97,7 @@ export function useRace() {
         dispatchBoardState({ type: "carMove", isLeft: false });
       }
       if (id === ButtonIds.Rotate) {
-        setCarSpeed(isTouchStart ? speed / 3 : speed);
+        setCarSpeed(isTouchStart ? speed / 2 : speed);
       }
     },
     [dispatchBoardState, speed, stopGame]
@@ -126,42 +132,4 @@ export function useRace() {
     score,
     speed,
   };
-}
-
-function getCrashBlock() {
-  return [RaceCell.CrashEmpty, RaceCell.CrashFire][
-    Math.floor(Math.random() * 2)
-  ];
-}
-
-function addShapeToBoard(
-  board: BoardShape,
-  car: DefaultShape,
-  otherCars: number[][][],
-  leftBoard: DefaultShape,
-  rightBoard: DefaultShape,
-  crashBlock: DefaultShape
-) {
-  (otherCars || []).forEach((car) => {
-    car.forEach(([row, column]) => {
-      board[row][column] = RaceCell.Block;
-    });
-  });
-  rightBoard.forEach(([row, column]) => {
-    board[row][column] = RaceCell.Block;
-  });
-  leftBoard.forEach(([row, column]) => {
-    board[row][column] = RaceCell.Block;
-  });
-  if (crashBlock.length) {
-    crashBlock.forEach(([row, column]) => {
-      board[row][column] = getCrashBlock();
-      board[row][column + 1] = getCrashBlock();
-      board[row][column - 1] = getCrashBlock();
-    });
-  } else {
-    car.forEach(([row, column]) => {
-      board[row][column] = RaceCell.Block;
-    });
-  }
 }

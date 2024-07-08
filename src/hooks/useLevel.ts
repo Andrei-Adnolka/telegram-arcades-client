@@ -31,7 +31,7 @@ export const useLevel = (score: number, levels: (typeof LEVELS)[0][]) => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setToState(score);
-    }, 2000);
+    }, 1000);
     return () => {
       clearTimeout(handler);
     };
