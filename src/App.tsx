@@ -17,14 +17,16 @@ function App() {
   const { webApp } = useTelegram();
 
   useEffect(() => {
-    if (isLoadedGame && webApp) {
-      webApp.BackButton.isVisible = true;
-      const callback = () => {
-        navigate(-1);
-      };
-      webApp.onEvent("backButtonClicked", callback);
-      return () => webApp.offEvent("backButtonClicked", callback);
+    const callback = () => navigate(-1);
+    if (webApp) {
+      if (isLoadedGame) {
+        webApp.BackButton.isVisible = true;
+        webApp.onEvent("backButtonClicked", callback);
+      } else {
+        webApp.BackButton.isVisible = false;
+      }
     }
+    return () => webApp && webApp.offEvent("backButtonClicked", callback);
   }, [isLoadedGame, webApp, navigate]);
 
   return (
