@@ -46,18 +46,6 @@ body {
   position: absolute;
   width: 358px;
   margin: 0 auto;
-
-  .back_button {
-    font-size: 32px;
-    font-weight: 700;
-    color: white;
-    position: absolute;
-    left: 20px;
-    top: 21px;
-    z-index: 1;
-    background-color: $main-background-color;
-    padding: 0px 8px;
-  }
 }
 
 .home_page {

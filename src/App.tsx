@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import Tetris from "./modules/tetris";
@@ -5,6 +6,7 @@ import Snake from "./modules/snake";
 import Arkanoid from "./modules/arkanoid";
 import Race from "./modules/race";
 import { AudioComponent } from "./components/audio";
+import { useTelegram } from "./provider/telegram";
 
 function App() {
   const { pathname } = useLocation();
@@ -12,13 +14,23 @@ function App() {
 
   const isLoadedGame = pathname !== "/";
 
+  const { webApp } = useTelegram();
+
+  useEffect(() => {
+    if (isLoadedGame && webApp) {
+      webApp.BackButton.isVisible = true;
+      const callback = () => {
+        navigate(-1);
+      };
+      webApp.onEvent("backButtonClicked", callback);
+      return () => webApp.offEvent("backButtonClicked", callback);
+    }
+  }, [isLoadedGame, webApp, navigate]);
+
   return (
     <div className="app">
       {isLoadedGame ? (
         <div className="back_button_wrapper">
-          <span className="back_button" onClick={() => navigate(-1)}>
-            ←
-          </span>
           <AudioComponent />
         </div>
       ) : (

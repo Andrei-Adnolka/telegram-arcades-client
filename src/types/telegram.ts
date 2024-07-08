@@ -34,6 +34,7 @@ export interface IWebApp {
   backgroundColor: string;
   BackButton: {
     isVisible: boolean;
+    onClick: (callback: () => void) => void;
   };
   MainButton: {
     text: string;
@@ -44,4 +45,6 @@ export interface IWebApp {
     isActive: boolean;
   };
   HapticFeedback: any;
+  onEvent: (arg: string, callback: () => void) => void;
+  offEvent: (arg: string, callback: () => void) => void;
 }
