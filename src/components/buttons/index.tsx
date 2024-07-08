@@ -1,5 +1,7 @@
 import { memo, TouchEvent } from "react";
+
 import { ButtonIds } from "../../constants";
+import { useTelegram } from "../../provider/telegram";
 
 import { ContinueSvg } from "../../svg/continue";
 import { RotateSvg } from "../../svg/rotate";
@@ -18,9 +20,13 @@ type Props = {
 };
 
 function ButtonsUI({ onClick }: Props) {
+  const { webApp } = useTelegram();
+
   const handleClick = (event: TouchEvent<HTMLButtonElement>) => {
+    webApp?.HapticFeedback?.impactOccurred?.("soft");
     onClick?.(event.currentTarget.id as ButtonIds, event.type === "touchstart");
   };
+
   return (
     <div className="buttons">
       <div className="buttons__left">

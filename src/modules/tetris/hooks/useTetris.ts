@@ -20,6 +20,7 @@ import { useHightScore } from "../../../hooks/useHighScore";
 import { getEmptyBoard, getRandomBlock, hasCollisions } from "./helpers";
 import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { useLevel } from "../../../hooks/useLevel";
+import { useTelegram } from "../../../provider/telegram";
 
 enum TickSpeed {
   Sliding = 100,
@@ -40,6 +41,7 @@ export function useTetris() {
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
   );
+  const { webApp } = useTelegram();
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
@@ -239,6 +241,7 @@ export function useTetris() {
         return;
       }
       event?.preventDefault?.();
+      webApp?.HapticFeedback?.impactOccurred?.("soft");
 
       if (id === ButtonIds.Bottom) {
         setTickSpeed(TickSpeed.Fast);
@@ -281,7 +284,7 @@ export function useTetris() {
       clearInterval(moveIntervalID);
       setTickSpeed(speed);
     };
-  }, [dispatchBoardState, isPlaying, speed]);
+  }, [dispatchBoardState, isPlaying, speed, webApp?.HapticFeedback]);
 
   const renderedBoard = structuredClone(board) as BoardShape;
 
