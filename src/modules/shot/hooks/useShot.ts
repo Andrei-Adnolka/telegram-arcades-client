@@ -16,12 +16,12 @@ export function useShot() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPause, setIsPause] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [carSpeed, setCarSpeed] = useState(0);
+  const [armySpeed, setArmySpeed] = useState(0);
 
   const [{ board, space, bullets, army, score }, dispatchBoardState] =
     useShotBoard();
 
-  const { level, speed } = useLevel(score, LEVELS);
+  const { level, speed, setLevel } = useLevel(score, LEVELS);
 
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
@@ -32,7 +32,7 @@ export function useShot() {
     setIsGameOver(false);
     setIsPlaying(true);
     setIsStart(true);
-    setCarSpeed(speed);
+    setArmySpeed(speed);
     dispatchBoardState({ type: "start" });
   }, [dispatchBoardState, speed]);
 
@@ -46,7 +46,7 @@ export function useShot() {
   const stopGame = !isPlaying || isGameOver;
 
   useEffect(() => {
-    setCarSpeed(speed);
+    setArmySpeed(speed);
   }, [speed]);
 
   const gameTick = useCallback(() => {
@@ -56,13 +56,14 @@ export function useShot() {
       onSendHightScore(score);
       return;
     }
+    setLevel(score);
     dispatchBoardState({ type: "armyMove" });
-  }, [army, score, onSendHightScore, dispatchBoardState]);
+  }, [army, score, setLevel, onSendHightScore, dispatchBoardState]);
 
   useInterval(() => {
     if (stopGame) return;
     gameTick();
-  }, carSpeed);
+  }, armySpeed);
 
   useInterval(() => {
     if (stopGame) return;
@@ -70,7 +71,7 @@ export function useShot() {
     if (bullets.length) {
       dispatchBoardState({ type: "bulletsMove", bullets });
     }
-  }, carSpeed / 6);
+  }, armySpeed / 6);
 
   const handleTouchDown = useCallback(
     (id: ButtonIds, isTouchStart?: boolean) => {

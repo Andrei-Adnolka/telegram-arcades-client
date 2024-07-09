@@ -98,8 +98,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       ];
       break;
     case "spaceFire":
-      const [row, column] = state.space;
-      newState.bullets = getUniqBullets([...state.bullets, [row - 1, column]]);
+      newState.bullets = getUniqBullets([...state.bullets, state.space]);
       break;
     case "bulletsMove":
       const newBullets = state.bullets

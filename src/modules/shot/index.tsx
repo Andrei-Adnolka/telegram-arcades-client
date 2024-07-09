@@ -5,7 +5,7 @@ import { useShot } from "./hooks/useShot";
 const ShotGame = () => {
   const data = useShot();
 
-  return <Board {...data} title="RACE" />;
+  return <Board {...data} title="SHOT" />;
 };
 
 export default ShotGame;

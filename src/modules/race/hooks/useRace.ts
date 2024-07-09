@@ -32,7 +32,7 @@ export function useRace() {
     dispatchBoardState,
   ] = useRaceBoard();
 
-  const { level, speed } = useLevel(score, LEVELS);
+  const { level, speed, setLevel } = useLevel(score, LEVELS);
 
   const { hightScore, onSendHightScore } = useHightScore(
     COOKIES_HIGHT_SCORE_NAME
@@ -57,7 +57,8 @@ export function useRace() {
   const gameTick = useCallback(() => {
     dispatchBoardState({ type: "boardsMove" });
     dispatchBoardState({ type: "otherCarsMove" });
-  }, [dispatchBoardState]);
+    setLevel(score);
+  }, [dispatchBoardState, score, setLevel]);
 
   const stopGame = !isPlaying || isCrash;
 
