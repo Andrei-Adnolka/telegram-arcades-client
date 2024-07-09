@@ -1,33 +1,20 @@
-import { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import Tetris from "./modules/tetris";
 import Snake from "./modules/snake";
 import Arkanoid from "./modules/arkanoid";
 import Race from "./modules/race";
+import Shot from "./modules/shot";
+
 import { AudioComponent } from "./components/audio";
-import { useTelegram } from "./provider/telegram";
+import { useBackButton } from "./hooks/useBackButton";
 
 function App() {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
 
   const isLoadedGame = pathname !== "/";
 
-  const { webApp } = useTelegram();
-  console.log("isLoadedGame", isLoadedGame);
-  useEffect(() => {
-    const callback = () => {
-      navigate(-1);
-      webApp?.BackButton?.hide?.();
-    };
-
-    if (webApp) {
-      webApp.BackButton.isVisible = isLoadedGame;
-      webApp.onEvent("backButtonClicked", callback);
-    }
-    return () => webApp && webApp.offEvent("backButtonClicked", callback);
-  }, [isLoadedGame, webApp, navigate]);
+  useBackButton();
 
   return (
     <div className="app">
@@ -42,6 +29,7 @@ function App() {
             <a href="/tetris">01 TETRIS</a>
             <a href="/snake">02 SNAKE</a>
             <a href="/race">03 RACE</a>
+            <a href="/shot">04 SHOT</a>
             {/* <a href="/arkanoid">ARKANOID</a> */}
           </div>
         </div>
@@ -51,6 +39,7 @@ function App() {
         <Route path="/snake" element={<Snake />} />
         <Route path="/arkanoid" element={<Arkanoid />} />
         <Route path="/race" element={<Race />} />
+        <Route path="/shot" element={<Shot />} />
       </Routes>
     </div>
   );
