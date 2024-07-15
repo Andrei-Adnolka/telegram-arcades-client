@@ -41,7 +41,6 @@ export type CellOptions =
   | RaceCell;
 export type BoardShape = CellOptions[][];
 export type SnakeShape = number[][];
-export type SpaceshipShape = number[][];
 export type DefaultShape = number[][];
 
 type ShapesObj = {

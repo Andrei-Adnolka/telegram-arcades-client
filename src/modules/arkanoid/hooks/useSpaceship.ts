@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { BoardShape, SpaceshipCell, SpaceshipShape } from "../../../types";
+import { BoardShape, DefaultShape, SpaceshipCell } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
 import { ButtonIds } from "../../../constants";
 
@@ -19,8 +19,10 @@ export function useSpaceship() {
 
   const { level, speed } = useLevel(score);
 
-  const [{ board, spaceship, isGameOver: isGM, ball }, dispatchBoardState] =
-    useSpaceshipBoard();
+  const [
+    { board, spaceship, bricks, isGameOver: isGM, ball },
+    dispatchBoardState,
+  ] = useSpaceshipBoard();
 
   const startGame = useCallback(() => {
     setIsBallStarted(false);
@@ -90,7 +92,7 @@ export function useSpaceship() {
   const renderedBoard = structuredClone(board) as BoardShape;
 
   if (isPlaying) {
-    addShapeToBoard(renderedBoard, spaceship, ball);
+    addShapeToBoard(renderedBoard, spaceship, ball, bricks);
   }
 
   return {
@@ -113,10 +115,14 @@ export function useSpaceship() {
 
 function addShapeToBoard(
   board: BoardShape,
-  spaceship: SpaceshipShape,
-  ball: number[]
+  spaceship: DefaultShape,
+  ball: number[],
+  bricks: DefaultShape
 ) {
   spaceship.forEach(([row, column]) => {
+    board[row][column] = SpaceshipCell.Spaceship;
+  });
+  bricks.forEach(([row, column]) => {
     board[row][column] = SpaceshipCell.Spaceship;
   });
 

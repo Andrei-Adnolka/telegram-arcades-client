@@ -7,6 +7,7 @@ import {
   getEmptyBoard,
   getNewBallPosition,
 } from "./helpers";
+import { FIRST_LEVEL } from "./constants";
 
 type BoardState = {
   board: BoardShape;
@@ -14,6 +15,7 @@ type BoardState = {
   ball: number[];
   ballDirection: Directions;
   isGameOver: boolean;
+  bricks: number[][];
 };
 
 const START_SPACESHIP = [
@@ -32,6 +34,7 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
       ball: START_BALL,
       ballDirection: Directions.RightTop,
       isGameOver: false,
+      bricks: FIRST_LEVEL,
     },
     (emptyState) => {
       const state = {
@@ -65,6 +68,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         ball: START_BALL,
         ballDirection: Directions.RightTop,
         isGameOver: false,
+        bricks: FIRST_LEVEL,
       };
     case "shipMove":
       let isCollisionWithBoard = false;
@@ -134,10 +138,13 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       });
 
       if (isTouchSpacehips) {
-        if (state.ballDirection === Directions.RightBottom) {
+        if (state.ballDirection === Directions.RightBottom || column === 0) {
           newDirection = Directions.RightTop;
         }
-        if (state.ballDirection === Directions.LeftBottom) {
+        if (
+          state.ballDirection === Directions.LeftBottom ||
+          column === BOARD_WIDTH - 1
+        ) {
           newDirection = Directions.LeftTop;
         }
       }
