@@ -9,7 +9,6 @@ import { useLevel } from "./useLevel";
 import { BOARD_HEIGHT } from "./helpers";
 
 export function useSpaceship() {
-  const [score, setScore] = useState(0);
   const [isStart, setIsStart] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -17,18 +16,16 @@ export function useSpaceship() {
   const [ballSpeed, setBallSpeed] = useState<number>(0);
   const [isBallStarted, setIsBallStarted] = useState(false);
 
-  const { level, speed } = useLevel(score);
-
   const [
-    { board, spaceship, bricks, isGameOver: isGM, ball },
+    { board, spaceship, bricks, score, isGameOver: isGM, ball },
     dispatchBoardState,
   ] = useSpaceshipBoard();
+  const { level, speed } = useLevel(score);
 
   const startGame = useCallback(() => {
     setIsBallStarted(false);
     setIsGameOver(false);
     setIsPause(false);
-    setScore(0);
     setIsPlaying(true);
     setIsStart(true);
     setBallSpeed(speed);

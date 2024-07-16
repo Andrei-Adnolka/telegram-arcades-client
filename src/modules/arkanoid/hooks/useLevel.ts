@@ -14,7 +14,7 @@ export const LEVELS = [
 
 export const useLevel = (score: number) => {
   const [level, setLevel] = useState(1);
-  const [speed, setSpeed] = useState(LEVELS[7].speed);
+  const [speed, setSpeed] = useState(LEVELS[3].speed);
 
   useEffect(() => {
     const handler = setTimeout(() => {

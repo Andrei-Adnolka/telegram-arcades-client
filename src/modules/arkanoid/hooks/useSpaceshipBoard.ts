@@ -3,9 +3,9 @@ import { BoardShape } from "../../../types";
 import {
   BOARD_WIDTH,
   BOARD_HEIGHT,
-  Directions,
   getEmptyBoard,
   getNewBallPosition,
+  getTouchBricks,
 } from "./helpers";
 import { FIRST_LEVEL } from "./constants";
 
@@ -13,17 +13,19 @@ type BoardState = {
   board: BoardShape;
   spaceship: number[][];
   ball: number[];
-  ballDirection: Directions;
   isGameOver: boolean;
   bricks: number[][];
+  score: number;
+  ballTop: number;
+  ballRight: number;
 };
 
 const START_SPACESHIP = [
-  [15, 3],
-  [15, 4],
-  [15, 5],
+  [16, 3],
+  [16, 4],
+  [16, 5],
 ];
-const START_BALL = [14, 4];
+const START_BALL = [15, 4];
 
 export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
   const [boardState, dispatchBoardState] = useReducer(
@@ -32,9 +34,11 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
       board: [],
       spaceship: START_SPACESHIP,
       ball: START_BALL,
-      ballDirection: Directions.RightTop,
       isGameOver: false,
+      ballTop: -1,
+      ballRight: 1,
       bricks: FIRST_LEVEL,
+      score: 0,
     },
     (emptyState) => {
       const state = {
@@ -66,9 +70,11 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         board: getEmptyBoard(),
         spaceship: START_SPACESHIP,
         ball: START_BALL,
-        ballDirection: Directions.RightTop,
+        ballTop: -1,
+        ballRight: -1,
         isGameOver: false,
         bricks: FIRST_LEVEL,
+        score: 0,
       };
     case "shipMove":
       let isCollisionWithBoard = false;
@@ -92,75 +98,63 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       break;
     case "ballMove":
       let [row, column] = state.ball;
-      let newDirection = "" as Directions;
+      let newBallTop = state.ballTop;
+      let newBallRight = state.ballRight;
 
       if (row === 0 && (column === 0 || column === BOARD_WIDTH - 1)) {
-        if (state.ballDirection === Directions.RightTop) {
-          newDirection = Directions.LeftBottom;
-        }
-        if (state.ballDirection === Directions.LeftTop) {
-          newDirection = Directions.RightBottom;
-        }
+        newBallRight *= -1;
+        newBallTop *= -1;
+
         newState.ball = getNewBallPosition(
           state.ball,
-          newDirection || state.ballDirection
+          newBallTop,
+          newBallRight
         );
-        if (newDirection) {
-          newState.ballDirection = newDirection;
-        }
+        newState.ballTop = newBallTop;
+        newState.ballRight = newBallRight;
         break;
       }
 
-      if (row === 0) {
-        newDirection =
-          state.ballDirection === Directions.RightTop
-            ? Directions.RightBottom
-            : Directions.LeftBottom;
+      const { isTouchRowBricks, isTouchColumnBricks, newBricks, score } =
+        getTouchBricks(state.ball, state.bricks, newBallTop, newBallRight);
+
+      if (isTouchRowBricks || row === 0) {
+        newBallTop *= -1;
       }
-      if (column === BOARD_WIDTH - 1) {
-        newDirection =
-          state.ballDirection === Directions.RightBottom
-            ? Directions.LeftBottom
-            : Directions.LeftTop;
-      }
-      if (column === 0) {
-        newDirection =
-          state.ballDirection === Directions.LeftBottom
-            ? Directions.RightBottom
-            : Directions.RightTop;
+      if (isTouchColumnBricks || column === BOARD_WIDTH - 1 || column === 0) {
+        newBallRight *= -1;
       }
 
       let isTouchSpacehips = false;
-      state.spaceship.forEach((el) => {
-        if (JSON.stringify(state.ball) === JSON.stringify(el)) {
-          isTouchSpacehips = true;
+
+      state.spaceship.forEach((el, i, array) => {
+        if (!isTouchSpacehips) {
+          const newBall = getNewBallPosition(
+            state.ball,
+            newBallTop,
+            newBallRight
+          );
+          if (JSON.stringify(newBall) === JSON.stringify(el)) {
+            newBallTop *= -1;
+            if (i === 0 && newBallRight === 1) {
+              newBallRight *= -1;
+            }
+          }
         }
       });
 
-      if (isTouchSpacehips) {
-        if (state.ballDirection === Directions.RightBottom || column === 0) {
-          newDirection = Directions.RightTop;
-        }
-        if (
-          state.ballDirection === Directions.LeftBottom ||
-          column === BOARD_WIDTH - 1
-        ) {
-          newDirection = Directions.LeftTop;
-        }
-      }
-      const newBall = getNewBallPosition(
-        state.ball,
-        newDirection || state.ballDirection
-      );
+      const newBall = getNewBallPosition(state.ball, newBallTop, newBallRight);
+
       if (newBall[0] === BOARD_HEIGHT) {
         state.isGameOver = true;
         break;
       }
 
+      newState.score = state.score + score;
+      newState.bricks = newBricks;
       newState.ball = newBall;
-      if (newDirection) {
-        newState.ballDirection = newDirection;
-      }
+      newState.ballTop = newBallTop;
+      newState.ballRight = newBallRight;
       break;
     default:
       const unhandledType: string = action.type;
