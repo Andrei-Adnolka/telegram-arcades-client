@@ -24,6 +24,7 @@ const START_SPACESHIP = [
   [16, 3],
   [16, 4],
   [16, 5],
+  [16, 6],
 ];
 const START_BALL = [15, 4];
 
@@ -115,13 +116,17 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         break;
       }
 
+      if (column === BOARD_WIDTH - 1 || column === 0) {
+        newBallRight *= -1;
+      }
+
       const { isTouchRowBricks, isTouchColumnBricks, newBricks, score } =
         getTouchBricks(state.ball, state.bricks, newBallTop, newBallRight);
 
       if (isTouchRowBricks || row === 0) {
         newBallTop *= -1;
       }
-      if (isTouchColumnBricks || column === BOARD_WIDTH - 1 || column === 0) {
+      if (isTouchColumnBricks) {
         newBallRight *= -1;
       }
 

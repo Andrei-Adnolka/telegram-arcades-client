@@ -79,7 +79,7 @@ export function useSpaceship() {
         if (!isBallStarted) {
           setIsBallStarted(true);
         } else {
-          setBallSpeed(isTouchStart ? speed / 2 : speed);
+          setBallSpeed(isTouchStart ? speed / 3 : speed);
         }
       }
     },

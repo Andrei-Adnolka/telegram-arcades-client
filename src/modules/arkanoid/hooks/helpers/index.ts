@@ -13,7 +13,22 @@ export const getNewBallPosition = (
   ball: number[],
   top: number,
   right: number
-) => [ball[0] + top, ball[1] + right];
+) => {
+  let newRow = ball[0] + top;
+  let newColumn = ball[1] + right;
+
+  if (newRow < 0) {
+    newRow = 1;
+  }
+  if (newColumn < 0) {
+    newColumn = 0;
+  }
+  if (newColumn > 9) {
+    newColumn = 9;
+  }
+
+  return [newRow, newColumn];
+};
 
 export const getTouchBricks = (
   ball: number[],
@@ -29,11 +44,8 @@ export const getTouchBricks = (
 
   const ballRow = ball[0];
   const ballColumn = ball[1];
-  const [newRow, newColumn] = getNewBallPosition(
-    ball,
-    newBallTop,
-    newBallRight
-  );
+  const data = getNewBallPosition(ball, newBallTop, newBallRight);
+  const [newRow, newColumn] = data;
 
   newBricks.forEach((el, i) => {
     const brickRow = el[0];

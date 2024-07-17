@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const LEVELS = [
-  { speed: 630, score: { start: 0, end: 2000 } },
+  { speed: 400, score: { start: 0, end: 2000 } },
   { speed: 580, score: { start: 2000, end: 5000 } },
   { speed: 500, score: { start: 5000, end: 7500 } },
   { speed: 450, score: { start: 7500, end: 10000 } },
@@ -14,7 +14,7 @@ export const LEVELS = [
 
 export const useLevel = (score: number) => {
   const [level, setLevel] = useState(1);
-  const [speed, setSpeed] = useState(LEVELS[3].speed);
+  const [speed, setSpeed] = useState(LEVELS[0].speed);
 
   useEffect(() => {
     const handler = setTimeout(() => {
