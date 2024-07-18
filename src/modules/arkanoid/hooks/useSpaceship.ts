@@ -60,7 +60,7 @@ export function useSpaceship() {
       return;
     }
     dispatchBoardState({ type: "ballMove" });
-  }, [ball, dispatchBoardState, isBallStarted]);
+  }, [ball, dispatchBoardState]);
 
   useEffect(() => {
     if (isLeftFireStore !== null) {
@@ -70,7 +70,7 @@ export function useSpaceship() {
         dispatchBoardState({ type: "setIsLeftFire" });
       }, 2000);
     }
-  }, [isLeftFireStore]);
+  }, [isLeftFireStore, dispatchBoardState]);
 
   useEffect(() => {
     setSpeed(levelData.speed);
@@ -82,7 +82,7 @@ export function useSpaceship() {
       setIsPlaying(false);
       onSendHightScore(score);
     }
-  }, [isGM, score]);
+  }, [isGM, score, onSendHightScore]);
 
   useInterval(() => {
     if (isPlaying && isBallStarted && isLeftFire === null) {
