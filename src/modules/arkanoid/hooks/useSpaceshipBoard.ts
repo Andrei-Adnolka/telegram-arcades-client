@@ -18,6 +18,7 @@ type BoardState = {
   score: number;
   ballTop: number;
   ballRight: number;
+  lives: number;
 };
 
 const START_SPACESHIP = [
@@ -40,6 +41,7 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
       ballRight: 1,
       bricks: FIRST_LEVEL,
       score: 0,
+      lives: 4,
     },
     (emptyState) => {
       const state = {
@@ -76,6 +78,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         isGameOver: false,
         bricks: FIRST_LEVEL,
         score: 0,
+        lives: 4,
       };
     case "shipMove":
       let isCollisionWithBoard = false;
@@ -132,7 +135,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
 
       let isTouchSpacehips = false;
 
-      state.spaceship.forEach((el, i, array) => {
+      state.spaceship.forEach((el, index, array) => {
         if (!isTouchSpacehips) {
           const newBall = getNewBallPosition(
             state.ball,
@@ -141,7 +144,10 @@ function boardReducer(state: BoardState, action: Action): BoardState {
           );
           if (JSON.stringify(newBall) === JSON.stringify(el)) {
             newBallTop *= -1;
-            if (i === 0 && newBallRight === 1) {
+            if (
+              (index === 0 && newBallRight === 1) ||
+              (array.length - 1 === index && newBallRight === -1)
+            ) {
               newBallRight *= -1;
             }
           }
@@ -151,7 +157,10 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       const newBall = getNewBallPosition(state.ball, newBallTop, newBallRight);
 
       if (newBall[0] === BOARD_HEIGHT) {
+        // const newLifes = state.lives - 1;
+        // if (newLifes === 0) {
         state.isGameOver = true;
+        // }
         break;
       }
 
