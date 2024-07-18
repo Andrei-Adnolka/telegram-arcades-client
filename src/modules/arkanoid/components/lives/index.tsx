@@ -1,5 +1,3 @@
-import { Block, SHAPES } from "../../../../types";
-
 import "./style.scss";
 
 interface Props {
