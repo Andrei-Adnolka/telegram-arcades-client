@@ -80,11 +80,6 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
   return [boardState, dispatchBoardState];
 }
 
-const findBallNewPosition = (spaceship: number[][]) => [
-  spaceship[1][0] - 1,
-  spaceship[1][1],
-];
-
 type Action = {
   type: "start" | "shipMove" | "ballMove" | "startBall" | "setIsLeftFire";
   newBoard?: BoardShape;
