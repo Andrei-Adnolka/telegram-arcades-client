@@ -6,6 +6,7 @@ import { PauseSvg } from "../../svg/pause";
 import { ContinueSvg } from "../../svg/continue";
 
 import UpcomingBlocks from "../../modules/tetris/components/upcoming-blocks";
+import LivesBlock from "../../modules/arkanoid/components/lives";
 import { ButtonIds } from "../../constants";
 import { Block, BoardShape } from "../../types";
 
@@ -27,6 +28,8 @@ type Props = {
   isStart: boolean;
   isContinue: boolean;
   isShowUpcomingsBlocks?: boolean;
+  isShowLives?: boolean;
+  lives?: number;
   title: string;
 };
 
@@ -47,6 +50,8 @@ const BoardWithButtons: FC<Props> = (props) => {
     onContinue,
     handleTouchDown,
     isShowUpcomingsBlocks,
+    isShowLives,
+    lives,
     title,
   } = props;
 
@@ -95,6 +100,11 @@ const BoardWithButtons: FC<Props> = (props) => {
               {isStoppedGame ? (
                 <UpcomingBlocks upcomingBlocks={upcomingBlocks} />
               ) : null}
+            </div>
+          ) : null}
+          {isShowLives ? (
+            <div className="new_game_with_upcoming">
+              <LivesBlock lives={lives} />
             </div>
           ) : null}
           <div className="pause_button">

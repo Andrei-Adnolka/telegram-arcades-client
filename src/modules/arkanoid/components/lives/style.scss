@@ -1,0 +1,24 @@
+.lives {
+  &_title {
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  &_blocks {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 50%;
+
+    >div {
+      flex-basis: 50%;
+      border: 5px double rgb(150, 183, 156);
+      max-width: 18px;
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+      background-color: black;
+    }
+  }
+
+
+}

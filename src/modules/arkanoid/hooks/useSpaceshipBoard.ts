@@ -14,6 +14,7 @@ type BoardState = {
   spaceship: number[][];
   ball: number[];
   isGameOver: boolean;
+  isBallStarted: boolean;
   bricks: number[][];
   score: number;
   ballTop: number;
@@ -37,6 +38,7 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
       spaceship: START_SPACESHIP,
       ball: START_BALL,
       isGameOver: false,
+      isBallStarted: false,
       ballTop: -1,
       ballRight: 1,
       bricks: FIRST_LEVEL,
@@ -56,7 +58,7 @@ export function useSpaceshipBoard(): [BoardState, Dispatch<Action>] {
 }
 
 type Action = {
-  type: "start" | "shipMove" | "ballMove";
+  type: "start" | "shipMove" | "ballMove" | "startBall";
   newBoard?: BoardShape;
   row?: number;
   column?: number;
@@ -76,6 +78,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         ballTop: -1,
         ballRight: -1,
         isGameOver: false,
+        isBallStarted: false,
         bricks: FIRST_LEVEL,
         score: 0,
         lives: 4,
@@ -100,6 +103,10 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         ];
       }
       break;
+    case "startBall": {
+      newState.isBallStarted = true;
+      break;
+    }
     case "ballMove":
       let [row, column] = state.ball;
       let newBallTop = state.ballTop;
@@ -157,10 +164,14 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       const newBall = getNewBallPosition(state.ball, newBallTop, newBallRight);
 
       if (newBall[0] === BOARD_HEIGHT) {
-        // const newLifes = state.lives - 1;
-        // if (newLifes === 0) {
-        state.isGameOver = true;
-        // }
+        const newLifes = state.lives - 1;
+        state.isBallStarted = false;
+        newState.lives = newLifes;
+        const spaceshipPosition = state.spaceship[1];
+        newState.ball = [spaceshipPosition[0] - 1, spaceshipPosition[1]];
+        if (newLifes === 0) {
+          state.isGameOver = true;
+        }
         break;
       }
 

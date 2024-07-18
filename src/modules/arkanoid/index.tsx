@@ -5,7 +5,7 @@ import { useSpaceship } from "./hooks/useSpaceship";
 const ArkanoidGame = () => {
   const data = useSpaceship();
 
-  return <Board {...data} title="ARKANOID" />;
+  return <Board {...data} title="ARKANOID" isShowLives />;
 };
 
 export default ArkanoidGame;

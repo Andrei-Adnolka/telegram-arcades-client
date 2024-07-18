@@ -14,16 +14,23 @@ export function useSpaceship() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPause, setIsPause] = useState(false);
   const [ballSpeed, setBallSpeed] = useState<number>(0);
-  const [isBallStarted, setIsBallStarted] = useState(false);
 
   const [
-    { board, spaceship, bricks, score, isGameOver: isGM, ball },
+    {
+      board,
+      spaceship,
+      bricks,
+      score,
+      isBallStarted,
+      isGameOver: isGM,
+      ball,
+      lives,
+    },
     dispatchBoardState,
   ] = useSpaceshipBoard();
   const { level, speed } = useLevel(score);
 
   const startGame = useCallback(() => {
-    setIsBallStarted(false);
     setIsGameOver(false);
     setIsPause(false);
     setIsPlaying(true);
@@ -77,7 +84,7 @@ export function useSpaceship() {
       }
       if (id === ButtonIds.Rotate) {
         if (!isBallStarted) {
-          setIsBallStarted(true);
+          dispatchBoardState({ type: "startBall" });
         } else {
           setBallSpeed(isTouchStart ? speed / 3 : speed);
         }
@@ -107,6 +114,7 @@ export function useSpaceship() {
     onContinue: () => {},
     hightScore: 0,
     isContinue: false,
+    lives,
   };
 }
 
