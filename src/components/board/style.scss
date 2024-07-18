@@ -1,3 +1,8 @@
+@mixin animation {
+  animation-duration: 2s;
+  animation-timing-function: steps(2, end);
+}
+
 .board {
   margin: auto;
   border-right: 4px solid black;
@@ -7,9 +12,130 @@
 
   &.paused {
     opacity: .6;
+
     .Food {
       background-color: rgb(131, 157, 136);
       animation-name: none;
     }
+  }
+}
+
+.fire {
+  &.left_fire {
+    >div:nth-last-child(-n+5) {
+
+      div[data-name='15-4'],
+      div[data-name='14-4'],
+      div[data-name='13-4'],
+      div[data-name='12-4'],
+      div[data-name='12-3'],
+      div[data-name='12-2'],
+      div[data-name='12-1'],
+      div[data-name='12-0'],
+      div[data-name='13-0'],
+      div[data-name='14-0'],
+      div[data-name='15-0'],
+      div[data-name='16-0'],
+      div[data-name='16-1'],
+      div[data-name='16-2'],
+      div[data-name='16-3'],
+      div[data-name='16-4'] {
+        @include animation;
+        animation-name: crash2;
+      }
+
+      div[data-name='13-3'],
+      div[data-name='13-2'],
+      div[data-name='13-1'],
+      div[data-name='14-3'],
+      div[data-name='14-1'],
+      div[data-name='15-1'],
+      div[data-name='15-2'],
+      div[data-name='15-3'] {
+        @include animation;
+        animation-name: crash1;
+      }
+    }
+  }
+
+  &.right_fire {
+    >div:nth-last-child(-n+5) {
+      div[data-name='15-5'],
+      div[data-name='14-5'],
+      div[data-name='13-5'],
+      div[data-name='12-5'],
+      div[data-name='12-6'],
+      div[data-name='12-7'],
+      div[data-name='12-8'],
+      div[data-name='12-9'],
+      div[data-name='13-9'],
+      div[data-name='14-9'],
+      div[data-name='15-9'],
+      div[data-name='16-9'],
+      div[data-name='16-8'],
+      div[data-name='16-7'],
+      div[data-name='16-6'],
+      div[data-name='16-5'] {
+        @include animation;
+        animation-name: crash2;
+      }
+
+      div[data-name='13-8'],
+      div[data-name='13-7'],
+      div[data-name='13-6'],
+      div[data-name='14-6'],
+      div[data-name='14-8'],
+      div[data-name='15-8'],
+      div[data-name='15-7'],
+      div[data-name='15-6'] {
+        @include animation;
+        animation-name: crash1;
+      }
+    }
+  }
+}
+
+@keyframes crash1 {
+  40% {
+    background-color: black;
+  }
+  45% {
+    background-color: rgb(131, 157, 136);
+  }
+  60% {
+    background-color: rgb(131, 157, 136);
+  }
+  80% {
+    background-color: black;
+  }
+  85% {
+    background-color: rgb(131, 157, 136);
+  }
+  95% {
+    background-color: rgb(131, 157, 136);
+  }
+}
+
+@keyframes crash2 {
+  0% {
+    background-color: rgb(131, 157, 136);
+  }
+  40% {
+    background-color: rgb(131, 157, 136);
+  }
+  60% {
+    background-color: black;
+  }
+  65% {
+    background-color: rgb(131, 157, 136);
+  }
+  80% {
+    background-color: rgb(131, 157, 136);
+  }
+  95% {
+    background-color: black;
+  }
+  100% {
+    background-color: rgb(131, 157, 136);
   }
 }

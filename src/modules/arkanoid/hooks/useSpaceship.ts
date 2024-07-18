@@ -1,65 +1,50 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { BoardShape, SpaceshipCell, SpaceshipShape } from "../../../types";
+import { BoardShape } from "../../../types";
 import { useInterval } from "../../../hooks/useInterval";
 import { ButtonIds } from "../../../constants";
 
 import { useSpaceshipBoard } from "./useSpaceshipBoard";
-import { useLevel } from "./useLevel";
-import { BOARD_HEIGHT, BOARD_WIDTH } from "./helpers";
-
-enum Directions {
-  RightTop = "right_top",
-  RightBottom = "right_bottom",
-  LeftTop = "left_top",
-  LeftBottom = "left_bottom",
-}
-
-const getDirection = (direction: Directions) => {
-  switch (direction) {
-    case Directions.RightTop: {
-      return { column: 1, row: -1 };
-    }
-    case Directions.RightBottom: {
-      return { column: 1, row: 1 };
-    }
-    case Directions.LeftTop: {
-      return { column: -1, row: -1 };
-    }
-    case Directions.LeftBottom: {
-      return { column: -1, row: 1 };
-    }
-    default: {
-      return { row: 0, column: 0 };
-    }
-  }
-};
+import { BOARD_HEIGHT, addShapeToBoard } from "./helpers";
+import { useHightScore } from "../../../hooks/useHighScore";
+import { COOKIES_HIGHT_SCORE_NAME } from "./constants";
 
 export function useSpaceship() {
-  const [score, setScore] = useState(0);
   const [isStart, setIsStart] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isPause, setIsPause] = useState(false);
-  const [ballSpeed, setBallSpeed] = useState<number>(0);
-  const [isBallStarted, setIsBallStarted] = useState(false);
-  const [ballDirection, setBallDirection] = useState(Directions.LeftTop);
+  const [speed, setSpeed] = useState<number>(0);
+  const [isLeftFire, setIsLeftFire] = useState<boolean | null>(null);
 
-  const { level, speed } = useLevel(score);
+  const [
+    {
+      board,
+      spaceship,
+      bricks,
+      score,
+      isBallStarted,
+      isGameOver: isGM,
+      ball,
+      lives,
+      levelData,
+      isLeftFire: isLeftFireStore,
+    },
+    dispatchBoardState,
+  ] = useSpaceshipBoard();
 
-  const [{ board, spaceship, ball }, dispatchBoardState] = useSpaceshipBoard();
+  const { hightScore, onSendHightScore } = useHightScore(
+    COOKIES_HIGHT_SCORE_NAME
+  );
 
   const startGame = useCallback(() => {
-    setIsBallStarted(false);
     setIsGameOver(false);
     setIsPause(false);
-    setScore(0);
     setIsPlaying(true);
     setIsStart(true);
-    setBallSpeed(speed);
+    setSpeed(levelData.speed);
     dispatchBoardState({ type: "start" });
-    setBallDirection(Directions.RightTop);
-  }, [dispatchBoardState, speed]);
+  }, [dispatchBoardState, levelData.speed]);
 
   const pauseGame = useCallback(() => {
     if (isStart) {
@@ -69,102 +54,69 @@ export function useSpaceship() {
   }, [isStart]);
 
   const gameTick = useCallback(() => {
-    if (isBallStarted) {
-      let row = ball[0];
-      let column = ball[1];
-
-      let direction = getDirection(ballDirection);
-
-      let newRow = row + direction.row;
-      let newColumn = column + direction.column;
-
-      if (newRow === BOARD_HEIGHT) {
-        setIsGameOver(true);
-        setIsPlaying(false);
-        return;
-      }
-
-      let newDirection = ballDirection;
-
-      if (newColumn === BOARD_WIDTH) {
-        if (ballDirection === Directions.RightBottom) {
-          newDirection = Directions.LeftBottom;
-        } else {
-          newDirection = Directions.LeftTop;
-        }
-      }
-
-      if (newColumn === 0) {
-        if (ballDirection === Directions.LeftBottom) {
-          newDirection = Directions.RightBottom;
-        } else {
-          newDirection = Directions.RightTop;
-        }
-      }
-
-      if (newRow === 0) {
-        if (ballDirection === Directions.RightTop) {
-          newDirection = Directions.RightBottom;
-        }
-        if (ballDirection === Directions.LeftTop) {
-          newDirection = Directions.LeftBottom;
-        }
-      }
-
-      if (newDirection) {
-        setBallDirection(newDirection);
-        direction = getDirection(newDirection);
-      }
-
-      newRow = row + direction.row;
-      newColumn = column + direction.column;
-      const newBoard = structuredClone(board) as BoardShape;
-      addShapeToBoard(newBoard, spaceship, [newRow, newColumn]);
-
-      dispatchBoardState({ type: "ballMove", row: newRow, column: newColumn });
-    }
-  }, [
-    ball,
-    ballDirection,
-    board,
-    dispatchBoardState,
-    isBallStarted,
-    spaceship,
-  ]);
-
-  useInterval(() => {
-    if (!isPlaying) {
+    if (ball[0] === BOARD_HEIGHT) {
+      setIsGameOver(true);
+      setIsPlaying(false);
       return;
     }
-    gameTick();
-  }, ballSpeed);
+    dispatchBoardState({ type: "ballMove" });
+  }, [ball, dispatchBoardState, isBallStarted]);
+
+  useEffect(() => {
+    if (isLeftFireStore !== null) {
+      setIsLeftFire(isLeftFireStore);
+      setTimeout(() => {
+        setIsLeftFire(null);
+        dispatchBoardState({ type: "setIsLeftFire" });
+      }, 2000);
+    }
+  }, [isLeftFireStore]);
+
+  useEffect(() => {
+    setSpeed(levelData.speed);
+  }, [levelData.speed]);
+
+  useEffect(() => {
+    if (isGM) {
+      setIsGameOver(true);
+      setIsPlaying(false);
+      onSendHightScore(score);
+    }
+  }, [isGM, score]);
+
+  useInterval(() => {
+    if (isPlaying && isBallStarted && isLeftFire === null) {
+      gameTick();
+      return;
+    }
+  }, speed);
 
   const handleTouchDown = useCallback(
     (id: ButtonIds, isTouchStart?: boolean) => {
-      if (!isPlaying) {
+      if (!isPlaying || isLeftFire !== null) {
         return;
       }
       if (id === ButtonIds.Left) {
-        dispatchBoardState({ type: "shipMove", column: -1, isLast: true });
+        dispatchBoardState({ type: "shipMove", isLeft: true, isBallStarted });
       }
       if (id === ButtonIds.Right) {
-        dispatchBoardState({ type: "shipMove", column: 1, isLast: false });
+        dispatchBoardState({ type: "shipMove", isLeft: false, isBallStarted });
       }
       if (id === ButtonIds.Rotate) {
         if (!isBallStarted) {
-          setIsBallStarted(true);
+          dispatchBoardState({ type: "startBall" });
         } else {
-          setBallSpeed(isTouchStart ? speed / 2 : speed);
+          setSpeed(isTouchStart ? levelData.speed / 3 : levelData.speed);
         }
       }
     },
-    [dispatchBoardState, isBallStarted, isPlaying, speed]
+    [dispatchBoardState, isBallStarted, isPlaying, levelData.speed, isLeftFire]
   );
 
   const renderedBoard = structuredClone(board) as BoardShape;
 
   if (isPlaying) {
-    addShapeToBoard(renderedBoard, spaceship, ball);
+    addShapeToBoard(renderedBoard, spaceship, ball, bricks);
   }
 
   return {
@@ -174,24 +126,15 @@ export function useSpaceship() {
     pauseGame,
     isPlaying,
     isPause,
-    level,
+    level: levelData.level,
+    isLeftFire,
     isStart,
     isGameOver,
     score,
     speed,
+    onContinue: () => {},
+    hightScore,
+    isContinue: false,
+    lives,
   };
-}
-
-function addShapeToBoard(
-  board: BoardShape,
-  spaceship: SpaceshipShape,
-  ball: number[]
-) {
-  spaceship.forEach(([row, column]) => {
-    board[row][column] = SpaceshipCell.Spaceship;
-  });
-
-  if (ball) {
-    board[ball[0]][ball[1]] = SpaceshipCell.Ball;
-  }
 }

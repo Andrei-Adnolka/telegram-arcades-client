@@ -1,6 +1,7 @@
 .upcoming {
   &_title {
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    font-weight: 700;
   }
   &_blocks {
     display: flex;
@@ -15,9 +16,9 @@
       }
 
       .cell {
-        width: 16px;
-        height: 16px;
-        border: 6px double rgb(131, 157, 136);
+        width: 18px;
+        height: 18px;
+        border: 5px double rgb(150 183 156);
       }
     }
   }

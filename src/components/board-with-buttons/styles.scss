@@ -74,9 +74,9 @@ h1 {
 }
 
 .info_block {
+  font-weight: 700;
   >div:last-of-type {
     font-size: 18px;
-    font-weight: 700;
   }
 
   &::after {
@@ -90,7 +90,7 @@ h1 {
   }
 
   &>div:first-of-type {
-    padding-bottom: 4px;
+    padding-bottom: 6px;
   }
 }
 
@@ -99,7 +99,7 @@ h1 {
   flex-direction: column;
   text-align: center;
   width: 90px;
-  gap: 16px;
+  gap: 12px;
   padding-top: 16px;
   position: relative;
   z-index: 1;

@@ -145,7 +145,7 @@ $main-color-two: #edd905;
       width: 110px;
       height: 110px;
       &::after {
-        @include buttonsHint("ROTATE/SPEED", -22%);
+        @include buttonsHint("ROTATE/SPEED/FIRE", -22%);
       }
 
       >svg {
