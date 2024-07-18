@@ -201,7 +201,7 @@ function boardReducer(state: BoardState, action: Action): BoardState {
       const newBall = getNewBallPosition(state.ball, newBallTop, newBallRight);
       if (newBall[0] === BOARD_HEIGHT) {
         const newLifes = state.lives - 1;
-        state.isBallStarted = false;
+        newState.isBallStarted = false;
         newState.lives = newLifes;
         newState.isLeftFire = newBall[1] < 5;
         newState.spaceship = [];
@@ -224,7 +224,8 @@ function boardReducer(state: BoardState, action: Action): BoardState {
         const newLevel = LEVELS[state.levelData.index + 1];
         newState.bricks = newLevel.bricksState;
         newState.levelData = newLevel;
-        newState.ball = findBallNewPosition(state.spaceship);
+        newState.spaceship = START_SPACESHIP;
+        newState.ball = START_BALL;
         break;
       } else {
         newState.bricks = newBricks;
