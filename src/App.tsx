@@ -30,7 +30,7 @@ function App() {
             <a href="/snake">02 SNAKE</a>
             <a href="/race">03 RACE</a>
             <a href="/shot">04 SHOT</a>
-            {/* <a href="/arkanoid">ARKANOID</a> */}
+            <a href="/arkanoid">05 ARKANOID</a>
           </div>
         </div>
       )}

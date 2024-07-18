@@ -31,6 +31,7 @@ type Props = {
   isShowLives?: boolean;
   lives?: number;
   title: string;
+  isLeftFire?: boolean | null;
 };
 
 const BoardWithButtons: FC<Props> = (props) => {
@@ -53,6 +54,7 @@ const BoardWithButtons: FC<Props> = (props) => {
     isShowLives,
     lives,
     title,
+    isLeftFire,
   } = props;
 
   const isStoppedGame = isPlaying || isPause;
@@ -63,6 +65,7 @@ const BoardWithButtons: FC<Props> = (props) => {
         <Board
           currentBoard={board}
           isPaused={!isPlaying || isPause || isGameOver}
+          isLeftFire={isLeftFire}
         />
         {isGameOver ? (
           <div className="popup game_over_popup">GAME OVER</div>

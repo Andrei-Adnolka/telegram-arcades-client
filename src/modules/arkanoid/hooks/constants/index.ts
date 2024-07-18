@@ -199,3 +199,9 @@ export const FOURTH_LEVEL = [
   [0, 1],
   [0, 0],
 ];
+
+export const BRIKS_LEVELS = [FIRST_LEVEL, SECOND_LEVEL, THIRD_LEVEL, FOURTH_LEVEL];
+
+
+export const COOKIES_HIGHT_SCORE_NAME = "arkanoid-hight-score";
+export const STORAGE_NAME = "arkanoid-return-data";

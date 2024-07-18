@@ -1,4 +1,4 @@
-import { BoardShape, EmptyCell } from "../../../../types";
+import { BoardShape, DefaultShape, EmptyCell, SpaceshipCell } from "../../../../types";
 
 export const BOARD_WIDTH = 10;
 export const BOARD_HEIGHT = 17;
@@ -83,3 +83,23 @@ export const getTouchBricks = (
 
   return { isTouchRowBricks, isTouchColumnBricks, newBricks, score };
 };
+
+export function addShapeToBoard(
+  board: BoardShape,
+  spaceship: DefaultShape,
+  ball: number[],
+  bricks: DefaultShape
+) {
+  if (spaceship.length) {
+    spaceship.forEach(([row, column]) => {
+      board[row][column] = SpaceshipCell.Spaceship;
+    });
+  }
+  bricks.forEach(([row, column]) => {
+    board[row][column] = SpaceshipCell.Spaceship;
+  });
+
+  if (ball?.length) {
+    board[ball[0]][ball[1]] = SpaceshipCell.Ball;
+  }
+}
