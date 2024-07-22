@@ -1,7 +1,7 @@
-import TelegramBot from "node-telegram-bot-api";
-import express from "express";
-import cors from "cors";
-import path from "path";
+const TelegramBot = require("node-telegram-bot-api");
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
 
 const token = "7472585101:AAGq0B8MME-Y9NhQFVCLZe_2sDliiWp92mg";
 const webAppUrl = "https://telegram-arcade-client.netlify.app/";
@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(path.resolve(__dirname, "../client/build")));
+// app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
@@ -29,8 +29,8 @@ bot.on("message", async (msg) => {
 
 const PORT = 8000;
 
-app.get("*", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
+// app.get("*", (_, res) => {
+//   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+// });
 
 app.listen(PORT, () => console.log("server started on PORT " + PORT));
