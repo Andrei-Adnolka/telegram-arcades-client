@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import dynamic from "next/dynamic";
 import { TelegramProvider } from "src/provider/telegram";
 import { useMounted } from "src/hooks/useMounted";
 
-const App = dynamic(() => import("../../src/App"), { ssr: false });
+const App = dynamic(() => import("../src/App"), { ssr: false });
+import "../src/style.scss";
 
-export function ClientOnly() {
+function Page() {
   const mounted = useMounted();
 
   return mounted ? (
@@ -19,3 +19,4 @@ export function ClientOnly() {
     </TelegramProvider>
   ) : null;
 }
+export default Page;
