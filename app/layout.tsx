@@ -1,11 +1,9 @@
-"use client";
+import type { Metadata } from "next";
 
-// import type { Metadata } from "next";
-
-// export const metadata: Metadata = {
-//   title: "Brick games",
-//   description: "Amazing bricks games",
-// };
+export const metadata: Metadata = {
+  title: "Brick games",
+  description: "Amazing bricks games",
+};
 
 export default function RootLayout({
   children,
@@ -22,7 +20,7 @@ export default function RootLayout({
           async
         ></script>
       </head>
-      <body onContextMenu={() => false}>
+      <body>
         <div id="root">{children}</div>
       </body>
     </html>
