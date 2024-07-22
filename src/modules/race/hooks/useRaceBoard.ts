@@ -59,7 +59,7 @@ const updatedCarForCheckingCollisions = (cars: number[][]) => {
   return cars.reduce((acc, next) => {
     const row = next[0];
     const column = next[1];
-    let newParts = [];
+    let newParts = [] as number[][];
     if (column !== leftDot) {
       newParts.push([row, leftDot]);
     }

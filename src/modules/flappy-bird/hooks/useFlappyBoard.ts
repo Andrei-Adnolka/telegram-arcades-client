@@ -11,22 +11,15 @@ type State = {
 };
 
 export function useFlappyBoard(): [State, Dispatch<Action>] {
-  const [boardState, dispatchBoardState] = useReducer(
-    boardReducer,
-    {
-      status: "stopped",
-      y: 250,
-      r: 0,
-      x: 300,
-      pipes: [],
-      score: 0,
-      prevIds: [],
-    }
-    // (emptyState) => {
-    //   const state = { ...emptyState };
-    //   return state;
-    // }
-  );
+  const [boardState, dispatchBoardState] = useReducer(boardReducer, {
+    status: "stopped",
+    y: 250,
+    r: 0,
+    x: 300,
+    pipes: [],
+    score: 0,
+    prevIds: [],
+  });
 
   return [boardState, dispatchBoardState];
 }
