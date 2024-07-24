@@ -19,7 +19,7 @@ function App() {
   useBackButton();
 
   return (
-    <div className="app" onContextMenu={() => false}>
+    <div className="app">
       {isLoadedGame && isShowSound ? (
         <div className="back_button_wrapper">
           <AudioComponent />
