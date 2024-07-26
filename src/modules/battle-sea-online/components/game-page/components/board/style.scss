@@ -1,0 +1,6 @@
+.battle-board {
+  display: grid;
+  margin: auto;
+  position: relative;
+  grid-template-columns: repeat(10, 26px);
+}
