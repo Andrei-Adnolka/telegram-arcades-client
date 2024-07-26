@@ -1,0 +1,18 @@
+.battle-cell {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-size: 33% 33%;
+  margin: 1px;
+  border-radius: 2px;
+  background-color: white;
+  &.grey {
+    background-color: rgb(146, 142, 142);
+  }
+  &.red {
+    background-color: rgb(193, 8, 8);
+  }
+  &.blue {
+    background-color: rgb(107, 127, 228);
+  }
+}
