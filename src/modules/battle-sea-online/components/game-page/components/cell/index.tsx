@@ -5,7 +5,7 @@ import "./style.scss";
 
 type Props = {
   cell: Cell;
-  addMark: (x: number, y: number) => void;
+  addMark: (position: number) => void;
 };
 
 const CellUI: FC<Props> = ({ cell, addMark }) => {
@@ -15,7 +15,7 @@ const CellUI: FC<Props> = ({ cell, addMark }) => {
   return (
     <div
       className={cellClasses.join(" ")}
-      onClick={() => addMark(cell.x, cell.y)}
+      onClick={() => addMark(cell.position)}
     >
       {cell?.mark?.name === "miss" ? (
         <div>&#183;</div>

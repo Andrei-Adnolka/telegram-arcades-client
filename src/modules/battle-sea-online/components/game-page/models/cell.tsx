@@ -3,16 +3,14 @@ import { Board } from "./board";
 
 export class Cell {
   board: Board;
-  x: number;
-  y: number;
+  position: number;
   mark: Mark | null;
-  id: string;
+  id: number;
 
-  constructor(board: Board, x: number, y: number, mark: Mark | null) {
-    this.x = x;
-    this.y = y;
+  constructor(board: Board, position: number, mark: Mark | null) {
+    this.position = position;
     this.board = board;
     this.mark = mark;
-    this.id = `${x}-${y}`;
+    this.id = position;
   }
 }

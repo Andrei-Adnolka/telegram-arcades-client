@@ -11,7 +11,7 @@ type Props = {
   shipsReady?: boolean;
   isMyBoard?: boolean;
   canShoot: boolean;
-  shoot?: (x: number, y: number) => void;
+  shoot?: (position: number) => void;
 };
 
 const BoardUI: FC<Props> = ({
@@ -24,11 +24,9 @@ const BoardUI: FC<Props> = ({
 }) => {
   const boardClasses = ["battle-board"];
 
-  const addMark = (x: number, y: number) => {
-    if (!shipsReady && isMyBoard) {
-      board.addShip(x, y);
-    } else if (canShoot && !isMyBoard) {
-      shoot?.(x, y);
+  const addMark = (position: number) => {
+    if (canShoot && !isMyBoard && shipsReady) {
+      shoot?.(position);
     }
     updatedBoard();
   };
@@ -44,12 +42,10 @@ const BoardUI: FC<Props> = ({
 
   return (
     <div className={boardClasses.join(" ")}>
-      {board.cells.map((row, index) => {
+      {board.cells.map((cell, index) => {
         return (
           <Fragment key={index}>
-            {row.map((cell) => (
-              <CellUI key={cell.id} cell={cell} addMark={addMark} />
-            ))}
+            <CellUI key={cell.id} cell={cell} addMark={addMark} />
           </Fragment>
         );
       })}

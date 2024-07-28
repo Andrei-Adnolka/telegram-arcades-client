@@ -3,20 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Board } from "./models/board";
 import BoardUI from "./components/board";
 import ActionsInfo from "./components/actions-info";
+import { changeBoardAfterShoot, getSendData } from "./helpers";
+import { getRandomShips } from "./helpers/ships";
 
 const wss = new WebSocket("ws://localhost:4000");
-
-const changeBoardAfterShoot = (
-  board: Board,
-  setBoard: (board: Board) => void,
-  x: number,
-  y: number,
-  isPerfectHit: boolean
-) => {
-  isPerfectHit ? board.addDamage(x, y) : board.addMiss(x, y);
-  const newBoard = board.getCopyBoard();
-  setBoard(newBoard);
-};
 
 const GamePageUI = () => {
   const [myBoard, setMyBoard] = useState(new Board());
@@ -25,40 +15,49 @@ const GamePageUI = () => {
   const [shipsReady, setShipsReady] = useState(false);
   const [canShoot, setCanShoot] = useState(false);
 
-  const { gameId } = useParams();
+  const params = useParams();
+  const gameId = params.gameId as string;
   const navigate = useNavigate();
 
-  const restart = () => {
+  const getInitBoard = () => {
     const newMyBoard = new Board();
-    const newHisBoard = new Board();
     newMyBoard.initCells();
-    newHisBoard.initCells();
-    setMyBoard(newMyBoard);
-    setHisBoard(newHisBoard);
+    return newMyBoard;
   };
 
-  const shoot = (x: number, y: number) => {
+  const getMyShips = () => {
+    const newMyBoard = getInitBoard();
+    const randomShips = getRandomShips();
+    randomShips.forEach((ship) => {
+      newMyBoard.addFullShip(ship.shipLocation);
+    });
+    setMyBoard(newMyBoard);
+  };
+
+  const restart = () => {
+    const newHisBoard = getInitBoard();
+    setHisBoard(newHisBoard);
+    getMyShips();
+  };
+
+  const shoot = (position: number) => {
     wss.send(
-      JSON.stringify({
-        event: "shoot",
-        payload: { username: localStorage.nickname, x, y, gameId },
+      getSendData("shoot", {
+        username: localStorage.nickname,
+        position,
+        gameId,
       })
     );
   };
 
   const ready = () => {
-    wss.send(
-      JSON.stringify({
-        event: "ready",
-        payload: { username: localStorage.nickname, gameId },
-      })
-    );
+    wss.send(getSendData("ready", { username: localStorage.nickname, gameId }));
     setShipsReady(true);
   };
 
   wss.onmessage = function (response) {
     const { type, payload } = JSON.parse(response.data);
-    const { username, x, y, rivalName, success } = payload;
+    const { username, position, rivalName, success } = payload;
     switch (type) {
       case "connectToPlay":
         if (!success) {
@@ -73,14 +72,9 @@ const GamePageUI = () => {
         break;
       case "afterShootByMe":
         if (username !== localStorage.nickname) {
-          const isPerfectHit = myBoard.cells[y][x]?.mark?.name === "ship";
-          changeBoardAfterShoot(myBoard, setMyBoard, x, y, isPerfectHit);
-          wss.send(
-            JSON.stringify({
-              event: "checkShoot",
-              payload: { ...payload, isPerfectHit },
-            })
-          );
+          const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
+          changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
+          wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
           if (!isPerfectHit) {
             setCanShoot(true);
           }
@@ -91,8 +85,7 @@ const GamePageUI = () => {
           changeBoardAfterShoot(
             hisBoard,
             setHisBoard,
-            x,
-            y,
+            position,
             payload.isPerfectHit
           );
           setCanShoot(payload.isPerfectHit);
@@ -106,10 +99,7 @@ const GamePageUI = () => {
   useEffect(() => {
     if (gameId) {
       wss.send(
-        JSON.stringify({
-          event: "connect",
-          payload: { username: localStorage.nickname, gameId },
-        })
+        getSendData("connect", { username: localStorage.nickname, gameId })
       );
       restart();
     }
@@ -117,10 +107,10 @@ const GamePageUI = () => {
 
   return (
     <div>
-      PLASE SHIPS
-      <div>
-        <div>
-          <p>{localStorage.nickname}</p>
+      <h1>PLASE SHIPS</h1>
+      <div className="battle_sea_wrapper__boards">
+        <div className="battle_sea_wrapper__board">
+          <p>YOUR BOARD</p>
           <BoardUI
             board={myBoard}
             isMyBoard
@@ -129,17 +119,33 @@ const GamePageUI = () => {
             canShoot={false}
           />
         </div>
-        <div>
-          <p>{rivalName}</p>
-          <BoardUI
-            board={hisBoard}
-            setBoard={setHisBoard}
-            canShoot={canShoot}
-            shoot={shoot}
-          />
+        <ActionsInfo
+          onReady={ready}
+          onRandomShips={getMyShips}
+          canShoot={canShoot}
+          shipsReady={shipsReady}
+        />
+        <div className="battle_sea_wrapper__board">
+          {rivalName ? (
+            <>
+              <p>RIVAL BOARD {rivalName}</p>
+              <BoardUI
+                board={hisBoard}
+                setBoard={setHisBoard}
+                canShoot={canShoot}
+                shoot={shoot}
+              />
+            </>
+          ) : (
+            <div className="battle_sea_wrapper__wait">
+              <div>WAITING OPPONENT</div>
+              <div className="loader-container">
+                <div className="loader-2" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <ActionsInfo ready={ready} canShoot={canShoot} shipsReady={shipsReady} />
     </div>
   );
 };

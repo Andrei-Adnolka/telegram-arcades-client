@@ -4,15 +4,10 @@ import { Ship } from "../marks/Ship";
 import { Cell } from "./cell";
 
 export class Board {
-  cells = [] as Cell[][];
+  cells = [] as Cell[];
   initCells() {
-    for (let i = 0; i < 10; i++) {
-      const row = [] as Cell[];
-      for (let j = 0; j < 10; j++) {
-        row.push(new Cell(this, j, i, null));
-      }
-
-      this.cells.push(row);
+    for (let i = 0; i < 100; i++) {
+      this.cells.push(new Cell(this, i, null));
     }
   }
 
@@ -21,16 +16,23 @@ export class Board {
     newBoard.cells = this.cells;
     return newBoard;
   }
-  getCells(x: number, y: number) {
-    return this.cells[y][x];
+  getCells(position: number) {
+    return this.cells[position];
   }
-  addShip(x: number, y: number) {
-    new Ship(this.getCells(x, y));
+  // addShip(x: number, y: number) {
+  //   new Ship(this.getCells(x, y));
+  // }
+
+  addFullShip(array: number[]) {
+    array.forEach((part) => {
+      new Ship(this.getCells(part));
+    });
   }
-  addMiss(x: number, y: number) {
-    new Miss(this.getCells(x, y));
+
+  addMiss(position: number) {
+    new Miss(this.getCells(position));
   }
-  addDamage(x: number, y: number) {
-    new Damage(this.getCells(x, y));
+  addDamage(position: number) {
+    new Damage(this.getCells(position));
   }
 }
