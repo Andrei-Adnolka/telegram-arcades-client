@@ -1,26 +1,67 @@
-// @ts-nocheck
-import { SHIPS } from "../../constants";
-
-export const isCanDrop = (settedShips: [], currentShip: number[]) => {
-  return !settedShips.some((ship) => {
-    return (
-      currentShip.some((coordinate) => {
-        return ship.occupiedCells.some((cell) => cell === coordinate);
-      }) ||
-      currentShip.some((coordinate) => {
-        return ship.shipLocation.some((cell) => cell === coordinate);
-      })
-    );
-  });
-};
-
-export const getRandomNum = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
-
-export const getShipOrientation = () => !(getRandomNum(0, 1) === 1);
+import { getRandomNum, getShipOrientation } from "../../helpers/ships";
+import { IShip } from "../../types";
+import { isCanDrop } from "./isCanDrop";
 
 const notAvailableIndexesRight = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
 const notAvailableIndexesLeft = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+
+export const getCorrectShip = (
+  settedShips: IShip[],
+  newShips: IShip[],
+  ship: number
+) => {
+  if (newShips.length < 10) {
+    const isHorizontal = getShipOrientation();
+    const randomShip = getShip(ship, isHorizontal);
+    if (isCanDrop(settedShips, randomShip) && isCanDrop(newShips, randomShip)) {
+      const occupiedCells = getOccupiedCells(randomShip);
+      newShips.push({
+        shipLocation: randomShip,
+        decks: ship,
+        occupiedCells: occupiedCells,
+        woundedCells: [],
+        isHorizontal,
+      });
+    } else {
+      getCorrectShip(settedShips, newShips, ship);
+    }
+  }
+};
+
+export const getShip = (length: number, isHorizontal: boolean) => {
+  let maxIndex = 99;
+  let startPosition = 0;
+  switch (isHorizontal) {
+    case true:
+      maxIndex -= length - 1;
+      const getStartPosition = () => {
+        startPosition = getRandomNum(0, maxIndex);
+        if (
+          Math.floor(startPosition / 10) !==
+          Math.floor((startPosition + length - 1) / 10)
+        ) {
+          getStartPosition();
+        }
+        return startPosition;
+      };
+      startPosition = getStartPosition();
+      break;
+    case false:
+      maxIndex -= (length - 1) * 10;
+      startPosition = getRandomNum(0, maxIndex);
+  }
+
+  return new Array(length).fill(0).map((_, index) => {
+    const i = isHorizontal ? 1 * index : 10 * index;
+    return startPosition + i;
+  });
+};
+
+export const checkPosition = (ship: number[], cellsList: number[]) => {
+  const shipCells = [...ship];
+  shipCells.push(...getOccupiedCells(ship));
+  return shipCells.every((cell) => !cellsList.includes(cell));
+};
 
 export const getOccupiedCells = (ship: number[]) => {
   const sortedShip = [...ship].sort((a, b) => a - b);
@@ -82,40 +123,4 @@ export const getOccupiedCells = (ship: number[]) => {
     }
   }
   return occupiedCells;
-};
-
-export const checkPosition = (ship: number[], cellsList: number[]) => {
-  const shipCells = [...ship];
-  shipCells.push(...getOccupiedCells(ship));
-  return shipCells.every((cell) => !cellsList.includes(cell));
-};
-
-export const getShip = (length: number, isHorizontal: boolean) => {
-  let maxIndex = 99;
-  let startPosition = 0;
-
-  switch (isHorizontal) {
-    case true:
-      maxIndex -= length - 1;
-      const getStartPosition = () => {
-        startPosition = getRandomNum(0, maxIndex);
-        if (
-          Math.floor(startPosition / 10) !==
-          Math.floor((startPosition + length - 1) / 10)
-        ) {
-          getStartPosition();
-        }
-        return startPosition;
-      };
-      startPosition = getStartPosition();
-      break;
-    case false:
-      maxIndex -= (length - 1) * 10;
-      startPosition = getRandomNum(0, maxIndex);
-  }
-
-  return new Array(length).fill(0).map((_, index) => {
-    const i = isHorizontal ? 1 * index : 10 * index;
-    return startPosition + i;
-  });
 };

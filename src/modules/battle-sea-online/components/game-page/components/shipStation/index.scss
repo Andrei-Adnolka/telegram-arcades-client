@@ -1,0 +1,45 @@
+.ship-station {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 90px;
+  margin-bottom: 40px;
+  order: 0;
+
+  &_container,
+  &_discription {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 168px;
+  }
+
+  &_discription {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+  }
+
+  &_button {
+    width: 160px;
+    height: 40px;
+    margin: 0 auto;
+
+    font: {
+      size: 20px;
+      weight: 100;
+    }
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
+    border: none {
+      radius: 4px;
+    }
+
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+  }
+}
+

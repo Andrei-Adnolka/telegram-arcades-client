@@ -1,10 +1,11 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Board } from "./models/board";
-import BoardUI from "./components/board";
 import ActionsInfo from "./components/actions-info";
 import { changeBoardAfterShoot, getSendData } from "./helpers";
-import { getRandomShips } from "./helpers/ships";
+
+import Field from "./components/field";
+import ShipStation from "./components/shipStation";
 
 const wss = new WebSocket("ws://localhost:4000");
 
@@ -14,6 +15,7 @@ const GamePageUI = () => {
   const [rivalName, setRivalName] = useState("");
   const [shipsReady, setShipsReady] = useState(false);
   const [canShoot, setCanShoot] = useState(false);
+  const isFirstSend = useRef(false);
 
   const params = useParams();
   const gameId = params.gameId as string;
@@ -27,10 +29,10 @@ const GamePageUI = () => {
 
   const getMyShips = () => {
     const newMyBoard = getInitBoard();
-    const randomShips = getRandomShips();
-    randomShips.forEach((ship) => {
-      newMyBoard.addFullShip(ship.shipLocation);
-    });
+    // const randomShips = getRandomShips();
+    // randomShips.forEach((ship) => {
+    //   newMyBoard.addFullShip(ship.shipLocation);
+    // });
     setMyBoard(newMyBoard);
   };
 
@@ -40,11 +42,11 @@ const GamePageUI = () => {
     getMyShips();
   };
 
-  const shoot = (position: number) => {
+  const shoot = (shoot: number) => {
     wss.send(
       getSendData("shoot", {
         username: localStorage.nickname,
-        position,
+        position: shoot,
         gameId,
       })
     );
@@ -55,55 +57,58 @@ const GamePageUI = () => {
     setShipsReady(true);
   };
 
-  wss.onmessage = function (response) {
-    const { type, payload } = JSON.parse(response.data);
-    const { username, position, rivalName, success } = payload;
-    switch (type) {
-      case "connectToPlay":
-        if (!success) {
-          return navigate("/battle-sea-online");
-        }
-        setRivalName(rivalName);
-        break;
-      case "readyToPlay":
-        if (payload.username === localStorage.nickname && payload.canStart) {
-          setCanShoot(true);
-        }
-        break;
-      case "afterShootByMe":
-        if (username !== localStorage.nickname) {
-          const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
-          changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
-          wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
-          if (!isPerfectHit) {
+  if (wss) {
+    wss.onmessage = function (response) {
+      const { type, payload } = JSON.parse(response.data);
+      const { username, position, rivalName, success } = payload;
+      switch (type) {
+        case "connectToPlay":
+          if (!success) {
+            return navigate("/battle-sea-online");
+          }
+          setRivalName(rivalName);
+          break;
+        case "readyToPlay":
+          if (payload.username === localStorage.nickname && payload.canStart) {
             setCanShoot(true);
           }
-        }
-        break;
-      case "isPerfectHit":
-        if (username === localStorage.nickname) {
-          changeBoardAfterShoot(
-            hisBoard,
-            setHisBoard,
-            position,
-            payload.isPerfectHit
-          );
-          setCanShoot(payload.isPerfectHit);
-        }
-        break;
-      default:
-        break;
-    }
-  };
+          break;
+        case "afterShootByMe":
+          if (username !== localStorage.nickname) {
+            const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
+            changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
+            wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
+            if (!isPerfectHit) {
+              setCanShoot(true);
+            }
+          }
+          break;
+        case "isPerfectHit":
+          if (username === localStorage.nickname) {
+            changeBoardAfterShoot(
+              hisBoard,
+              setHisBoard,
+              position,
+              payload.isPerfectHit
+            );
+            setCanShoot(payload.isPerfectHit);
+          }
+          break;
+        default:
+          break;
+      }
+    };
+  }
 
   useEffect(() => {
-    if (gameId) {
+    if (isFirstSend.current) {
+      restart();
       wss.send(
         getSendData("connect", { username: localStorage.nickname, gameId })
       );
-      restart();
+      isFirstSend.current = false;
     }
-  }, [gameId]);
+  }, []);
 
   return (
     <div>
@@ -111,12 +116,18 @@ const GamePageUI = () => {
       <div className="battle_sea_wrapper__boards">
         <div className="battle_sea_wrapper__board">
           <p>YOUR BOARD</p>
-          <BoardUI
+          {/* <BoardUI
             board={myBoard}
             isMyBoard
             shipsReady={shipsReady}
             setBoard={setMyBoard}
             canShoot={false}
+          /> */}
+          <Field
+            isRival={false}
+            isOnline={true}
+            isStarted={shipsReady}
+            sendSocket={shoot}
           />
         </div>
         <ActionsInfo
@@ -125,7 +136,8 @@ const GamePageUI = () => {
           canShoot={canShoot}
           shipsReady={shipsReady}
         />
-        <div className="battle_sea_wrapper__board">
+        <ShipStation isReady={shipsReady} />
+        {/* <div className="battle_sea_wrapper__board">
           {rivalName ? (
             <>
               <p>RIVAL BOARD {rivalName}</p>
@@ -144,7 +156,7 @@ const GamePageUI = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

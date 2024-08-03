@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Login from "./components/authorization";
 import GamePage from "./components/game-page";
+import { СontextProvider } from "./context";
 
 import "./style.scss";
 
@@ -17,9 +18,11 @@ const BattleSea = () => {
   }, []);
 
   return (
-    <div className="battle_sea_wrapper">
-      {gameId ? <GamePage /> : <Login />}
-    </div>
+    <СontextProvider>
+      <div className="battle_sea_wrapper">
+        {gameId ? <GamePage /> : <Login />}
+      </div>
+    </СontextProvider>
   );
 };
 

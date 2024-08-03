@@ -1,6 +1,16 @@
-.battle-board {
+.battle-row {
+  display: flex;
+}
+
+.battleground {
   display: grid;
   margin: auto;
   position: relative;
   grid-template-columns: repeat(10, 32px);
 }
+
+.inactive {
+  opacity: 0.5;
+}
+
+
