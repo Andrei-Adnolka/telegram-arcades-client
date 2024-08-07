@@ -40,11 +40,22 @@ export const userSlice = createSlice({
       });
       state.ships = newShips;
     },
+    addNotAllowed: (state, { payload }: PayloadAction<number[]>) => {
+      state.notAllowed = [...state.notAllowed, ...payload];
+    },
+    sendMisses: (state, { payload }: PayloadAction<number>) => {
+      state.misses = [...state.misses, payload];
+    },
   },
 });
 
-export const { addShip, addNewShips, resetShips, setRandomShips } =
-  userSlice.actions;
+export const {
+  addShip,
+  addNewShips,
+  resetShips,
+  setRandomShips,
+  addNotAllowed,
+} = userSlice.actions;
 
 export const selectShips = (state: RootState) => state[USER_PATH].ships;
 export const selectMisses = (state: RootState) => state[USER_PATH].misses;

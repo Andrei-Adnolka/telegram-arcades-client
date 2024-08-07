@@ -22,7 +22,7 @@ const BattleSea = () => {
   return (
     <Provider store={store}>
       <div className="battle_sea_wrapper">
-        {gameId ? <GamePage gameId={gameId} /> : <Login />}
+        {gameId ? <GamePage /> : <Login />}
       </div>
     </Provider>
   );

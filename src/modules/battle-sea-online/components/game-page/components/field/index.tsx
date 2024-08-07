@@ -4,21 +4,24 @@ import { FIELD } from "../../constants";
 
 import Cell from "../cell";
 
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { usePersonData } from "../../../../redux/usePersonData";
 import { setRandomShips } from "../../../../redux/rivalSlice";
+import { useUserTurn } from "../../hooks/useUserTurn";
+import { selectIsUserShot } from "../../../../redux/gameSlice";
 
 type Props = {
   isRival: boolean;
   isOnline: boolean;
-  sendSocket: (shoot: number) => void;
+  sendSocket?: (shoot: number) => void;
 };
 
 const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
   const { misses, ships, notAllowed } = usePersonData(isRival);
+  const isUserShot = useAppSelector(selectIsUserShot);
   const dispatch = useAppDispatch();
 
-  const isAbleShoot = false;
+  const { userTurn } = useUserTurn();
 
   useEffect(() => {
     if (isRival) {
@@ -26,7 +29,7 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
     }
   }, []);
 
-  const bgClass = `battleground ${!isAbleShoot && isRival ? "inactive" : ""}`;
+  const bgClass = `battleground ${!isUserShot && isRival ? "inactive" : ""}`;
 
   const shootHandler = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (!(e.target as HTMLDivElement).id) {
@@ -35,7 +38,7 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
 
     const shoot = Number((e.target as HTMLDivElement).id);
 
-    if (isAbleShoot && isRival) {
+    if (isUserShot && isRival) {
       const isMissAlready = misses.includes(shoot);
 
       const isDeadAlready = ships.some((ship) => {
@@ -51,6 +54,7 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
       // if (isOnline) {
       //   sendSocket(shoot);
       // }
+      userTurn(shoot);
     }
   };
   const id = isRival ? "rival" : "user";
