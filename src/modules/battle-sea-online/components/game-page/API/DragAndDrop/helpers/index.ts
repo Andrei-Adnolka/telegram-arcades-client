@@ -58,3 +58,14 @@ export const getActiveId = (x: number, y: number) => {
 
   return { deltaX: positionX, deltaY: positionY, isVerticalDraggble };
 };
+
+export const getIsCorrentDots = (shipLocation: number[]) => {
+  let isCorrent = true;
+
+  shipLocation.forEach((el) => {
+    if (el > 99 || el < 0) {
+      isCorrent = false;
+    }
+  });
+  return isCorrent;
+};

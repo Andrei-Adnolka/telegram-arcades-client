@@ -54,7 +54,7 @@ function App() {
         <Route path="/shot" element={<Shot />} />
         <Route path="/flappy" element={<FlappyBird />} />
         <Route path="/battle-sea-online" element={<BattleSea />}>
-          <Route path=":gameId" />
+          <Route path=":gameId" element={null} />
         </Route>
       </Routes>
     </div>

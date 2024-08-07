@@ -1,9 +1,11 @@
 import { memo, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Provider } from "react-redux";
 
 import Login from "./components/authorization";
 import GamePage from "./components/game-page";
-import { СontextProvider } from "./context";
+
+import { store } from "./redux/store";
 
 import "./style.scss";
 
@@ -18,11 +20,11 @@ const BattleSea = () => {
   }, []);
 
   return (
-    <СontextProvider>
+    <Provider store={store}>
       <div className="battle_sea_wrapper">
-        {gameId ? <GamePage /> : <Login />}
+        {gameId ? <GamePage gameId={gameId} /> : <Login />}
       </div>
-    </СontextProvider>
+    </Provider>
   );
 };
 

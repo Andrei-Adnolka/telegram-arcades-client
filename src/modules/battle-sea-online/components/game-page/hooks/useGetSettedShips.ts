@@ -1,9 +1,10 @@
 import { useMemo } from "react";
-import { PERSON } from "../types";
-import { usePersonContextData } from "../../../context";
+
+import { selectShips } from "../../../redux/userSlice";
+import { useAppSelector } from "../../../redux/hooks";
 
 export const useGetSettedShips = () => {
-  const ships = usePersonContextData(PERSON.user).ships;
+  const ships = useAppSelector(selectShips);
 
   const restShips = useMemo(() => {
     const shipsList = ships.map((ship) => ship.decks);

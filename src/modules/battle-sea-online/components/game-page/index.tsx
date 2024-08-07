@@ -1,46 +1,28 @@
-import { memo, useEffect, useRef, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Board } from "./models/board";
-import ActionsInfo from "./components/actions-info";
-import { changeBoardAfterShoot, getSendData } from "./helpers";
+import { FC, memo, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getSendData } from "./helpers";
 
+import { useAppSelector } from "../../redux/hooks";
+import { selectShips } from "../../redux/userSlice";
+
+import UserField from "./components/userField";
 import Field from "./components/field";
-import ShipStation from "./components/shipStation";
+import { useStatusText } from "./hooks/useStatusText";
 
 const wss = new WebSocket("ws://localhost:4000");
 
-const GamePageUI = () => {
-  const [myBoard, setMyBoard] = useState(new Board());
-  const [hisBoard, setHisBoard] = useState(new Board());
+type Props = {
+  gameId: string;
+};
+
+const GamePageUI: FC<Props> = ({ gameId }) => {
   const [rivalName, setRivalName] = useState("");
   const [shipsReady, setShipsReady] = useState(false);
   const [canShoot, setCanShoot] = useState(false);
   const isFirstSend = useRef(false);
+  const userShips = useAppSelector(selectShips);
 
-  const params = useParams();
-  const gameId = params.gameId as string;
   const navigate = useNavigate();
-
-  const getInitBoard = () => {
-    const newMyBoard = new Board();
-    newMyBoard.initCells();
-    return newMyBoard;
-  };
-
-  const getMyShips = () => {
-    const newMyBoard = getInitBoard();
-    // const randomShips = getRandomShips();
-    // randomShips.forEach((ship) => {
-    //   newMyBoard.addFullShip(ship.shipLocation);
-    // });
-    setMyBoard(newMyBoard);
-  };
-
-  const restart = () => {
-    const newHisBoard = getInitBoard();
-    setHisBoard(newHisBoard);
-    getMyShips();
-  };
 
   const shoot = (shoot: number) => {
     wss.send(
@@ -52,7 +34,7 @@ const GamePageUI = () => {
     );
   };
 
-  const ready = () => {
+  const onReady = () => {
     wss.send(getSendData("ready", { username: localStorage.nickname, gameId }));
     setShipsReady(true);
   };
@@ -75,23 +57,23 @@ const GamePageUI = () => {
           break;
         case "afterShootByMe":
           if (username !== localStorage.nickname) {
-            const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
-            changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
-            wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
-            if (!isPerfectHit) {
-              setCanShoot(true);
-            }
+            // const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
+            // changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
+            // wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
+            // if (!isPerfectHit) {
+            //   setCanShoot(true);
+            // }
           }
           break;
         case "isPerfectHit":
           if (username === localStorage.nickname) {
-            changeBoardAfterShoot(
-              hisBoard,
-              setHisBoard,
-              position,
-              payload.isPerfectHit
-            );
-            setCanShoot(payload.isPerfectHit);
+            // changeBoardAfterShoot(
+            //   hisBoard,
+            //   setHisBoard,
+            //   position,
+            //   payload.isPerfectHit
+            // );
+            // setCanShoot(payload.isPerfectHit);
           }
           break;
         default:
@@ -102,7 +84,6 @@ const GamePageUI = () => {
 
   useEffect(() => {
     if (isFirstSend.current) {
-      restart();
       wss.send(
         getSendData("connect", { username: localStorage.nickname, gameId })
       );
@@ -110,53 +91,46 @@ const GamePageUI = () => {
     }
   }, []);
 
+  const { statusText, statusClassName } = useStatusText(userShips.length);
+
   return (
     <div>
       <h1>PLASE SHIPS</h1>
       <div className="battle_sea_wrapper__boards">
         <div className="battle_sea_wrapper__board">
-          <p>YOUR BOARD</p>
-          {/* <BoardUI
-            board={myBoard}
-            isMyBoard
-            shipsReady={shipsReady}
-            setBoard={setMyBoard}
-            canShoot={false}
-          /> */}
-          <Field
-            isRival={false}
-            isOnline={true}
-            isStarted={shipsReady}
-            sendSocket={shoot}
-          />
-        </div>
-        <ActionsInfo
-          onReady={ready}
-          onRandomShips={getMyShips}
-          canShoot={canShoot}
-          shipsReady={shipsReady}
-        />
-        <ShipStation isReady={shipsReady} />
-        {/* <div className="battle_sea_wrapper__board">
-          {rivalName ? (
+          {shipsReady ? null : (
             <>
-              <p>RIVAL BOARD {rivalName}</p>
-              <BoardUI
-                board={hisBoard}
-                setBoard={setHisBoard}
-                canShoot={canShoot}
-                shoot={shoot}
-              />
+              <p>{(localStorage.nickname || "YOUR BOARD").toUpperCase()}</p>
+              <span className={statusClassName.join(" ")} onClick={onReady}>
+                {statusText}
+              </span>
+              <UserField />
             </>
-          ) : (
-            <div className="battle_sea_wrapper__wait">
-              <div>WAITING OPPONENT</div>
-              <div className="loader-container">
-                <div className="loader-2" />
-              </div>
-            </div>
           )}
-        </div> */}
+          {shipsReady ? (
+            <>
+              <div className="battle_sea_wrapper__board">
+                <p>{(localStorage.nickname || "YOUR BOARD").toUpperCase()}</p>
+                <Field isRival={false} isOnline sendSocket={shoot} />
+              </div>
+              <div className="battle_sea_wrapper__board">
+                {rivalName ? (
+                  <>
+                    <p>{(rivalName || "RIVAL BOARD").toUpperCase()}</p>
+                    <Field isRival isOnline sendSocket={shoot} />
+                  </>
+                ) : (
+                  <div className="battle_sea_wrapper__wait">
+                    <div>WAITING OPPONENT</div>
+                    <div className="loader-container">
+                      <div className="loader-2" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
     </div>
   );

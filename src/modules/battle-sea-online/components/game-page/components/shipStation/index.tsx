@@ -1,42 +1,48 @@
-import { FC } from "react";
+import { memo } from "react";
 
 import { useGetSettedShips } from "../../hooks/useGetSettedShips";
 
 import Ship from "../ship";
 
 import "./index.scss";
-import { useStateContextActions } from "../../../../context";
+import { useAppDispatch } from "../../../../redux/hooks";
+import { resetShips, setRandomShips } from "../../../../redux/userSlice";
 
-type Props = {
-  isReady: boolean;
-};
-
-const ShipStation: FC<Props> = ({ isReady }) => {
+const ShipStation = () => {
   const { restShips } = useGetSettedShips();
-  const { resetShips, setRandomShips } = useStateContextActions();
 
-  if (!isReady) {
-    return (
-      <div className="ship-station">
+  const dispatch = useAppDispatch();
+
+  const resetUserShips = () => {
+    dispatch(resetShips());
+  };
+  const setRandomUserShips = () => {
+    dispatch(setRandomShips());
+  };
+
+  return (
+    <div className="ship-station">
+      {restShips.length ? (
         <div className="ship-station_container">
-          {restShips.map((decks, i) => (
-            <Ship decks={decks} key={i} />
-          ))}
+          {restShips.map((decks, i) => {
+            const randomId = Math.random();
+            return (
+              <Ship decks={decks} key={randomId} id={randomId.toString()} />
+            );
+          })}
         </div>
-        <div className="ship-station_discription">
-          <button className="ship-station_button" onClick={setRandomShips}>
-            random
-          </button>
-          <button className="ship-station_button" onClick={resetShips}>
-            reset
-          </button>
-          dragAndDrop
-        </div>
+      ) : null}
+      <div className="ship-station_discription">
+        <button className="ship-station_button" onClick={setRandomUserShips}>
+          random
+        </button>
+        <button className="ship-station_button" onClick={resetUserShips}>
+          reset
+        </button>
       </div>
-    );
-  }
-
-  return null;
+      <p>dragAndDrop</p>
+    </div>
+  );
 };
 
-export default ShipStation;
+export default memo(ShipStation);

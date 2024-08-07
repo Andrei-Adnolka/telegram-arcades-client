@@ -1,6 +1,6 @@
-import { useReducer, Dispatch } from "react";
+import { useReducer, Dispatch, useMemo } from "react";
 
-import { IPlayerState, ISetShip, IShip, PERSON } from "../types";
+import { IPlayerState, IShip, PERSON } from "../types";
 import Sound from "../API/Sound/Sound";
 import { SHIPS } from "../constants";
 import { getCorrectShip } from "../API/ShipsPlacer/ShipsPlacer";
@@ -8,8 +8,6 @@ import { getCorrectShip } from "../API/ShipsPlacer/ShipsPlacer";
 export type State = {
   user: IPlayerState;
   rival: IPlayerState;
-  shipDnD: ISetShip;
-  wasDropped: boolean;
   sound: boolean;
 };
 
@@ -29,15 +27,10 @@ const initialPersonsState = {
 export function useBattleSeaState(): [State, Dispatch<Action>] {
   const [state, dispatchState] = useReducer(boardReducer, {
     ...initialPersonsState,
-    shipDnD: {
-      decks: null,
-      isHorizontal: false,
-    },
-    wasDropped: false,
     sound: true,
   });
 
-  return [state, dispatchState];
+  return useMemo(() => [state, dispatchState], [state]);
 }
 
 type ShipsTypes =
@@ -76,13 +69,24 @@ function boardReducer(state: State, action: Action): State {
   switch (action.type) {
     case "addShip":
       if (action.person && action.ship) {
-        newState[action.person].ships.push(action.ship);
+        const person = action.person;
+        let isIncludeShip = false;
+        action.ship.shipLocation.forEach((position) => {
+          if (!isIncludeShip) {
+            newState[person].ships.forEach((ship) => {
+              isIncludeShip = ship.shipLocation.includes(position);
+            });
+          }
+        });
+        if (!isIncludeShip) {
+          const newShips = [...state[action.person].ships, action.ship];
+          newState[person].ships = newShips;
+        }
       }
       break;
     case "addNewShips":
       if (action.ships) {
-        console.log("action.ships", action.ships);
-        newState.user.ships = action.ships;
+        state.user.ships = action.ships;
       }
       break;
     case "addShoot":

@@ -6,6 +6,7 @@ import {
   filteredShips,
   getActiveId,
   getBoardCollisions,
+  getIsCorrentDots,
   getNewShipLocation,
 } from "./helpers";
 
@@ -16,8 +17,9 @@ export const dragEnd = (
   addNewShips: (ships: IShip[]) => void
 ) => {
   if (!event?.active?.id || !activeShip?.shipLocation) return;
+
   const { shipLocation, isHorizontal } = activeShip;
-  const parent = document.getElementById("field");
+  const parent = document.getElementById("user-field");
 
   if (parent) {
     shipLocation.forEach((el, i) => {
@@ -41,17 +43,8 @@ export const dragEnd = (
     return;
   }
 
-  let isCorrent = true;
+  if (!getIsCorrentDots(newShipLocation)) return;
 
-  newShipLocation.forEach((el) => {
-    if (el > 99 || el < 0) {
-      isCorrent = false;
-    }
-  });
-
-  if (!isCorrent) return;
-
-  const occupiedCells = getOccupiedCells(newShipLocation);
   const newShips = filteredShips(event.active.id, settedShips);
 
   if (!isCanDrop(newShips, newShipLocation)) {
@@ -61,7 +54,7 @@ export const dragEnd = (
   const newShip = {
     ...activeShip,
     shipLocation: newShipLocation,
-    occupiedCells,
+    occupiedCells: getOccupiedCells(newShipLocation),
   };
 
   newShips.push(newShip);

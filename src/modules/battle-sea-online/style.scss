@@ -15,6 +15,8 @@
 
   &__board {
     padding: 8px;
+    display: flex;
+    flex-direction: column;
   }
 
   &__wait {
@@ -24,6 +26,7 @@
     color: black;
     font-size: 16px;
   }
+
   .loader-container {
     position: relative;
     width: 100px;
@@ -51,6 +54,7 @@
         border-radius: 50%;
         animation: loader-2 0.9s ease alternate infinite;
       }
+      
       &::before {
         left: -20px;
         animation-delay: 0.2s;
@@ -64,14 +68,30 @@
   p {
     color: black;
     font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 }
 
 @keyframes loader-2 {
   0% {
-    box-shadow: 0 15px 0 -15px #ffffff;
+    box-shadow: 0 15px 0 -15px black;
   }
   100% {
-    box-shadow: 0 15px 0 #ffffff;
+    box-shadow: 0 15px 0 black;
+  }
+}
+
+.sistem_message {
+  display: block;
+  padding: 8px 4px;
+  background-color: #00ad64;
+  border-radius: 4px;
+  color: white;
+  margin-bottom: 8px;
+
+  &_not_ready {
+    pointer-events: none;
+    background-color: rgb(103, 104, 103);
   }
 }

@@ -1,10 +1,12 @@
 .ship {
-  cursor: grab;
   display: flex;
   flex-direction: column;
-  width: 30px;
+  width: 28px;
   transition: all ease 0.2s;
   z-index: 10;
+  box-sizing: border-box;
+  transition: left 0.05s ease-out;
+  transition: top 0.05s ease-out;
 }
 
 .one-deck {
@@ -26,10 +28,12 @@
 .ship-cell {
   width: 32px;
   height: 32px;
-  border: 2px solid #00f;
   border-radius: 4px;
-  background-color: white;
+  border: 2px solid #0909f0;
+  border-radius: 2px;
+  background-color: rgb(48 48 52 / 14%);
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .horizontal {
@@ -38,10 +42,16 @@
   height: 20px;
 }
 
-.red {
-  background-color: red;
+.ship-red {
+  .ship-cell {
+    border: 2px solid red;
+    background-color: rgba(171, 2, 2, 0.14);
+  }
 }
 
-.green {
-  background-color: green;
+.ship-green {
+  .ship-cell {
+    border: 2px solid green;
+    background-color: rgba(2, 171, 5, 0.14);
+  }
 }
