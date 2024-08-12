@@ -1,8 +1,8 @@
-import { IShip } from "../types";
+import { IShip, IPlayerState } from "../types";
 
 export const getSendData = (
   event: string,
-  payload: Record<string, string | number>
+  payload: Record<string, string | number | IPlayerState>
 ) => {
   return JSON.stringify({ event, payload });
 };

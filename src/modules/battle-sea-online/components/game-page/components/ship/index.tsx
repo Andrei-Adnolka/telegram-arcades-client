@@ -151,7 +151,7 @@ const Ship: FC<Props> = ({ decks, id }) => {
         const element = document.getElementById(
           (e.target as HTMLElement).id
         )?.parentElement;
-        console.log("element", element);
+
         if (element) {
           if (isCan) {
             element.classList.add("ship-green");

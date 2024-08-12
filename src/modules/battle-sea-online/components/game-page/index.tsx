@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 
 import { useAppSelector } from "../../redux/hooks";
 import { selectShips } from "../../redux/userSlice";
@@ -9,21 +9,20 @@ import { useStatusText } from "./hooks/useStatusText";
 import { selectIsUserShot } from "../../redux/gameSlice";
 import { useWss } from "./hooks/useWss";
 
-const GamePageUI = () => {
+const GamePageUI = ({ gameId }: { gameId: string }) => {
   const userShips = useAppSelector(selectShips);
   const isUserShot = useAppSelector(selectIsUserShot);
+  const isFirstLoad = useRef(true);
 
-  const { isGameReady, onReady, rivalName } = useWss();
+  const { isGameReady, onReady, onShoot, onConnect, rivalName } =
+    useWss(gameId);
 
-  const shoot = (shoot: number) => {
-    // wss.send(
-    //   getSendData("shoot", {
-    //     username: localStorage.nickname,
-    //     position: shoot,
-    //     gameId,
-    //   })
-    // );
-  };
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      onConnect();
+      isFirstLoad.current = false;
+    }
+  }, []);
 
   const { statusText, statusClassName } = useStatusText(userShips.length);
 
@@ -51,10 +50,10 @@ const GamePageUI = () => {
                 <p>{hintText}</p>
               </div>
               <div className="battle_sea_wrapper__board">
-                {!rivalName ? (
+                {rivalName ? (
                   <>
                     <p>{(rivalName || "RIVAL BOARD").toUpperCase()}</p>
-                    <Field isRival isOnline sendSocket={shoot} />
+                    <Field isRival isOnline sendSocket={onShoot} />
                   </>
                 ) : (
                   <div className="battle_sea_wrapper__wait">

@@ -4,15 +4,11 @@ import { SHIPS } from "../components/game-page/constants";
 import { getCorrectShip } from "../components/game-page/API/ShipsPlacer/ShipsPlacer";
 import { IShip } from "../components/game-page/types";
 
+import { IPlayerState } from "../components/game-page/types";
+
 import { RootState } from "./store";
 
-interface UserState {
-  ships: IShip[];
-  misses: number[];
-  notAllowed: number[];
-}
-
-const initialState: UserState = {
+const initialState: IPlayerState = {
   ships: [],
   misses: [],
   notAllowed: [],
@@ -43,11 +39,21 @@ export const rivalSlice = createSlice({
     sendMisses: (state, { payload }: PayloadAction<number>) => {
       state.misses = [...state.misses, payload];
     },
+    setFullData: (state, { payload }: PayloadAction<IPlayerState>) => {
+      state.ships = payload.ships;
+      state.misses = payload.misses;
+      state.notAllowed = payload.notAllowed;
+    },
   },
 });
 
-export const { resetShips, setRandomShips, addNewShips, addNotAllowed } =
-  rivalSlice.actions;
+export const {
+  resetShips,
+  setRandomShips,
+  addNewShips,
+  addNotAllowed,
+  setFullData,
+} = rivalSlice.actions;
 
 export const selectShips = (state: RootState) => state[RIVAL_PATH].ships;
 export const selectMisses = (state: RootState) => state[RIVAL_PATH].misses;

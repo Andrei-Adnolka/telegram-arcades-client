@@ -8,7 +8,7 @@
   background-size: 33% 33%;
 }
 
-.hit {
+.hit[class] {
   position: relative;
   background-color: rgb(109, 16, 16);
   overflow: hidden;
@@ -33,7 +33,7 @@
   }
 }
 
-.destroyed {
+.destroyed[class] {
   background-size: contain;
   &::after,
   &::before {
@@ -41,7 +41,7 @@
   }
 }
 
-.miss {
+.miss[class] {
   background: #f2f4f8;
   position: relative;
   &::before {

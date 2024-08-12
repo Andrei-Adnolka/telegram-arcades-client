@@ -24,7 +24,7 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
   const { userTurn } = useUserTurn();
 
   useEffect(() => {
-    if (isRival) {
+    if (isRival && !isOnline) {
       dispatch(setRandomShips());
     }
   }, []);
@@ -51,9 +51,9 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
         return;
       }
 
-      // if (isOnline) {
-      //   sendSocket(shoot);
-      // }
+      if (isOnline) {
+        sendSocket?.(shoot);
+      }
       userTurn(shoot);
     }
   };

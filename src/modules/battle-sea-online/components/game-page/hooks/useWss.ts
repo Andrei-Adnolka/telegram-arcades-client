@@ -1,24 +1,51 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { getSendData } from "../helpers";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setIsUserShot } from "../../../redux/gameSlice";
+import { setFullData } from "../../../redux/rivalSlice";
+import { addNotAllowed, selectUserData } from "../../../redux/userSlice";
+import { useCheckShoot } from "./useCheckShoot";
 
-const wss = new WebSocket("ws://localhost:4000");
+const ws = new WebSocket("ws://localhost:4000");
 
-export const useWss = () => {
+// @ts-ignore
+const send = function (message) {
+  waitForConnection(function () {
+    ws.send(message);
+    // if (typeof callback !== "undefined") {
+    //   callback?.();
+    // }
+  }, 1000);
+};
+
+// @ts-ignore
+const waitForConnection = function (callback, interval) {
+  if (ws.readyState === 1) {
+    callback();
+  } else {
+    // optional: implement backoff for interval here
+    setTimeout(function () {
+      waitForConnection(callback, interval);
+    }, interval);
+  }
+};
+
+export const useWss = (gameId: string) => {
   const [rivalName, setRivalName] = useState("");
   const [isGameReady, setIsGameReady] = useState(false);
-  const [canShoot, setCanShoot] = useState(false);
-  const isFirstSend = useRef(false);
+  const dispatch = useAppDispatch();
+  const userData = useAppSelector(selectUserData);
 
   const navigate = useNavigate();
-  const params = useParams();
-  const gameId = params.gameId || "";
+  const { checkShoot } = useCheckShoot(false);
 
-  if (wss) {
-    wss.onmessage = function (response) {
+  if (ws) {
+    ws.onmessage = function (response) {
       const { type, payload } = JSON.parse(response.data);
       const { username, position, rivalName, success } = payload;
+
       switch (type) {
         case "connectToPlay":
           if (!success) {
@@ -26,23 +53,29 @@ export const useWss = () => {
           }
           setRivalName(rivalName);
           break;
+        case "setToState":
+          if (username !== localStorage.nickname) {
+            dispatch(setFullData(payload.userData));
+          }
+          break;
         case "readyToPlay":
           if (payload.username === localStorage.nickname && payload.canStart) {
-            setCanShoot(true);
+            setIsGameReady(true);
+            dispatch(setIsUserShot(payload.isAbleShot));
           }
           break;
         case "afterShootByMe":
           if (username !== localStorage.nickname) {
-            // const isPerfectHit = myBoard.cells[position]?.mark?.name === "ship";
-            // changeBoardAfterShoot(myBoard, setMyBoard, position, isPerfectHit);
-            // wss.send(getSendData("checkShoot", { ...payload, isPerfectHit }));
-            // if (!isPerfectHit) {
-            //   setCanShoot(true);
-            // }
+            const { isHit } = checkShoot(position);
+            send(getSendData("checkShoot", { ...payload, isHit, position }));
+            if (!isHit) {
+              dispatch(setIsUserShot(true));
+            }
           }
           break;
-        case "isPerfectHit":
+        case "isHit":
           if (username === localStorage.nickname) {
+            dispatch(setIsUserShot(payload.isHit));
             // changeBoardAfterShoot(
             //   hisBoard,
             //   setHisBoard,
@@ -58,19 +91,30 @@ export const useWss = () => {
     };
   }
 
-  useEffect(() => {
-    if (isFirstSend.current) {
-      wss.send(
-        getSendData("connect", { username: localStorage.nickname, gameId })
-      );
-      isFirstSend.current = false;
-    }
+  const onConnect = useCallback(() => {
+    send(getSendData("connect", { username: localStorage.nickname, gameId }));
+  }, [gameId]);
+
+  const onReady = useCallback(() => {
+    send(getSendData("ready", { username: localStorage.nickname, gameId }));
+    send(
+      getSendData("sentData", {
+        username: localStorage.nickname,
+        gameId,
+        userData,
+      })
+    );
+  }, [gameId, userData]);
+
+  const onShoot = useCallback((shoot: number) => {
+    send(
+      getSendData("shoot", {
+        username: localStorage.nickname,
+        position: shoot,
+        gameId,
+      })
+    );
   }, []);
 
-  const onReady = () => {
-    wss.send(getSendData("ready", { username: localStorage.nickname, gameId }));
-    setIsGameReady(true);
-  };
-
-  return { onReady, rivalName, isGameReady };
+  return { onReady, onShoot, onConnect, rivalName, isGameReady };
 };

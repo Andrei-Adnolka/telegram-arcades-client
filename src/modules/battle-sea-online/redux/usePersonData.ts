@@ -18,6 +18,9 @@ export function usePersonActionsData(isRival: boolean) {
   const sendNewShips = (ships: IShip[]) => {
     dispatch(actions.addNewShips(ships));
   };
+  const sendNotAllowed = (cells: number[]) => {
+    dispatch(actions.addNotAllowed(cells));
+  };
 
-  return { sendNewShips, sendMisses };
+  return { sendNewShips, sendMisses, sendNotAllowed };
 }
