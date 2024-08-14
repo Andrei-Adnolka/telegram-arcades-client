@@ -16,7 +16,7 @@ import Cell from "../user-cell";
 
 import { dragEnd, dragOver, dragStart } from "../../API";
 import { findShip } from "../../helpers";
-import ShipStation from "../shipStation";
+import ShipStation from "../ship-station";
 
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {

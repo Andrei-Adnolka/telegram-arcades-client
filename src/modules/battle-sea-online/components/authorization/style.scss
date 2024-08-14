@@ -1,0 +1,31 @@
+.battleship-authorization-block {
+  position: relative;
+  font-weight: bold;
+}
+
+.radio-buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.battle-submit-buttom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px;
+  padding: 8px 16px;
+  width: calc(100% - 48px);
+  border: none;
+  border-radius: 8px;
+  user-select: none;
+  background-color: #06a30b;
+  color: white;
+  font-family: inherit;
+
+  &:disabled {
+    background-color: #c6c4c4;
+
+  }
+}

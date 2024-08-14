@@ -13,6 +13,18 @@
     margin-bottom: -8px;
   }
 
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid black;
+    padding-bottom: 12px;
+    width: 100%;
+    a {
+      text-decoration: none;
+    }
+  }
+
   &__board {
     padding: 8px;
     display: flex;
@@ -73,15 +85,6 @@
   }
 }
 
-@keyframes loader-2 {
-  0% {
-    box-shadow: 0 15px 0 -15px black;
-  }
-  100% {
-    box-shadow: 0 15px 0 black;
-  }
-}
-
 .sistem_message {
   display: block;
   padding: 8px 4px;
@@ -90,8 +93,54 @@
   color: white;
   margin-bottom: 8px;
 
-  &_not_ready {
+  &_not_ready,
+  &_not_rival_ready {
     pointer-events: none;
     background-color: rgb(103, 104, 103);
+  }
+  &_not_rival_ready {
+    display: flex;
+    padding-left: 16px;
+    position: relative;
+
+    > .loader-2 {
+      width: 6px;
+      height: 6px;
+      position: absolute;
+      top: 10px;
+      left: -16%;
+      border-radius: 50%;
+      position: relative;
+      animation: loader-2 0.9s 0.35s ease alternate infinite;
+      margin: -20px auto 0;
+
+      &::after,
+      &::before {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: loader-2 0.9s ease alternate infinite;
+      }
+      &::before {
+        left: -20px;
+        animation-delay: 0.2s;
+      }
+      &::after {
+        right: -20px;
+        animation-delay: 0.5s;
+      }
+    }
+  }
+}
+
+
+@keyframes loader-2 {
+  0% {
+    box-shadow: 0 15px 0 -15px white;
+  }
+  100% {
+    box-shadow: 0 15px 0 white;
   }
 }

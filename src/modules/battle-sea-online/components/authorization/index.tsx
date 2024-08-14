@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import RadioButtons from "./components/radio-buttons";
+import NicknameField from "./components/nickname-field";
+
+import "./style.scss";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [invitationGame, setInvitationGame] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [invitationGame, setInvitationGame] = useState("Create Game");
   const [gameId, setGameId] = useState<string>("");
+  const [nickname, setNickname] = useState("");
 
   const startPlay = () => {
     if (gameId && nickname) {
@@ -14,71 +19,52 @@ const Login = () => {
     }
   };
 
-  const radioValue1 = invitationGame !== "ingame" ? "1" : "";
-  const radioValue2 = invitationGame === "ingame" ? "1" : "";
+  const isCreateGame = invitationGame === "Create Game";
+
+  useEffect(() => {
+    if (isCreateGame) {
+      setGameId(String(Date.now()));
+    } else {
+      setGameId("");
+    }
+  }, [isCreateGame]);
 
   return (
     <div>
       <h2>AUTHORIZATION</h2>
-      <div>
-        <div>
-          <label htmlFor="nickname">Your name</label>
-          <input
-            type="text"
-            id="nickname"
-            name="nickname"
-            onChange={(e) => setNickname(e.target.value)}
-          />
-        </div>
-        <div onChange={(e) => setInvitationGame((e.target as HTMLElement).id)}>
-          <input
-            type="radio"
-            name="typeEnter"
-            id="gen"
-            value={radioValue1}
-            defaultChecked={invitationGame !== "ingame"}
-          />
-          <label htmlFor="gen">Create Game</label>
-          <input
-            type="radio"
-            name="typeEnter"
-            id="ingame"
-            value={radioValue2}
-            defaultChecked={invitationGame === "ingame"}
-          />
-          <label htmlFor="ingame">Go to created game</label>
+      <div className="battleship-authorization-block">
+        <NicknameField setNickname={setNickname} nickname={nickname} />
+        <div
+          onChange={(e) => setInvitationGame((e.target as HTMLElement).id)}
+          className="radio-buttons-wrapper"
+        >
+          <RadioButtons activeId={invitationGame} />
         </div>
         <div>
-          {invitationGame === "ingame" ? (
-            <>
-              <div>
-                <label htmlFor="gameId">Enter the game ID</label>
-              </div>
+          {invitationGame === "Go to game" ? (
+            <div className="text-field">
+              <label className="text-field__label" htmlFor="nickname">
+                Enter the game ID
+              </label>
               <input
+                className="text-field__input"
                 type="text"
                 name="gameId"
                 id="gameId"
-                defaultValue=""
                 onChange={(e) => setGameId(e.target.value)}
+                defaultValue=""
               />
-            </>
-          ) : (
-            <>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  setGameId(String(Date.now()));
-                }}
-              >
-                Generate game id
-              </button>
-              <p>{gameId}</p>
-            </>
-          )}
+            </div>
+          ) : null}
         </div>
       </div>
-      <button type="submit" onClick={startPlay}>
-        Game
+      <button
+        type="submit"
+        onClick={startPlay}
+        className="battle-submit-buttom"
+        disabled={!gameId || !nickname}
+      >
+        Play
       </button>
     </div>
   );

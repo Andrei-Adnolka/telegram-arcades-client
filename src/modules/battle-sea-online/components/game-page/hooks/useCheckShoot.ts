@@ -1,11 +1,10 @@
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import {
   usePersonData,
   usePersonActionsData,
 } from "../../../redux/usePersonData";
 import { selectSound } from "../../../redux/gameSlice";
 import Sound from "../API/Sound/Sound";
-import { addNotAllowed } from "../../../redux/userSlice";
 
 export const useCheckShoot = (isRival: boolean) => {
   const person = usePersonData(isRival);
