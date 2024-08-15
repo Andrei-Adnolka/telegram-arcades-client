@@ -42,6 +42,7 @@ function App() {
             <h1>CLASSIC GAMES</h1>
             <div className="home_page_links">
               <a href="/flappy">01 FLAPPY BIRD</a>
+              <a href="/battle-sea-online">02 BATTLESHIP ONLINE</a>
             </div>
           </div>
         </div>
