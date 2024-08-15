@@ -33,6 +33,8 @@ export const getNewShipLocation = (
   deltaX: number,
   deltaY: number
 ) => {
+  if (!shipLocation?.length) return [];
+
   return shipLocation.map((ship) => {
     let newValue = ship;
     if (deltaX) newValue = newValue + deltaX;

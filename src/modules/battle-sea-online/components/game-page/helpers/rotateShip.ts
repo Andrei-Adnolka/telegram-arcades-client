@@ -14,6 +14,7 @@ export const rotateShip = (
   addNewShips: (arg: IShip[]) => void
 ) => {
   const activeShip = findShip(Number(id), ships);
+  if (!activeShip) return;
   const { isHorizontal, shipLocation } = activeShip || ({} as IShip);
   let newShipLocation = [...shipLocation];
   const headrShip = shipLocation[0];
