@@ -7,6 +7,7 @@ import { isCanDrop } from "../ShipsPlacer/isCanDrop";
 import {
   filteredShips,
   getActiveId,
+  getBoardCollisions,
   getIsCorrentDots,
   getNewShipLocation,
 } from "./helpers";
@@ -20,14 +21,19 @@ export const dragOver = (
 ) => {
   if (!event.active.id) return;
 
-  const { shipLocation } = activeShip;
+  const { shipLocation, isHorizontal } = activeShip;
 
   const { deltaX, deltaY } = getActiveId(event?.delta?.x, event?.delta?.y);
   const newShipLocation = getNewShipLocation(shipLocation, deltaX, deltaY);
   const isCorrent = getIsCorrentDots(newShipLocation);
   const newShips = filteredShips(event.active.id, settedShips);
 
-  if (!isCanDrop(newShips, newShipLocation) || !isCorrent) {
+  const isCollisionBoard =
+    newShipLocation.length > 1 &&
+    isHorizontal &&
+    getBoardCollisions(newShipLocation);
+
+  if (!isCanDrop(newShips, newShipLocation) || !isCorrent || isCollisionBoard) {
     if (activeClassName !== "ship-red ") {
       setActiveClassName("ship-red ");
     }

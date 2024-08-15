@@ -24,6 +24,8 @@ import {
   setRandomShips,
   selectShips,
 } from "../../../../redux/userSlice";
+import { rotateShip } from "../../helpers/rotateShip";
+
 import "./index.scss";
 
 const getStylePosition = (activeShip: IShip, activeId: string) => {
@@ -55,7 +57,7 @@ const UserField: FC<{ isUserReady: boolean }> = ({ isUserReady }) => {
 
   const sensors = useSensors(
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 100, tolerance: 0 },
+      activationConstraint: { delay: 120, tolerance: 0 },
     })
   );
 
@@ -63,10 +65,14 @@ const UserField: FC<{ isUserReady: boolean }> = ({ isUserReady }) => {
     dragOver(event, activeShip, ships, activeClassName, setActiveClassName);
   };
 
+  const setNewShips = (s: IShip[]) => {
+    dispatch(addNewShips(s));
+  };
+
   const handleEnd = (s: IShip[]) => {
     setActiveShip({} as IShip);
-    dispatch(addNewShips(s));
     setActiveId("");
+    setNewShips(s);
     setActiveClassName("");
   };
 
@@ -83,13 +89,17 @@ const UserField: FC<{ isUserReady: boolean }> = ({ isUserReady }) => {
     dragEnd(event, activeShip, ships, handleEnd);
   };
 
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    rotateShip((e.target as HTMLElement).id, ships, setNewShips);
+  };
+
   const idsList = FIELD.map((_, i) => i.toString());
   const stylePosition = getStylePosition(activeShip, activeId);
   const bgClass = `battleground ${isUserReady ? "inactive" : ""}`;
 
   return (
     <>
-      <div className={bgClass} id="user-field">
+      <div className={bgClass} id="user-field" onClick={handleClick}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

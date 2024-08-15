@@ -51,7 +51,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
         <div className="battle_sea_wrapper__header">
           <div>{hint}</div>
           <div>
-            <a href={link}>Share game id to Telegram</a>
+            <a href={link}>Share the Game ID to Telegram</a>
           </div>
         </div>
       )}
