@@ -1,0 +1,31 @@
+import { memo, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Provider } from "react-redux";
+
+import Login from "./components/authorization";
+import GamePage from "./components/game-page";
+
+import { store } from "./redux/store";
+
+import "./style.scss";
+
+const BattleSea = () => {
+  const { gameId } = useParams();
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (root?.style) {
+      root.style.backgroundColor = "white";
+    }
+  }, []);
+
+  return (
+    <Provider store={store}>
+      <div className="battle_sea_wrapper">
+        {gameId ? <GamePage gameId={gameId} /> : <Login />}
+      </div>
+    </Provider>
+  );
+};
+
+export default memo(BattleSea);

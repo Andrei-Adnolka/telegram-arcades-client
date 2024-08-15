@@ -6,6 +6,7 @@ import Arkanoid from "./modules/arkanoid";
 import Race from "./modules/race";
 import Shot from "./modules/shot";
 import FlappyBird from "./modules/flappy-bird";
+import BattleSea from "./modules/battle-sea-online";
 
 import { AudioComponent } from "./components/audio";
 import { useBackButton } from "./hooks/useBackButton";
@@ -14,7 +15,7 @@ function App() {
   const { pathname } = useLocation();
 
   const isLoadedGame = pathname !== "/";
-  const isShowSound = pathname !== "/flappy";
+  const isShowSound = pathname === "/tetris";
 
   useBackButton();
 
@@ -41,6 +42,7 @@ function App() {
             <h1>CLASSIC GAMES</h1>
             <div className="home_page_links">
               <a href="/flappy">01 FLAPPY BIRD</a>
+              <a href="/battle-sea-online">02 BATTLESHIP ONLINE</a>
             </div>
           </div>
         </div>
@@ -52,6 +54,9 @@ function App() {
         <Route path="/race" element={<Race />} />
         <Route path="/shot" element={<Shot />} />
         <Route path="/flappy" element={<FlappyBird />} />
+        <Route path="/battle-sea-online" element={<BattleSea />}>
+          <Route path=":gameId" element={null} />
+        </Route>
       </Routes>
     </div>
   );

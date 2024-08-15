@@ -1,0 +1,18 @@
+.form_radio_btn {
+	display: inline-block;
+  width: 100%;
+
+  input[type=radio] {
+    display: none;
+  }
+  label {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    user-select: none;
+  }
+  input[type=radio]:checked + label {
+    background: #ffe0a6;
+  }
+}
