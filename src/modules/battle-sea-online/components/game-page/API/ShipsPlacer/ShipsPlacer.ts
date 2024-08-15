@@ -68,7 +68,7 @@ export const getOccupiedCells = (ship: number[]) => {
   const length = sortedShip.length;
   const startPosition = sortedShip[0];
   const lastPosition = sortedShip[length - 1];
-  const isHorizontal = sortedShip[0] + 1 == sortedShip[1] ? true : false;
+  const isHorizontal = sortedShip[0] + 1 === sortedShip[1] ? true : false;
   const occupiedCells: number[] = [];
 
   if (isHorizontal) {

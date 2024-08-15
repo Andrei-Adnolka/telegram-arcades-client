@@ -20,6 +20,7 @@ const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
     setTimeout(() => {
       setIsShowHint(true);
     }, 5000);
+    // eslint-disable-next-line
   }, []);
 
   let hint = "Enter nickname";

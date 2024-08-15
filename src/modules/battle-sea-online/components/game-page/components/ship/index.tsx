@@ -2,7 +2,6 @@ import { FC, memo, useMemo, useState } from "react";
 
 import { DECKS } from "./_constants";
 
-import { getOccupiedCells } from "../../helpers/ships";
 import { isCanDrop } from "../../API";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { addShip, selectShips } from "../../../../redux/userSlice";
@@ -10,6 +9,7 @@ import { getNewShipLocation } from "./helpers";
 import { getIsCorrentDots } from "../../API/DragAndDrop/helpers";
 
 import "./index.scss";
+import { getOccupiedCells } from "../../API/ShipsPlacer/ShipsPlacer";
 
 type Props = {
   decks: number;
