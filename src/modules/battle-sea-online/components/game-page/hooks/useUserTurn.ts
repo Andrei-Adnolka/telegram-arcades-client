@@ -1,7 +1,7 @@
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setIsUserShot, setWinner } from "../../../redux/gameSlice";
+import { setWinner } from "../../../redux/gameSlice";
 import { selectRivalData, addNotAllowed } from "../../../redux/rivalSlice";
-import { IPlayerState, IShip, PERSON } from "../types";
+import { IShip, PERSON } from "../types";
 import { useCheckShoot } from "./useCheckShoot";
 
 export const useUserTurn = () => {

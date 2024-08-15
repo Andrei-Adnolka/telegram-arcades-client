@@ -23,7 +23,7 @@ const Cell: FC<{ coordinate: number; id: string; ships: IShip[] }> = ({
     });
 
     return classList;
-  }, [ships]);
+  }, [ships, coordinate]);
 
   return (
     <div

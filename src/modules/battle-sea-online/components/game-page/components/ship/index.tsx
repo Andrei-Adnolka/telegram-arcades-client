@@ -1,23 +1,15 @@
-import {
-  FC,
-  memo,
-  ReactNode,
-  TouchEventHandler,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FC, memo, useMemo, useState } from "react";
 
 import { DECKS } from "./_constants";
 
-import "./index.scss";
-import { IShip, PERSON } from "../../types";
 import { getOccupiedCells } from "../../helpers/ships";
 import { isCanDrop } from "../../API";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { addShip, selectShips } from "../../../../redux/userSlice";
 import { getNewShipLocation } from "./helpers";
 import { getIsCorrentDots } from "../../API/DragAndDrop/helpers";
+
+import "./index.scss";
 
 type Props = {
   decks: number;

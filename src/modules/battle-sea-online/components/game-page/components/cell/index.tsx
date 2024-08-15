@@ -32,7 +32,7 @@ const Cell: FC<ICell> = ({
     });
 
     return classList;
-  }, [ships, notAllowed, misses]);
+  }, [ships, notAllowed, misses, coordinate, isRival]);
 
   return (
     <div
