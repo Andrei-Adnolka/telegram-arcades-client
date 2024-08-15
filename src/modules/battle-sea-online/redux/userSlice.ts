@@ -46,6 +46,9 @@ export const userSlice = createSlice({
     sendMisses: (state, { payload }: PayloadAction<number>) => {
       state.misses = [...state.misses, payload];
     },
+    setInitState: (state) => {
+      state = initialState;
+    },
   },
 });
 
@@ -55,6 +58,7 @@ export const {
   resetShips,
   setRandomShips,
   addNotAllowed,
+  setInitState,
 } = userSlice.actions;
 
 export const selectShips = (state: RootState) => state[USER_PATH].ships;

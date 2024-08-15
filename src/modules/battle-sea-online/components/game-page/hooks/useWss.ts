@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getSendData } from "../helpers";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { selectWinner, setIsUserShot } from "../../../redux/gameSlice";
 import { setFullData } from "../../../redux/rivalSlice";
-import { addNotAllowed, selectUserData } from "../../../redux/userSlice";
+import { selectUserData } from "../../../redux/userSlice";
 import { useCheckShoot } from "./useCheckShoot";
 
 const ws = new WebSocket("ws://localhost:4000");
@@ -14,9 +14,6 @@ const ws = new WebSocket("ws://localhost:4000");
 const send = function (message) {
   waitForConnection(function () {
     ws.send(message);
-    // if (typeof callback !== "undefined") {
-    //   callback?.();
-    // }
   }, 1000);
 };
 
@@ -38,12 +35,20 @@ export const useWss = (gameId: string) => {
   const [isRivalReady, setIsRivalReady] = useState(false);
   const [isUserReady, setIsUserReady] = useState(false);
   const [isUserLossed, setIsUserLossed] = useState(false);
+  const [timeStart, setTimeStart] = useState(0);
   const dispatch = useAppDispatch();
   const userData = useAppSelector(selectUserData);
   const winner = useAppSelector(selectWinner);
-
   const navigate = useNavigate();
   const { checkShoot } = useCheckShoot(false);
+
+  const skipIsUserReady = () => {
+    setIsUserReady(false);
+  };
+
+  const onInitState = () => {
+    window.location.reload();
+  };
 
   useEffect(() => {
     if (winner) {
@@ -51,10 +56,11 @@ export const useWss = (gameId: string) => {
         getSendData("loss", {
           username: localStorage.nickname,
           youLossed: "true",
+          gameId,
         })
       );
     }
-  }, [winner]);
+  }, [winner, gameId]);
 
   useEffect(() => {
     if (isUserReady && isRivalReady) {
@@ -65,11 +71,10 @@ export const useWss = (gameId: string) => {
           userData,
         })
       );
-      // if (payload.username === localStorage.nickname && payload.canStart) {
       setIsGameReady(true);
-      // }
+      setTimeStart(new Date().getTime());
     }
-  }, [isUserReady, isRivalReady]);
+  }, [isUserReady, gameId, userData, isRivalReady]);
 
   if (ws) {
     ws.onmessage = function (response) {
@@ -111,13 +116,6 @@ export const useWss = (gameId: string) => {
         case "isHit":
           if (username === localStorage.nickname) {
             dispatch(setIsUserShot(payload.isHit));
-            // changeBoardAfterShoot(
-            //   hisBoard,
-            //   setHisBoard,
-            //   position,
-            //   payload.isPerfectHit
-            // );
-            // setCanShoot(payload.isPerfectHit);
           }
           break;
         default:
@@ -133,27 +131,33 @@ export const useWss = (gameId: string) => {
   const onReady = useCallback(() => {
     setIsUserReady(true);
     send(getSendData("ready", { username: localStorage.nickname, gameId }));
-  }, [gameId, userData]);
+  }, [gameId]);
 
-  const onShoot = useCallback((shoot: number) => {
-    send(
-      getSendData("shoot", {
-        username: localStorage.nickname,
-        position: shoot,
-        gameId,
-      })
-    );
-  }, []);
+  const onShoot = useCallback(
+    (shoot: number) => {
+      send(
+        getSendData("shoot", {
+          username: localStorage.nickname,
+          position: shoot,
+          gameId,
+        })
+      );
+    },
+    [gameId]
+  );
 
   return {
     onReady,
     onShoot,
     onConnect,
+    onInitState,
+    skipIsUserReady,
     rivalName,
     isGameReady,
     isRivalReady,
     isUserReady,
     isUserLossed,
     isWinner: !!winner,
+    timeStart,
   };
 };

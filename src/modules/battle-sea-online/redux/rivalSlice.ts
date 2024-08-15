@@ -44,6 +44,9 @@ export const rivalSlice = createSlice({
       state.misses = payload.misses;
       state.notAllowed = payload.notAllowed;
     },
+    setInitState: (state) => {
+      state = initialState;
+    },
   },
 });
 
@@ -53,6 +56,7 @@ export const {
   addNewShips,
   addNotAllowed,
   setFullData,
+  setInitState,
 } = rivalSlice.actions;
 
 export const selectShips = (state: RootState) => state[RIVAL_PATH].ships;

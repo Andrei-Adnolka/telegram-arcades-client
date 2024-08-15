@@ -1,0 +1,41 @@
+.end-game-block {
+  position: absolute;
+  background-color: #00ad64;
+  color: white;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  width: 225px;
+
+  &.lose {
+    background-color: #e84141;
+  }
+
+  &_info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-top: 12px;
+    font-weight: 400;
+
+    p {
+      color: white;
+      margin: 0;
+    }
+  }
+
+  &_rematch {
+    margin-top: 16px;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    user-select: none;
+    background: #ffffff;
+    color: #212529;
+  }
+}

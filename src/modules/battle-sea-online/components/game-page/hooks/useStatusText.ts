@@ -9,10 +9,10 @@ export const useStatusText = (
 
   if (isNotReadyShips) {
     statusText = "Place the ships";
-    statusClassName.push("sistem_message_not_ready");
+    statusClassName.push("sistem_message__not_ready");
   } else if (isUserReady && !isRivalReady) {
     statusText = "Waiting the Rival";
-    statusClassName.push("sistem_message_not_rival_ready");
+    statusClassName.push("sistem_message__not_rival_ready");
   }
 
   return { statusText, statusClassName };

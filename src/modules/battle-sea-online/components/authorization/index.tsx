@@ -23,7 +23,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isCreateGame) {
-      setGameId(String(Date.now()));
+      setGameId(String(Math.floor(Math.random() * 10001)));
     } else {
       setGameId("");
     }

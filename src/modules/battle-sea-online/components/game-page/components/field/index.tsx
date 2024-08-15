@@ -12,11 +12,12 @@ import { selectIsUserShot } from "../../../../redux/gameSlice";
 
 type Props = {
   isRival: boolean;
+  isUserBoard?: boolean;
   isOnline: boolean;
   sendSocket?: (shoot: number) => void;
 };
 
-const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
+const Field: FC<Props> = ({ isRival, isOnline, isUserBoard, sendSocket }) => {
   const { misses, ships, notAllowed } = usePersonData(isRival);
   const isUserShot = useAppSelector(selectIsUserShot);
   const dispatch = useAppDispatch();
@@ -27,9 +28,11 @@ const Field: FC<Props> = ({ isRival, isOnline, sendSocket }) => {
     if (isRival && !isOnline) {
       dispatch(setRandomShips());
     }
-  }, []);
+  }, [isRival, isOnline, dispatch]);
 
-  const bgClass = `battleground ${!isUserShot && isRival ? "inactive" : ""}`;
+  const bgClass = `battleground ${
+    (!isUserShot && isRival) || isUserBoard ? "inactive" : ""
+  }`;
 
   const shootHandler = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (!(e.target as HTMLDivElement).id) {

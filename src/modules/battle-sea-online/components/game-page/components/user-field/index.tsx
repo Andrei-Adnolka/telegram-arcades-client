@@ -1,4 +1,4 @@
-import { useEffect, memo, useState } from "react";
+import { useEffect, memo, useState, FC } from "react";
 import {
   closestCenter,
   DndContext,
@@ -40,7 +40,7 @@ const getStylePosition = (activeShip: IShip, activeId: string) => {
   return { [isHorizontal ? "left" : "top"]: `-${32 * position}px` };
 };
 
-const UserField = () => {
+const UserField: FC<{ isUserReady: boolean }> = ({ isUserReady }) => {
   const ships = useAppSelector(selectShips);
   const dispatch = useAppDispatch();
 
@@ -85,10 +85,11 @@ const UserField = () => {
 
   const idsList = FIELD.map((_, i) => i.toString());
   const stylePosition = getStylePosition(activeShip, activeId);
+  const bgClass = `battleground ${isUserReady ? "inactive" : ""}`;
 
   return (
     <>
-      <div className="battleground" id="user-field">
+      <div className={bgClass} id="user-field">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -122,7 +123,7 @@ const UserField = () => {
           ) : null}
         </DndContext>
       </div>
-      <ShipStation />
+      {isUserReady ? null : <ShipStation />}
     </>
   );
 };
