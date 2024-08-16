@@ -17,7 +17,7 @@ const RadioButtons: FC<Props> = ({ activeId }) => {
     <>
       {options.map((option) => {
         return (
-          <div className="form_radio_btn">
+          <div className="form_radio_btn" key={option.id}>
             <input
               id={option.id}
               type="radio"

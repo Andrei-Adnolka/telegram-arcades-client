@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { getSendData } from "../helpers";
@@ -7,27 +7,6 @@ import { selectWinner, setIsUserShot } from "../../../redux/gameSlice";
 import { setFullData } from "../../../redux/rivalSlice";
 import { selectUserData } from "../../../redux/userSlice";
 import { useCheckShoot } from "./useCheckShoot";
-
-const ws = new WebSocket("ws://localhost:4000");
-
-// @ts-ignore
-const send = function (message) {
-  waitForConnection(function () {
-    ws.send(message);
-  }, 1000);
-};
-
-// @ts-ignore
-const waitForConnection = function (callback, interval) {
-  if (ws.readyState === 1) {
-    callback();
-  } else {
-    // optional: implement backoff for interval here
-    setTimeout(function () {
-      waitForConnection(callback, interval);
-    }, interval);
-  }
-};
 
 export const useWss = (gameId: string) => {
   const [rivalName, setRivalName] = useState("");
@@ -42,6 +21,32 @@ export const useWss = (gameId: string) => {
   const navigate = useNavigate();
   const { checkShoot } = useCheckShoot(false);
 
+  const ws = useRef<WebSocket>(null);
+  const isFirstLoad = useRef(true);
+  const isSecondLoad = useRef(true);
+
+  const send = function (message: string) {
+    waitForConnection(function () {
+      if (ws.current) {
+        ws.current.send(message);
+      }
+    }, 1000);
+  };
+
+  // @ts-ignore
+  const waitForConnection = function (callback, interval) {
+    if (ws.current) {
+      if (ws.current.readyState === 1) {
+        callback();
+      } else {
+        // optional: implement backoff for interval here
+        setTimeout(function () {
+          waitForConnection(callback, interval);
+        }, interval);
+      }
+    }
+  };
+
   const skipIsUserReady = () => {
     setIsUserReady(false);
   };
@@ -49,6 +54,36 @@ export const useWss = (gameId: string) => {
   const onInitState = () => {
     window.location.reload();
   };
+
+  const onConnect = useCallback(() => {
+    send(getSendData("connect", { username: localStorage.nickname, gameId }));
+  }, [gameId]);
+
+  const onReady = useCallback(() => {
+    setIsUserReady(true);
+    send(getSendData("ready", { username: localStorage.nickname, gameId }));
+  }, [gameId]);
+
+  const fetchData = async () => {
+    await fetch("https://101rest.by/api/websocketInit");
+  };
+
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      fetchData();
+      // @ts-ignore
+      ws.current = new WebSocket("wss://101rest.by/api/websocketInit");
+      isFirstLoad.current = false;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isFirstLoad.current && isSecondLoad.current) {
+      onConnect();
+      isFirstLoad.current = false;
+      isSecondLoad.current = false;
+    }
+  }, [onConnect]);
 
   useEffect(() => {
     if (winner) {
@@ -76,8 +111,8 @@ export const useWss = (gameId: string) => {
     }
   }, [isUserReady, gameId, userData, isRivalReady]);
 
-  if (ws) {
-    ws.onmessage = function (response) {
+  if (ws.current) {
+    ws.current.onmessage = function (response) {
       const { type, payload } = JSON.parse(response.data);
       const { username, position, rivalName, success } = payload;
 
@@ -123,15 +158,6 @@ export const useWss = (gameId: string) => {
       }
     };
   }
-
-  const onConnect = useCallback(() => {
-    send(getSendData("connect", { username: localStorage.nickname, gameId }));
-  }, [gameId]);
-
-  const onReady = useCallback(() => {
-    setIsUserReady(true);
-    send(getSendData("ready", { username: localStorage.nickname, gameId }));
-  }, [gameId]);
 
   const onShoot = useCallback(
     (shoot: number) => {

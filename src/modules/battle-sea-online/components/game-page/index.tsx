@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 
 import { useAppSelector } from "../../redux/hooks";
 
@@ -11,7 +11,6 @@ import { useWss } from "./hooks/useWss";
 
 const GamePageUI = ({ gameId }: { gameId: string }) => {
   const isUserShot = useAppSelector(selectIsUserShot);
-  const isFirstLoad = useRef(true);
 
   const {
     isGameReady,
@@ -19,7 +18,6 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
     isRivalReady,
     onReady,
     onShoot,
-    onConnect,
     rivalName,
     isUserLossed,
     isWinner,
@@ -27,13 +25,6 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
     onInitState,
     skipIsUserReady,
   } = useWss(gameId);
-
-  useEffect(() => {
-    if (isFirstLoad.current) {
-      onConnect();
-      isFirstLoad.current = false;
-    }
-  }, [onConnect]);
 
   let hintText = isUserShot ? "Your Turn" : "Rival Turn";
   if (isUserLossed || isWinner) {
