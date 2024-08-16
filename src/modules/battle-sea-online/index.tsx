@@ -21,6 +21,7 @@ const BattleSea = () => {
     }
     if (body?.style) {
       body.style.overflow = "auto";
+      body.style.background = "white";
     }
   }, []);
 
