@@ -8,7 +8,7 @@ import { setFullData } from "../../../redux/rivalSlice";
 import { selectUserData } from "../../../redux/userSlice";
 import { useCheckShoot } from "./useCheckShoot";
 
-const ws = new WebSocket("ws://localhost:4000");
+const ws = new WebSocket("ws://192.168.31.235:4000");
 
 // @ts-ignore
 const send = function (message) {
