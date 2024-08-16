@@ -39,7 +39,6 @@ export const useWss = (gameId: string) => {
       if (ws.current.readyState === 1) {
         callback();
       } else {
-        // optional: implement backoff for interval here
         setTimeout(function () {
           waitForConnection(callback, interval);
         }, interval);
