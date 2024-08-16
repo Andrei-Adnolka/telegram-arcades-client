@@ -25,16 +25,8 @@ export const useWss = (gameId: string) => {
   const isFirstLoad = useRef(true);
   const isSecondLoad = useRef(true);
 
-  const send = function (message: string) {
-    waitForConnection(function () {
-      if (ws.current) {
-        ws.current.send(message);
-      }
-    }, 1000);
-  };
-
   // @ts-ignore
-  const waitForConnection = function (callback, interval) {
+  const waitForConnection = useCallback((callback, interval) => {
     if (ws.current) {
       if (ws.current.readyState === 1) {
         callback();
@@ -44,7 +36,18 @@ export const useWss = (gameId: string) => {
         }, interval);
       }
     }
-  };
+  }, []);
+
+  const send = useCallback(
+    (message: string) => {
+      waitForConnection(function () {
+        if (ws.current) {
+          ws.current.send(message);
+        }
+      }, 1000);
+    },
+    [waitForConnection]
+  );
 
   const skipIsUserReady = () => {
     setIsUserReady(false);
@@ -56,12 +59,12 @@ export const useWss = (gameId: string) => {
 
   const onConnect = useCallback(() => {
     send(getSendData("connect", { username: localStorage.nickname, gameId }));
-  }, [gameId]);
+  }, [send, gameId]);
 
   const onReady = useCallback(() => {
     setIsUserReady(true);
     send(getSendData("ready", { username: localStorage.nickname, gameId }));
-  }, [gameId]);
+  }, [send, gameId]);
 
   const fetchData = async () => {
     await fetch("https://101rest.by/api/websocketInit");
@@ -94,7 +97,7 @@ export const useWss = (gameId: string) => {
         })
       );
     }
-  }, [winner, gameId]);
+  }, [winner, gameId, send]);
 
   useEffect(() => {
     if (isUserReady && isRivalReady) {
@@ -108,7 +111,7 @@ export const useWss = (gameId: string) => {
       setIsGameReady(true);
       setTimeStart(new Date().getTime());
     }
-  }, [isUserReady, gameId, userData, isRivalReady]);
+  }, [isUserReady, gameId, userData, isRivalReady, send]);
 
   if (ws.current) {
     ws.current.onmessage = function (response) {
@@ -168,7 +171,7 @@ export const useWss = (gameId: string) => {
         })
       );
     },
-    [gameId]
+    [gameId, send]
   );
 
   return {
