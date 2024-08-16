@@ -14,8 +14,13 @@ const BattleSea = () => {
 
   useEffect(() => {
     const root = document.getElementById("root");
+    const body = document.querySelector("body");
+
     if (root?.style) {
       root.style.backgroundColor = "white";
+    }
+    if (body?.style) {
+      body.style.overflow = "auto";
     }
   }, []);
 
