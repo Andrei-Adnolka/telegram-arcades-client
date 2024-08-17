@@ -4,13 +4,24 @@ import { useNavigate } from "react-router-dom";
 import RadioButtons from "./components/radio-buttons";
 import NicknameField from "./components/nickname-field";
 
+import { useAppSelector } from "../../redux/hooks";
+import { selectLang } from "../../redux/gameSlice";
+
 import "./style.scss";
+
+const l10n = {
+  ru: { auth: "Авторизация", play: "Играть", enter: "Введите код игры" },
+  eng: { auth: "Authorization", play: "Play", enter: "Enter the game ID" },
+};
 
 const Login = () => {
   const navigate = useNavigate();
   const [invitationGame, setInvitationGame] = useState("Create Game");
   const [gameId, setGameId] = useState<string>("");
   const [nickname, setNickname] = useState("");
+  const lang = useAppSelector(selectLang);
+
+  const { auth, play, enter } = l10n[lang];
 
   const startPlay = () => {
     if (gameId && nickname) {
@@ -31,7 +42,7 @@ const Login = () => {
 
   return (
     <div>
-      <h2 className="battleship-authorization-block-title">AUTHORIZATION</h2>
+      <h2 className="battleship-authorization-block-title">{auth}</h2>
       <div className="battleship-authorization-block">
         <NicknameField setNickname={setNickname} nickname={nickname} />
         <div
@@ -44,7 +55,7 @@ const Login = () => {
           {invitationGame === "Go to game" ? (
             <div className="text-field">
               <label className="text-field__label" htmlFor="nickname">
-                Enter the game ID
+                {enter}
               </label>
               <input
                 className="text-field__input"
@@ -64,7 +75,7 @@ const Login = () => {
         className="battle-submit-buttom"
         disabled={!gameId || !nickname}
       >
-        Play
+        {play}
       </button>
     </div>
   );

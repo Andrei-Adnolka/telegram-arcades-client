@@ -1,10 +1,18 @@
 import { FC } from "react";
 
 import "./style.scss";
+import { useAppSelector } from "../../../../redux/hooks";
+import { selectLang } from "../../../../redux/gameSlice";
 
 const options = [
-  { id: "Create Game", label: "Online game" },
-  { id: "Go to game", label: "Go to game" },
+  {
+    id: "Create Game",
+    labels: { ru: "Создать игру", eng: "Create game" },
+  },
+  {
+    id: "Go to game",
+    labels: { ru: "Подключится", eng: "Connect" },
+  },
   // { id: "Play with AI", label: "Play with AI" },
 ];
 
@@ -13,6 +21,7 @@ type Props = {
 };
 
 const RadioButtons: FC<Props> = ({ activeId }) => {
+  const lang = useAppSelector(selectLang);
   return (
     <>
       {options.map((option) => {
@@ -24,7 +33,7 @@ const RadioButtons: FC<Props> = ({ activeId }) => {
               name="radio"
               checked={option.id === activeId}
             />
-            <label htmlFor={option.id}>{option.label}</label>
+            <label htmlFor={option.id}>{option.labels[lang]}</label>
           </div>
         );
       })}

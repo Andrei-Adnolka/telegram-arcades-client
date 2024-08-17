@@ -3,15 +3,24 @@ import { FC, useEffect, useState } from "react";
 import { useTelegram } from "../../../../../../provider/telegram";
 
 import "./style.scss";
+import { useAppSelector } from "../../../../redux/hooks";
+import { selectLang } from "../../../../redux/gameSlice";
 
 type Props = {
   setNickname: (arg: string) => void;
   nickname: string;
 };
 
+const l10n = {
+  ru: { h: "Введите имя", label: "Введите свое имя" },
+  eng: { h: "Enter nickname", label: "" },
+};
+
 const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
   const [isShowHint, setIsShowHint] = useState(false);
   const { user } = useTelegram();
+  const lang = useAppSelector(selectLang);
+  const { h, label } = l10n[lang];
 
   useEffect(() => {
     if (user) {
@@ -23,7 +32,7 @@ const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
     // eslint-disable-next-line
   }, []);
 
-  let hint = "Enter nickname";
+  let hint = h;
 
   if (nickname) {
     hint = "";
@@ -39,7 +48,7 @@ const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
   return (
     <div className="text-field">
       <label className="text-field__label" htmlFor="nickname">
-        Set your nickname
+        {label}
       </label>
       <input
         className="text-field__input"

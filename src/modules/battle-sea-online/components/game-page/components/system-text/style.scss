@@ -7,14 +7,16 @@
   color: white;
   margin-bottom: 16px;
   width: 100%;
-  font-size: 14px;
+  font-size: 16px;
+  animation: pulse 1s ease-in-out infinite;
+
 
   &__cancel_button{
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 7px;
+    top: 9px;
     right: 16px;
     border: 1px solid white;
     border-radius: 6px;
@@ -29,6 +31,7 @@
   &__not_rival_ready {
     pointer-events: none;
     background-color: rgb(103, 104, 103);
+    animation: none;
   }
   &__not_rival_ready {
     display: flex;
@@ -39,8 +42,8 @@
       width: 6px;
       height: 6px;
       position: absolute;
-      top: 10px;
-      left: -16%;
+      top: 12px;
+      left: -10%;
       border-radius: 50%;
       position: relative;
       animation: loader-2 0.9s 0.35s ease alternate infinite;
@@ -73,5 +76,17 @@
   }
   100% {
     box-shadow: 0 15px 0 white;
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
   }
 }

@@ -4,14 +4,23 @@ import { useGetSettedShips } from "../../hooks/useGetSettedShips";
 
 import Ship from "../ship";
 
-import "./index.scss";
-import { useAppDispatch } from "../../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { resetShips, setRandomShips } from "../../../../redux/userSlice";
+import { selectLang } from "../../../../redux/gameSlice";
+
+import "./index.scss";
 
 const BLOCK_ID = "ship-station";
 
+const l10n = {
+  ru: { random: "Случайный образом", reset: "С чистого листа" },
+  eng: { random: "Randomise", reset: "Reset" },
+};
+
 const ShipStation = () => {
   const { restShips, countShips } = useGetSettedShips();
+  const lang = useAppSelector(selectLang);
+  const { random, reset } = l10n[lang];
 
   const dispatch = useAppDispatch();
 
@@ -41,13 +50,12 @@ const ShipStation = () => {
       ) : null}
       <div className="ship-station_discription">
         <button className="ship-station_button" onClick={setRandomUserShips}>
-          random
+          {random}
         </button>
         <button className="ship-station_button" onClick={resetUserShips}>
-          reset
+          {reset}
         </button>
       </div>
-      <p style={{ marginTop: "4px" }}>dragAndDrop</p>
     </div>
   );
 };
