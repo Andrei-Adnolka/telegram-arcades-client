@@ -20,5 +20,5 @@ export const useGetSettedShips = () => {
       .sort((a, b) => b - a);
   }, [ships]);
 
-  return { restShips };
+  return { restShips, countShips: restShips.length };
 };
