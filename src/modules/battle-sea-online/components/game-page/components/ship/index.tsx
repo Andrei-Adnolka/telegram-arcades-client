@@ -38,12 +38,12 @@ const getDeckClass = (decks: number) => {
 };
 
 const Ship: FC<Props> = ({ decks, id }) => {
-  const [activeId, setActiveId] = useState(0);
   const [shiftX, setShiftX] = useState(0);
   const [shiftY, setShiftY] = useState(0);
   const [drag, setDrag] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
+  const [activeId, setActiveId] = useState(0);
 
   const dispatch = useAppDispatch();
   const ships = useAppSelector(selectShips);
@@ -51,19 +51,17 @@ const Ship: FC<Props> = ({ decks, id }) => {
   const classList = ["ship", getDeckClass(decks)];
 
   function moveAt(pageX: number, pageY: number) {
+    const { top } = document.body.getBoundingClientRect();
     return {
       left: pageX - shiftX,
-      top: pageY - shiftY,
+      top: pageY - shiftY + top,
     };
   }
 
   const onTouchStart = (e: TouchEvent) => {
     if (!(e?.target as HTMLDivElement)?.id) return;
-    const body = document.querySelector("body");
 
-    if (body?.style) {
-      body.style.overflowY = "hidden";
-    }
+    document.body.style.overflow = "hidden";
 
     let { clientX, clientY, pageX, pageY } = e.changedTouches[0];
     const element = document.getElementById(id);
@@ -102,7 +100,6 @@ const Ship: FC<Props> = ({ decks, id }) => {
 
   const onTouchEnd = (e: TouchEvent) => {
     const point = e.changedTouches[0];
-    console.log("point", point);
     if (point) {
       const { clientX, clientY } = point;
       const cells = document.elementsFromPoint(clientX, clientY);
@@ -138,11 +135,7 @@ const Ship: FC<Props> = ({ decks, id }) => {
     } else {
       skipElement(e);
     }
-
-    const body = document.querySelector("body");
-    if (body?.style) {
-      body.style.overflowY = "auto";
-    }
+    document.body.style.overflow = "auto";
   };
 
   const onTouchMove = (e: TouchEvent) => {
