@@ -16,11 +16,6 @@ type Props = {
   id: string;
 };
 
-// function moveAt(pageX, pageY) {
-//   ball.style.left = pageX - ball.offsetWidth / 2 + "px";
-//   ball.style.top = pageY - ball.offsetHeight / 2 + "px";
-// }
-
 const removeClassList = (id: string) => {
   const element = document.getElementById(id)?.parentElement;
   element?.classList.remove("ship-red");
@@ -64,6 +59,11 @@ const Ship: FC<Props> = ({ decks, id }) => {
 
   const onTouchStart = (e: TouchEvent) => {
     if (!(e?.target as HTMLDivElement)?.id) return;
+    const body = document.querySelector("body");
+
+    if (body?.style) {
+      body.style.overflowY = "hidden";
+    }
 
     let { clientX, clientY, pageX, pageY } = e.changedTouches[0];
     const element = document.getElementById(id);
@@ -87,29 +87,37 @@ const Ship: FC<Props> = ({ decks, id }) => {
     }
   };
 
+  const skipElement = (e: TouchEvent) => {
+    setActiveId(0);
+    setDrag(false);
+    removeClassList((e.target as HTMLElement).id);
+    const element = document.getElementById(
+      (e.target as HTMLElement).id
+    )?.parentElement;
+    if (element) {
+      element.classList.remove("ship-red");
+      element.classList.remove("ship-green");
+    }
+  };
+
   const onTouchEnd = (e: TouchEvent) => {
     const point = e.changedTouches[0];
-
+    console.log("point", point);
     if (point) {
       const { clientX, clientY } = point;
       const cells = document.elementsFromPoint(clientX, clientY);
       if (cells.length) {
-        // @ts-ignore
-        const p = +cells[2]?.id;
-        if (typeof p === "number") {
+        const p = cells[2]?.id ? Number(cells[2]?.id) : "";
+
+        if (typeof p === "number" && !Number.isNaN(p)) {
           const shipLocation = getNewShipLocation(p, decks, activeId);
 
           if (!shipLocation?.length || !getIsCorrentDots(shipLocation)) {
-            setActiveId(0);
-            setDrag(false);
-            removeClassList((e.target as HTMLElement).id);
+            skipElement(e);
             return;
           }
           if (!isCanDrop(ships, shipLocation)) {
-            setActiveId(0);
-            setDrag(false);
-            removeClassList((e.target as HTMLElement).id);
-
+            skipElement(e);
             return;
           }
 
@@ -122,11 +130,19 @@ const Ship: FC<Props> = ({ decks, id }) => {
           };
 
           dispatch(addShip(ship));
+        } else {
+          skipElement(e);
+          return;
         }
       }
+    } else {
+      skipElement(e);
     }
-    setActiveId(0);
-    setDrag(false);
+
+    const body = document.querySelector("body");
+    if (body?.style) {
+      body.style.overflowY = "auto";
+    }
   };
 
   const onTouchMove = (e: TouchEvent) => {

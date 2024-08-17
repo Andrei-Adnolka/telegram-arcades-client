@@ -20,7 +20,7 @@ const BattleSea = () => {
       root.style.backgroundColor = "white";
     }
     if (body?.style) {
-      body.style.overflow = "auto";
+      body.style.overflowY = "auto";
       body.style.background = "white";
     }
   }, []);

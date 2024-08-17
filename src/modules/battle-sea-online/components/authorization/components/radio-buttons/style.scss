@@ -6,11 +6,15 @@
     display: none;
   }
   label {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 4px 8px;
     border: 1px solid #999;
     border-radius: 6px;
     user-select: none;
+    height: 30px;
+
   }
   input[type=radio]:checked + label {
     background: #ffe0a6;

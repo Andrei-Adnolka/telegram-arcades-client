@@ -10,7 +10,7 @@
     display: flex;
     margin-left: -8px;
     width: calc(100% + 16px);
-    min-height: 168px;
+    min-height: 130px;
     gap: 6px;
   }
 
@@ -26,6 +26,8 @@
     width: 160px;
     height: 40px;
     margin: 0 auto;
+    background-color: #b4b4ff;
+    color: white;
 
     font: {
       size: 20px;
@@ -36,11 +38,10 @@
     letter-spacing: 2px;
 
     border: none {
-      radius: 4px;
+      radius: 8px;
     }
 
     cursor: pointer;
     transition: ease-in-out 0.5s;
   }
 }
-

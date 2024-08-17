@@ -31,16 +31,16 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
     hintText = isUserLossed ? "You lose" : "You Win";
   }
 
-  const text = `I want to play with you, please go to battleship and enter this code <b>${gameId}</b>`;
+  const text = `I want to play with you, please go to battleship and enter this code ${gameId}`;
   const link = `https://t.me/share/url?url=https://t.me/Arcade_Games_BY_VAOM_Bot&text=${text}`;
-  const hint = `Share your friend the Game ID: ${gameId}`;
+  const hint = `Share your friend the Game ID: <b>${gameId}</b>`;
   const isShowEndGameBlock = isWinner || isUserLossed;
 
   return (
     <div>
       {isUserReady || isShowEndGameBlock ? null : (
         <div className="battle_sea_wrapper__header">
-          <div>{hint}</div>
+          <div dangerouslySetInnerHTML={{ __html: hint }} />
           <div>
             <a href={link}>Share the Game ID to Telegram</a>
           </div>

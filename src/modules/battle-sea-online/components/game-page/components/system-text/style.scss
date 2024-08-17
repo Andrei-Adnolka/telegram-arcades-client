@@ -1,27 +1,27 @@
 
 .sistem_message {
   display: block;
-  padding: 8px 4px;
+  padding: 12px 4px;
   background-color: #00ad64;
-  border-radius: 4px;
+  border-radius: 8px;
   color: white;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   width: 100%;
+  font-size: 14px;
 
   &__cancel_button{
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 6px;
+    top: 7px;
     right: 16px;
     border: 1px solid white;
     border-radius: 6px;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     z-index: 20;
     pointer-events: initial;
-    font-size: 10px;
     font-weight: 700;
   }
 

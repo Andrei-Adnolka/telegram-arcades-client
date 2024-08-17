@@ -31,7 +31,7 @@ const Login = () => {
 
   return (
     <div>
-      <h2>AUTHORIZATION</h2>
+      <h2 className="battleship-authorization-block-title">AUTHORIZATION</h2>
       <div className="battleship-authorization-block">
         <NicknameField setNickname={setNickname} nickname={nickname} />
         <div
