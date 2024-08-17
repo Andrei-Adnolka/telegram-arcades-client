@@ -26,16 +26,15 @@ export const useFlappy = () => {
         };
       })
       .filter((el) => el.x1 > 0 && el.x1 < 288);
-
-    if (y > 512 - 108) {
+    if (y > 512 - 100) {
       dispatchBoardState({ type: "gameOver" });
       onSendHightScore(score);
     }
     if (challenge.length) {
       const { x1, y1, x2, y2, id } = challenge[0];
       if (
-        (x1 < 120 && 120 < x1 + 52 && y < y1) ||
-        (x2 < 120 && 120 < x2 + 52 && y > y2)
+        (x1 <= 139 && 139 <= x1 + 52 && y - 28 <= y1) ||
+        (x2 <= 139 && 139 <= x2 + 52 && y >= y2)
       ) {
         dispatchBoardState({ type: "gameOver" });
         onSendHightScore(score);

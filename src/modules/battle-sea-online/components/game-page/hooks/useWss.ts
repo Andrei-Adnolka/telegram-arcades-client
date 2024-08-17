@@ -8,6 +8,8 @@ import { setFullData } from "../../../redux/rivalSlice";
 import { selectUserData } from "../../../redux/userSlice";
 import { useCheckShoot } from "./useCheckShoot";
 
+const API_URL = "101rest.by/api/websocketInit";
+
 export const useWss = (gameId: string) => {
   const [rivalName, setRivalName] = useState("");
   const [isGameReady, setIsGameReady] = useState(false);
@@ -67,14 +69,14 @@ export const useWss = (gameId: string) => {
   }, [send, gameId]);
 
   const fetchData = async () => {
-    await fetch("https://101rest.by/api/websocketInit");
+    await fetch(`https://${API_URL}`);
   };
 
   useEffect(() => {
     if (isFirstLoad.current) {
       fetchData();
       // @ts-ignore
-      ws.current = new WebSocket("wss://101rest.by/api/websocketInit");
+      ws.current = new WebSocket(`wss://${API_URL}`);
       isFirstLoad.current = false;
     }
   }, []);

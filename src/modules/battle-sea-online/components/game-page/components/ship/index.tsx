@@ -61,7 +61,9 @@ const Ship: FC<Props> = ({ decks, id }) => {
   const onTouchStart = (e: TouchEvent) => {
     if (!(e?.target as HTMLDivElement)?.id) return;
 
-    document.body.style.overflow = "hidden";
+    setTimeout(() => {
+      document.body.style.overflow = "hidden";
+    }, 0);
 
     let { clientX, clientY, pageX, pageY } = e.changedTouches[0];
     const element = document.getElementById(id);
