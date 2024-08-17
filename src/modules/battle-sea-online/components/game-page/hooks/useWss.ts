@@ -66,6 +66,7 @@ export const useWss = (gameId: string) => {
   const onReady = useCallback(() => {
     setIsUserReady(true);
     send(getSendData("ready", { username: localStorage.nickname, gameId }));
+    document.body.style.overflow = "auto";
   }, [send, gameId]);
 
   const fetchData = async () => {

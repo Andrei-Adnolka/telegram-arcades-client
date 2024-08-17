@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 
 import { useGetSettedShips } from "../../hooks/useGetSettedShips";
 
@@ -26,10 +26,6 @@ const ShipStation = () => {
   const setRandomUserShips = () => {
     dispatch(setRandomShips());
   };
-
-  useEffect(() => {
-    document.body.style.overflow = countShips ? "hidden" : "auto";
-  }, [countShips]);
 
   return (
     <div className="ship-station" id={BLOCK_ID}>
