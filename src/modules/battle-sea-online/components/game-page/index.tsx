@@ -74,11 +74,11 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
           )}
           {isGameReady || isShowEndGameBlock ? (
             <>
-              <div className="battle_sea_wrapper__board">
+              <div>
                 <p>{`${localStorage.nickname.toUpperCase()} (You)`}</p>
                 <Field isRival={false} isOnline isUserBoard />
               </div>
-              <div className="battle_sea_wrapper__board">
+              <div style={{ marginTop: "16px" }}>
                 {rivalName ? (
                   <>
                     <p>{`${
