@@ -34,6 +34,7 @@ const ShipStation = () => {
   };
   const setRandomUserShips = () => {
     dispatch(setRandomShips());
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

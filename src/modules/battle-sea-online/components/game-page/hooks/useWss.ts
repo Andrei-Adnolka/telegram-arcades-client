@@ -27,7 +27,6 @@ export const useWss = (gameId: string) => {
 
   const ws = useRef<WebSocket>(null);
   const isFirstLoad = useRef(true);
-  const isSecondLoad = useRef(true);
 
   // @ts-ignore
   const waitForConnection = useCallback((callback, interval) => {
@@ -55,6 +54,8 @@ export const useWss = (gameId: string) => {
 
   const skipIsUserReady = () => {
     setIsUserReady(false);
+    document.body.style.overflow = "hidden";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onInitState = () => {
@@ -80,17 +81,14 @@ export const useWss = (gameId: string) => {
   useEffect(() => {
     if (isFirstLoad.current) {
       fetchData();
-      isFirstLoad.current = false;
-    }
-  }, []);
+      setTimeout(() => {
+        onConnect();
+      }, 1000);
 
-  useEffect(() => {
-    if (!isFirstLoad.current && isSecondLoad.current) {
-      onConnect();
       isFirstLoad.current = false;
-      isSecondLoad.current = false;
     }
-  }, [onConnect]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (winner) {
@@ -130,19 +128,19 @@ export const useWss = (gameId: string) => {
   if (ws.current) {
     ws.current.onmessage = function (response) {
       const { type, payload } = JSON.parse(response.data);
-      const { username, position, rivalName, success } = payload;
+      const { username, position, success } = payload;
 
       switch (type) {
         case "connectToPlay":
           if (!success) {
             return navigate("/battle-sea-online");
           }
-          setRivalName(rivalName);
           break;
         case "setToState":
           if (username !== localStorage.nickname) {
             setIsRivalReady(true);
             dispatch(setFullData(payload.userData));
+            setRivalName(payload.rivalName);
           }
           break;
         case "readyToPlay":
