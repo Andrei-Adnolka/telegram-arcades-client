@@ -6,7 +6,7 @@ interface Props {
 }
 
 function Cell({ type, dataName }: Props) {
-  return <div className={`cell ${type}`} data-name={dataName} />;
+  return <div className={`brick-cell ${type}`} data-name={dataName} />;
 }
 
 export default Cell;

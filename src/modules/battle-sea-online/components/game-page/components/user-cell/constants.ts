@@ -1,5 +1,5 @@
 export enum CELLCLASS {
-  initial = "battleship-cell",
+  initial = "cell",
   shoot = " hit",
   miss = " miss",
   boat = " ship-cell",
