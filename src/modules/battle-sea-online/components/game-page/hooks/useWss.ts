@@ -7,6 +7,7 @@ import { selectWinner, setIsUserShot } from "../../../redux/gameSlice";
 import { setFullData } from "../../../redux/rivalSlice";
 import { selectUserData } from "../../../redux/userSlice";
 import { useCheckShoot } from "./useCheckShoot";
+import { useUnload } from "./useUnload";
 
 const API_URL = "101rest.by/api/websocketInit";
 
@@ -16,6 +17,7 @@ export const useWss = (gameId: string) => {
   const [isRivalReady, setIsRivalReady] = useState(false);
   const [isUserReady, setIsUserReady] = useState(false);
   const [isUserLossed, setIsUserLossed] = useState(false);
+  const [isRivalLeft, setIsRivalLeft] = useState(false);
   const [timeStart, setTimeStart] = useState(0);
   const dispatch = useAppDispatch();
   const userData = useAppSelector(selectUserData);
@@ -102,6 +104,15 @@ export const useWss = (gameId: string) => {
     }
   }, [winner, gameId, send]);
 
+  useUnload(() => {
+    send(
+      getSendData("reload", {
+        username: localStorage.nickname,
+        gameId,
+      })
+    );
+  });
+
   useEffect(() => {
     if (isUserReady && isRivalReady) {
       send(
@@ -130,6 +141,7 @@ export const useWss = (gameId: string) => {
           break;
         case "setToState":
           if (username !== localStorage.nickname) {
+            setIsRivalReady(true);
             dispatch(setFullData(payload.userData));
           }
           break;
@@ -151,6 +163,14 @@ export const useWss = (gameId: string) => {
         case "youLossed":
           if (username !== localStorage.nickname) {
             setIsUserLossed(true);
+          }
+          break;
+        case "reloadRival":
+          if (username !== localStorage.nickname) {
+            setIsRivalLeft(true);
+            setTimeout(() => {
+              navigate("/battle-sea-online");
+            }, 2000);
           }
           break;
         case "isHit":
@@ -190,5 +210,6 @@ export const useWss = (gameId: string) => {
     isUserLossed,
     isWinner: !!winner,
     timeStart,
+    isRivalLeft,
   };
 };

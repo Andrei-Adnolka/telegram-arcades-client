@@ -5,6 +5,7 @@ import { useAppSelector } from "../../redux/hooks";
 import UserField from "./components/user-field";
 import Field from "./components/field";
 import { EndBlockUI } from "./components/end-block";
+import { RivalLeftUI } from "./components/rival-left-block";
 import { SystemTextUI } from "./components/system-text";
 import { selectIsUserShot, selectLang } from "../../redux/gameSlice";
 import { useWss } from "./hooks/useWss";
@@ -64,6 +65,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
     isUserLossed,
     isWinner,
     timeStart,
+    isRivalLeft,
     onInitState,
     skipIsUserReady,
   } = useWss(gameId);
@@ -95,6 +97,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
           onInitState={onInitState}
         />
       ) : null}
+      {isRivalLeft ? <RivalLeftUI onInitState={onInitState} /> : null}
       {isGameReady || isShowEndGameBlock ? <h1>{hintText}</h1> : null}
       <div
         className={`battle_sea_wrapper__boards ${
