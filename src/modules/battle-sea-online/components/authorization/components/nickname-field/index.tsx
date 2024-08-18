@@ -25,6 +25,8 @@ const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
   useEffect(() => {
     if (user) {
       setNickname(user.first_name || user.username || "");
+    } else {
+      setNickname(localStorage.nickname || "");
     }
     setTimeout(() => {
       setIsShowHint(true);

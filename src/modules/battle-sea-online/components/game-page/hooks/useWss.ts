@@ -73,13 +73,13 @@ export const useWss = (gameId: string) => {
 
   const fetchData = async () => {
     await fetch(`https://${API_URL}`);
+    // @ts-ignore
+    ws.current = new WebSocket(`wss://${API_URL}`);
   };
 
   useEffect(() => {
     if (isFirstLoad.current) {
       fetchData();
-      // @ts-ignore
-      ws.current = new WebSocket(`wss://${API_URL}`);
       isFirstLoad.current = false;
     }
   }, []);
