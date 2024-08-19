@@ -5,13 +5,17 @@
 
   width: 100%;
   text-align: center;
-  padding-top: 24px;
+  padding-top: 16px;
 
   h1 {
     background-color: white;
     color: black;
     margin-bottom: -8px;
     font-size: 18px;
+    position: sticky;
+    top: 0px;
+    width: 100%;
+    padding: 16px 0px;
   }
 
   &__header {
@@ -43,7 +47,7 @@
     color: black;
     font-weight: 700;
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     margin-top: 0px;
   }
 }

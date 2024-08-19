@@ -31,7 +31,6 @@ export const SystemTextUI: FC<Props> = ({
 
   return (
     <span className={statusClassName.join(" ")} onClick={onReady}>
-      {statusText}
       {isShowCancelButton ? (
         <div
           className="sistem_message__cancel_button"
@@ -40,9 +39,10 @@ export const SystemTextUI: FC<Props> = ({
             skipIsUserReady();
           }}
         >
-          X
+          ←
         </div>
       ) : null}
+      {statusText}
       <div className="loader-2" />
     </span>
   );

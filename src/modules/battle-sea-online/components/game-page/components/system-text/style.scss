@@ -1,14 +1,17 @@
 
 .sistem_message {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px 4px;
   background-color: #00ad64;
   border-radius: 8px;
   color: white;
   margin-bottom: 16px;
-  width: 100%;
+  width: 320px;
   font-size: 16px;
   animation: pulse 1s ease-in-out infinite;
+  height: 40px;
 
 
   &__cancel_button{
@@ -16,15 +19,18 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 9px;
-    right: 16px;
+    top: 0px;
+    left: -50px;
     border: 1px solid white;
-    border-radius: 6px;
-    width: 24px;
-    height: 24px;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
     z-index: 20;
     pointer-events: initial;
     font-weight: 700;
+    font-size: 24px;
+    background-color: rgb(103, 104, 103);
+    padding-bottom: 4px;
   }
 
   &__not_ready,
@@ -35,15 +41,18 @@
   }
   &__not_rival_ready {
     display: flex;
+    align-items: center;
     padding-left: 16px;
     position: relative;
+    width: 270px;
+    margin-right: -50px;
 
     > .loader-2 {
       width: 6px;
       height: 6px;
       position: absolute;
-      top: 12px;
-      left: -10%;
+      top: -4px;
+      left: -3%;
       border-radius: 50%;
       position: relative;
       animation: loader-2 0.9s 0.35s ease alternate infinite;

@@ -123,7 +123,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
                 <p>{`${localStorage.nickname.toUpperCase()} (${you})`}</p>
                 <Field isRival={false} isOnline isUserBoard />
               </div>
-              <div style={{ marginTop: "16px" }}>
+              <div style={{ marginTop: "32px", marginBottom: "32px" }}>
                 {rivalName ? (
                   <>
                     <p>{`${

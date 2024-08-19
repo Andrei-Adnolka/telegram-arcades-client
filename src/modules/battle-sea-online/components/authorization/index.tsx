@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import RadioButtons from "./components/radio-buttons";
 import NicknameField from "./components/nickname-field";
 
 import { useAppSelector } from "../../redux/hooks";
@@ -10,73 +9,96 @@ import { selectLang } from "../../redux/gameSlice";
 import "./style.scss";
 
 const l10n = {
-  ru: { auth: "Авторизация", play: "Играть", enter: "Введите код игры" },
-  eng: { auth: "Authorization", play: "Play", enter: "Enter the game ID" },
+  ru: {
+    createGame: "Создать игру",
+    auth: "Авторизация",
+    play: "Играть",
+    enter: "Введите код игры",
+    connect: "Подключится",
+  },
+  eng: {
+    createGame: "Create game",
+    auth: "Authorization",
+    play: "Play",
+    enter: "Enter the game ID",
+    connect: "Connect",
+  },
 };
 
 const Login = () => {
   const navigate = useNavigate();
-  const [invitationGame, setInvitationGame] = useState("Create Game");
+  const [invitationGame, setInvitationGame] = useState(false);
   const [gameId, setGameId] = useState<string>("");
   const [nickname, setNickname] = useState("");
   const lang = useAppSelector(selectLang);
 
-  const { auth, play, enter } = l10n[lang];
+  const { auth, play, enter, createGame, connect } = l10n[lang];
+
+  const isGameReady = gameId && nickname;
 
   const startPlay = () => {
-    if (gameId && nickname) {
+    if (isGameReady) {
       localStorage.nickname = nickname;
       navigate("/battle-sea-online/" + gameId);
     }
   };
 
-  const isCreateGame = invitationGame === "Create Game";
+  const changeInvState = () => {
+    setInvitationGame((prev) => !prev);
+  };
 
-  useEffect(() => {
-    if (isCreateGame) {
-      setGameId(String(Math.floor(Math.random() * 10001)));
-    } else {
-      setGameId("");
-    }
-  }, [isCreateGame]);
+  const onCreateGame = () => {
+    const id = String(Math.floor(Math.random() * 10001));
+    navigate("/battle-sea-online/" + id);
+  };
 
   return (
     <div>
       <h2 className="battleship-authorization-block-title">{auth}</h2>
       <div className="battleship-authorization-block">
         <NicknameField setNickname={setNickname} nickname={nickname} />
-        <div
-          onChange={(e) => setInvitationGame((e.target as HTMLElement).id)}
-          className="radio-buttons-wrapper"
-        >
-          <RadioButtons activeId={invitationGame} />
+        <div className="radio-buttons-wrapper">
+          <div
+            className={`button ${nickname ? "active" : ""}`}
+            onClick={onCreateGame}
+          >
+            {createGame}
+          </div>
+          <div
+            className={`button ${invitationGame ? "active" : ""}`}
+            onClick={changeInvState}
+          >
+            {connect}
+          </div>
         </div>
         <div>
-          {invitationGame === "Go to game" ? (
-            <div className="text-field">
-              <label className="text-field__label" htmlFor="nickname">
-                {enter}
-              </label>
-              <input
-                className="text-field__input"
-                type="text"
-                name="gameId"
-                id="gameId"
-                onChange={(e) => setGameId(e.target.value)}
-                defaultValue=""
-              />
-            </div>
+          {invitationGame ? (
+            <>
+              <div className="text-field">
+                <label className="text-field__label" htmlFor="nickname">
+                  {enter}
+                </label>
+                <input
+                  className="text-field__input"
+                  type="text"
+                  name="gameId"
+                  id="gameId"
+                  onChange={(e) => setGameId(e.target.value)}
+                  defaultValue=""
+                />
+              </div>
+              <button
+                type="submit"
+                onClick={startPlay}
+                className="battle-submit-buttom"
+                disabled={!gameId || !nickname}
+              >
+                {play}
+              </button>
+            </>
           ) : null}
         </div>
       </div>
-      <button
-        type="submit"
-        onClick={startPlay}
-        className="battle-submit-buttom"
-        disabled={!gameId || !nickname}
-      >
-        {play}
-      </button>
     </div>
   );
 };

@@ -60,6 +60,7 @@ export const useWss = (gameId: string) => {
 
   const onInitState = () => {
     window.location.reload();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onConnect = useCallback(() => {
@@ -135,12 +136,21 @@ export const useWss = (gameId: string) => {
           if (!success) {
             return navigate("/battle-sea-online");
           }
+          if (payload.rivalName) {
+            setRivalName(payload.rivalName);
+          }
+          if (payload.isRivalReady) {
+            setIsRivalReady(payload.isRivalReady);
+            dispatch(setIsUserShot(false));
+          }
           break;
         case "setToState":
           if (username !== localStorage.nickname) {
             setIsRivalReady(true);
             dispatch(setFullData(payload.userData));
-            setRivalName(payload.rivalName);
+            if (!rivalName) {
+              setRivalName(payload.rivalName);
+            }
           }
           break;
         case "readyToPlay":

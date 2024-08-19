@@ -12,16 +12,29 @@
   justify-content: space-between;
   gap: 8px;
   margin-bottom: 16px;
+
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    user-select: none;
+    height: 30px;
+    width: 100%;
+    &.active {
+      background-color: #06a30b;
+      color: white;
+      border: none;
+    }
+  }
 }
 
 .battle-submit-buttom {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 36px;
   padding: 8px 16px;
   height: 40px;
-  width: calc(100% - 48px);
+  width: 100%;
   border: none;
   border-radius: 8px;
   user-select: none;

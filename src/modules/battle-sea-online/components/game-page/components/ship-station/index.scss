@@ -24,16 +24,17 @@
   }
 
   &_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 160px;
     height: 40px;
     margin: 0 auto;
     background-color: #b4b4ff;
     color: white;
-    padding: 4px;
 
     font-size: 14px;
-
-    letter-spacing: 2px;
 
     border: none {
       radius: 8px;

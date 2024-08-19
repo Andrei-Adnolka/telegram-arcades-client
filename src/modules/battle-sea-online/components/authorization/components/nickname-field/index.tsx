@@ -23,16 +23,16 @@ const NicknameField: FC<Props> = ({ nickname, setNickname }) => {
   const { h, label } = l10n[lang];
 
   useEffect(() => {
-    if (user) {
-      setNickname(user.first_name || user.username || "");
-    } else {
-      setNickname(localStorage.nickname || "");
+    const userName =
+      localStorage.nickname || user?.first_name || user?.username || "";
+    setNickname(userName);
+    if (!userName) {
+      setTimeout(() => {
+        setIsShowHint(true);
+      }, 5000);
     }
-    setTimeout(() => {
-      setIsShowHint(true);
-    }, 5000);
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   let hint = h;
 

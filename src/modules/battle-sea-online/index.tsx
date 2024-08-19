@@ -22,6 +22,7 @@ const BattleSea = () => {
     if (body?.style) {
       body.style.background = "white";
       document.body.style.overflow = "hidden";
+      window.scrollTo({ top: 0 });
     }
   }, []);
 
