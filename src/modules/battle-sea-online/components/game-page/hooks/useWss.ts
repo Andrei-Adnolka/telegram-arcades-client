@@ -11,6 +11,14 @@ import { useUnload } from "./useUnload";
 
 const API_URL = "101rest.by/api/websocketInit";
 
+const updatedWrapperElement = (value: string) => {
+  const el = document.getElementById("battleships-wrapper");
+
+  if (el) {
+    el.style.overflow = value;
+  }
+};
+
 export const useWss = (gameId: string) => {
   const [rivalName, setRivalName] = useState("");
   const [isGameReady, setIsGameReady] = useState(false);
@@ -55,6 +63,7 @@ export const useWss = (gameId: string) => {
   const skipIsUserReady = () => {
     setIsUserReady(false);
     document.body.style.overflow = "hidden";
+    updatedWrapperElement("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -71,6 +80,7 @@ export const useWss = (gameId: string) => {
     setIsUserReady(true);
     send(getSendData("ready", { username: localStorage.nickname, gameId }));
     document.body.style.overflow = "auto";
+    updatedWrapperElement("auto");
   }, [send, gameId]);
 
   const fetchData = async () => {
@@ -113,7 +123,7 @@ export const useWss = (gameId: string) => {
   });
 
   useEffect(() => {
-    if (isUserReady && isRivalReady) {
+    if (isUserReady && isRivalReady && !isGameReady) {
       send(
         getSendData("sentData", {
           username: localStorage.nickname,
@@ -124,7 +134,7 @@ export const useWss = (gameId: string) => {
       setIsGameReady(true);
       setTimeStart(new Date().getTime());
     }
-  }, [isUserReady, gameId, userData, isRivalReady, send]);
+  }, [isUserReady, gameId, userData, isRivalReady, isGameReady, send]);
 
   if (ws.current) {
     ws.current.onmessage = function (response) {

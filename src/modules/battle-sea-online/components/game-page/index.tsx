@@ -119,7 +119,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
           )}
           {isGameReady || isShowEndGameBlock ? (
             <>
-              <div>
+              <div style={{ marginTop: "32px" }}>
                 <p>{`${localStorage.nickname.toUpperCase()} (${you})`}</p>
                 <Field isRival={false} isOnline isUserBoard />
               </div>
