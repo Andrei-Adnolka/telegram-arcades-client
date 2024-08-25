@@ -1,0 +1,48 @@
+.battle-row {
+  display: flex;
+}
+
+.block-blast-field {
+  margin: auto;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  overflow: hidden;
+  border: 2px solid black;
+  border-radius: 8px;
+}
+
+.blast-cell {
+  border: 1px double black;
+  width: 32px;
+  height: 32px;
+  box-sizing: border-box;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  &.Empty {
+    background-color: #252c54;
+  }
+  &.Z {
+    background-color: #da150a;
+  }
+  &.S {
+    background-color: #da150a;
+  }
+  &.T {
+    background-color: #6f47a5;
+  }
+  &.L {
+    background-color: #e4b036;
+  }
+  &.I {
+    background-color: #4965e2;
+  }
+  &.J {
+    background-color: #e4b036;
+  }
+  &.O {
+    background-color: #6f47a5;
+  }
+}

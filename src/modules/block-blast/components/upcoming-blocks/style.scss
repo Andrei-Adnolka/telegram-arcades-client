@@ -1,0 +1,42 @@
+.block-blast-upcoming-blocks {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  width: 100%;
+  justify-content: space-between;
+
+  margin-top: 24px;
+  > div {
+    display: flex;
+    flex-direction: column;
+    width: 112px;
+  }
+
+
+  .block-row {
+    display: flex;
+    .blast-cell {
+      transition: all 0.1s ease;
+      width: 28px;
+      height: 28px;
+    }
+
+  }
+}
+
+.correct-element[class] {
+  border: 2px solid #00b91c;
+  background-color: #057b17;
+}
+
+.full-size {
+  .blast-cell {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+.empty-block {
+  width: 104px;
+  height: 40px
+}
