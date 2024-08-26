@@ -6,9 +6,18 @@ export enum Block {
   S = "S",
   T = "T",
   Z = "Z",
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+export enum EmptyCell {
+  Empty = "Empty",
 }
 
 export type BlockShape = boolean[][];
+export type BlastCell = Block | EmptyCell;
+export type BoardShape = BlastCell[][];
 
 export const BLOCK_L = {
   [Block.I]: 4,
@@ -18,4 +27,8 @@ export const BLOCK_L = {
   [Block.S]: 4,
   [Block.T]: 4,
   [Block.Z]: 4,
+  [Block.A]: 3,
+  [Block.B]: 6,
+  [Block.C]: 3,
+  [Block.D]: 2,
 };

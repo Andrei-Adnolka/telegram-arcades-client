@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "./store";
-import { BoardShape } from "../../../types";
+
 import { getEmptyBoard, getRandomBlock } from "../hooks/helpers";
-import { Block } from "../types";
+import { Block, BlockShape, BoardShape } from "../types";
 
 interface GameState {
   board: BoardShape;
-  blocks: Block[];
+  blocks: { block: Block; shape: BlockShape }[];
   score: number;
 }
 
@@ -34,8 +34,13 @@ export const gameSlice = createSlice({
     },
     updatedBlocks: (state, { payload }: PayloadAction<number>) => {
       const blocksWithEmpty = [...state.blocks];
-      blocksWithEmpty[payload] = "empty" as Block;
-      const newBlocks = blocksWithEmpty.filter((b) => b !== ("empty" as Block));
+      blocksWithEmpty[payload] = {
+        block: "empty" as Block,
+        shape: [] as BlockShape,
+      };
+      const newBlocks = blocksWithEmpty.filter(
+        (b) => b.block !== ("empty" as Block)
+      );
       state.blocks = newBlocks.length ? blocksWithEmpty : getFullBlocks();
     },
     startGame: (state) => {

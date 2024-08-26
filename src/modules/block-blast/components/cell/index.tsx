@@ -1,7 +1,7 @@
-import { CellOptions } from "../../../../types";
+import { BlastCell } from "../../types";
 
 type Props = {
-  type: CellOptions;
+  type: BlastCell;
   dataName: string;
   className: string;
 };

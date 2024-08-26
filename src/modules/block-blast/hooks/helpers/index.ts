@@ -1,35 +1,45 @@
-import { BoardShape, EmptyCell } from "../../../../types";
-import { Block, BlockShape } from "../../types";
+import { Block, BlockShape, BoardShape, EmptyCell } from "../../types";
 
-import { BOARD_HEIGHT, BOARD_WIDTH } from "../../constants";
+import { BOARD_HEIGHT, BOARD_WIDTH, SHAPES } from "../../constants";
 
 export function getEmptyBoard(height = BOARD_HEIGHT): BoardShape {
   return Array(height)
     .fill(null)
     .map(() => Array(BOARD_WIDTH).fill(EmptyCell.Empty));
 }
+const getShape = (block: Block) => {
+  const isRotate = !!Math.round(Math.random());
+  console.log("block", block);
+  return isRotate && block !== Block.C
+    ? rotateBlock(SHAPES[block].shape)
+    : SHAPES[block].shape.filter((row) => row.some((cell) => cell));
+};
 
-export function getRandomBlock(): Block {
+export function getRandomBlock() {
   const blockValues = Object.values(Block);
-  return blockValues[Math.floor(Math.random() * blockValues.length)] as Block;
+  const block = blockValues[
+    Math.floor(Math.random() * blockValues.length)
+  ] as Block;
+
+  return { block, shape: getShape(block) };
 }
 
-// export function rotateBlock(shape: BlockShape): BlockShape {
-//   const rows = shape.length;
-//   const columns = shape[0].length;
+export function rotateBlock(shape: BlockShape): BlockShape {
+  const rows = shape.length;
+  const columns = shape[0].length;
 
-//   const rotated = Array(rows)
-//     .fill(null)
-//     .map(() => Array(columns).fill(false));
+  const rotated = Array(rows)
+    .fill(null)
+    .map(() => Array(columns).fill(false));
 
-//   for (let row = 0; row < rows; row++) {
-//     for (let column = 0; column < columns; column++) {
-//       rotated[column][rows - 1 - row] = shape[row][column];
-//     }
-//   }
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      rotated[column][rows - 1 - row] = shape[row][column];
+    }
+  }
 
-//   return rotated;
-// }
+  return rotated;
+}
 
 export function addShapeToBoard(
   board: BoardShape,

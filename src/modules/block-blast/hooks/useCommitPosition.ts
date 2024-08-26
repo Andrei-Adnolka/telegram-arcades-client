@@ -2,10 +2,9 @@ import { useCallback } from "react";
 
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { selectBoard, setBoard, setScore } from "../redux/gameSlice";
-import { Block, BLOCK_L, BlockShape } from "../types";
+import { Block, BLOCK_L, BlockShape, BoardShape, EmptyCell } from "../types";
 import { addShapeToBoard, hasCollisions } from "./helpers";
-import { BoardShape, EmptyCell } from "../../../types";
-import { BOARD_HEIGHT } from "../constants";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
 
 export const useCommitPosition = () => {
   const board = useAppSelector(selectBoard);
@@ -14,32 +13,7 @@ export const useCommitPosition = () => {
   const hasCollision = useCallback(
     (shape: BlockShape, row: number, column: number) => {
       const newBoard = structuredClone(board) as BoardShape;
-
       return hasCollisions(newBoard, shape, row, column);
-
-      // let numCleared = 0;
-      // for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
-      //   if (newBoard[row].every((entry) => entry !== EmptyCell.Empty)) {
-      //     numCleared++;
-      //     newBoard.splice(row, 1);
-      //   }
-      // }
-
-      // const newUpcomingBlocks = structuredClone(upcomingBlocks) as Block[];
-      // const newBlock = newUpcomingBlocks.pop() as Block;
-      // newUpcomingBlocks.unshift(getRandomBlock());
-
-      // if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
-      //   setIsGameOver(true);
-      //   setIsPlaying(false);
-      //   setTickSpeed(null);
-      //   onSendHightScore(score);
-      // } else {
-      //   setTickSpeed(speed);
-      // }
-      // setUpcomingBlocks(newUpcomingBlocks);
-      // setScore((prevScore) => prevScore + getPoints(numCleared));
-      dispatch(setBoard(newBoard));
     },
     [board]
   );
@@ -52,12 +26,71 @@ export const useCommitPosition = () => {
       if (!isHasCollision) {
         const b = addShapeToBoard(newBoard, block, shape, row, column);
         let numCleared = 0;
-        for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
-          if (b[row].every((entry) => entry !== EmptyCell.Empty)) {
-            numCleared++;
-            b.splice(row, 1);
+        let rowsArr = {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: [],
+          7: [],
+        };
+        let columnsArr = {
+          0: [],
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: [],
+          7: [],
+        };
+
+        b.forEach((row, i) => {
+          row.forEach((column, index) => {
+            if (column !== "Empty") {
+              // @ts-ignore
+              rowsArr[i].push(column);
+              // @ts-ignore
+              columnsArr[index].push(column);
+            }
+          });
+        });
+
+        let rowsRemoved = [] as any[];
+        let columnsRemoved = [] as any[];
+
+        Object.keys(rowsArr).forEach((row) => {
+          // @ts-ignore
+          if (rowsArr[row].length === 8) {
+            // @ts-ignore
+            rowsArr[row].forEach((a: _, i) => {
+              // @ts-ignore
+              rowsRemoved.push(`${row}_${i}`);
+            });
           }
-        }
+        });
+        Object.keys(columnsArr).forEach((ar) => {
+          // @ts-ignore
+          if (columnsArr[ar].length === 8) {
+            // @ts-ignore
+            columnsArr[ar].forEach((a: _, i) => {
+              // @ts-ignore
+              columnsRemoved.push(`${i}_${ar}`);
+            });
+          }
+          const removedValues = Array.from(
+            new Set([...rowsRemoved, ...columnsRemoved])
+          );
+          if (removedValues.length) {
+            removedValues.forEach((values) => {
+              const [row, column] = values.split("_");
+              b[row][column] = EmptyCell.Empty;
+            });
+          }
+          console.log("b", b);
+        });
 
         dispatch(setBoard(b));
         dispatch(setScore(BLOCK_L[block] + numCleared));
@@ -65,30 +98,6 @@ export const useCommitPosition = () => {
       }
 
       return false;
-
-      // let numCleared = 0;
-      // for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
-      //   if (newBoard[row].every((entry) => entry !== EmptyCell.Empty)) {
-      //     numCleared++;
-      //     newBoard.splice(row, 1);
-      //   }
-      // }
-
-      // const newUpcomingBlocks = structuredClone(upcomingBlocks) as Block[];
-      // const newBlock = newUpcomingBlocks.pop() as Block;
-      // newUpcomingBlocks.unshift(getRandomBlock());
-
-      // if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
-      //   setIsGameOver(true);
-      //   setIsPlaying(false);
-      //   setTickSpeed(null);
-      //   onSendHightScore(score);
-      // } else {
-      //   setTickSpeed(speed);
-      // }
-      // setUpcomingBlocks(newUpcomingBlocks);
-      // setScore((prevScore) => prevScore + getPoints(numCleared));
-      dispatch(setBoard(newBoard));
     },
     [board]
   );

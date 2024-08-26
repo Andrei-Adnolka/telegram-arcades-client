@@ -2,17 +2,18 @@ import { FC, useState } from "react";
 import trottle from "lodash.throttle";
 
 import { SHAPES } from "../../constants";
-import { Block } from "../../types";
+import { Block, BlockShape } from "../../types";
 
 import { useCommitPosition } from "../../hooks/useCommitPosition";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectBlocks, updatedBlocks } from "../../redux/gameSlice";
-import { getNewBlockIds } from "../../hooks/helpers";
+import { getNewBlockIds, rotateBlock } from "../../hooks/helpers";
 
 import "./style.scss";
 
 type BlockProps = {
   block: Block;
+  shape: BlockShape;
   index: number;
   id: string;
   updatedBlocks: (arg: number) => void;
@@ -25,8 +26,6 @@ const getPoint = (cells: any[]) => {
   }
   return point;
 };
-const getShape = (block: Block) =>
-  SHAPES[block].shape.filter((row) => row.some((cell) => cell));
 
 //@ts-ignore
 const isCanDrop = (el) => {
@@ -38,8 +37,13 @@ const isCanDrop = (el) => {
   }
 };
 
-const BlockUI: FC<BlockProps> = ({ block, index, id, updatedBlocks }) => {
-  const shape = getShape(block);
+const BlockUI: FC<BlockProps> = ({
+  block,
+  shape,
+  index,
+  id,
+  updatedBlocks,
+}) => {
   const [isDrag, setIsDrag] = useState(false);
   const { commitPosition } = useCommitPosition();
 
@@ -107,7 +111,6 @@ const BlockUI: FC<BlockProps> = ({ block, index, id, updatedBlocks }) => {
           const element = document.getElementById(cell.id);
           if (element) {
             element.classList.remove("correct-element");
-            moving.classList.remove("full-size");
           }
         });
       }
@@ -140,13 +143,13 @@ const BlockUI: FC<BlockProps> = ({ block, index, id, updatedBlocks }) => {
                 element.classList.remove("correct-element");
               }
             });
-            moving.classList.remove("full-size");
             if (isCorrect) {
               updatedBlocks(index);
             }
           }
         }
       }
+      moving.classList.remove("full-size");
     }
 
     if (moving) {
@@ -201,14 +204,15 @@ const UpcomingBlocks = () => {
   return (
     <div className="block-blast-upcoming-blocks">
       {blocks.map((b, i) => {
-        const id = `${b}_${i}`;
-        if (b === ("empty" as Block)) {
+        const id = `${b.block}_${i}`;
+        if (b.block === ("empty" as Block)) {
           return <div className="empty-block" key={id} />;
         }
 
         return (
           <BlockUI
-            block={b}
+            block={b.block}
+            shape={b.shape}
             index={i}
             key={id}
             id={id}

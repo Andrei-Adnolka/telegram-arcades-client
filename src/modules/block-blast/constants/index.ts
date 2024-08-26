@@ -54,4 +54,32 @@ export const SHAPES = {
       [false, true, true],
     ],
   },
+  A: {
+    shape: [
+      [false, true, false],
+      [false, true, false],
+      [false, true, false],
+    ],
+  },
+  B: {
+    shape: [
+      [false, true, true],
+      [false, true, true],
+      [false, true, true],
+    ],
+  },
+  C: {
+    shape: [
+      [false, false, true],
+      [false, true, false],
+      [true, false, false],
+    ],
+  },
+  D: {
+    shape: [
+      [false, false, false],
+      [false, true, true],
+      [false, false, false],
+    ],
+  },
 };
