@@ -1,6 +1,6 @@
-import { Block, BlockShape, BoardShape, EmptyCell } from "../../types";
+import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from "../../types";
 
-import { BOARD_HEIGHT, BOARD_WIDTH, SHAPES } from "../../constants";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../../constants";
 
 export function getEmptyBoard(height = BOARD_HEIGHT): BoardShape {
   return Array(height)
@@ -8,11 +8,7 @@ export function getEmptyBoard(height = BOARD_HEIGHT): BoardShape {
     .map(() => Array(BOARD_WIDTH).fill(EmptyCell.Empty));
 }
 const getShape = (block: Block) => {
-  const isRotate = !!Math.round(Math.random());
-  console.log("block", block);
-  return isRotate && block !== Block.C
-    ? rotateBlock(SHAPES[block].shape)
-    : SHAPES[block].shape.filter((row) => row.some((cell) => cell));
+  return SHAPES[block].shape.filter((row) => row.some((cell) => cell));
 };
 
 export function getRandomBlock() {

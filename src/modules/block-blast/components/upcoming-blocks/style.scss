@@ -1,19 +1,19 @@
 .block-blast-upcoming-blocks {
   display: flex;
-  align-items: center;
   gap: 16px;
   position: relative;
   width: 100%;
   justify-content: space-between;
 
   margin-top: 24px;
+  height: 128px;
+
   > div {
     display: flex;
     flex-direction: column;
-    width: 112px;
+    width: max-content;
     animation: fade-in 0.5s linear;
   }
-
 
   .block-row {
     display: flex;
@@ -32,7 +32,6 @@
 }
 
 .full-size {
-  width: 128px !important;
   .blast-cell {
     width: 32px !important;
     height: 32px !important;
@@ -40,7 +39,7 @@
 }
 
 .empty-block {
-  width: 104px;
+  width: 104px !important;
   height: 40px
 }
 @keyframes fade-in {

@@ -3,18 +3,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 import { getEmptyBoard, getRandomBlock } from "../hooks/helpers";
-import { Block, BlockShape, BoardShape } from "../types";
+import { Block, Blocks, BlockShape, BoardShape } from "../types";
 
 interface GameState {
   board: BoardShape;
-  blocks: { block: Block; shape: BlockShape }[];
+  blocks: Blocks;
   score: number;
+  isGameOver: boolean;
 }
 
 const initialState: GameState = {
   board: [],
   blocks: [],
   score: 0,
+  isGameOver: false,
 };
 
 export const GAME_PATH = "game";
@@ -50,14 +52,19 @@ export const gameSlice = createSlice({
     setScore: (state, { payload }: PayloadAction<number>) => {
       state.score += payload;
     },
+    setIsGameOver: (state) => {
+      state.isGameOver = true;
+    },
   },
 });
 
-export const { setBoard, startGame, updatedBlocks, setScore } =
+export const { setBoard, startGame, updatedBlocks, setScore, setIsGameOver } =
   gameSlice.actions;
 
 export const selectBoard = (state: RootState) => state[GAME_PATH].board;
 export const selectBlocks = (state: RootState) => state[GAME_PATH].blocks;
 export const selectScore = (state: RootState) => state[GAME_PATH].score;
+export const selectIsGameOver = (state: RootState) =>
+  state[GAME_PATH].isGameOver;
 
 export default gameSlice.reducer;

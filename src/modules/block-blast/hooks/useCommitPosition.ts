@@ -1,13 +1,20 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { selectBoard, setBoard, setScore } from "../redux/gameSlice";
+import {
+  selectBlocks,
+  selectBoard,
+  setBoard,
+  setIsGameOver,
+  setScore,
+} from "../redux/gameSlice";
 import { Block, BLOCK_L, BlockShape, BoardShape, EmptyCell } from "../types";
 import { addShapeToBoard, hasCollisions } from "./helpers";
-import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
 
 export const useCommitPosition = () => {
   const board = useAppSelector(selectBoard);
+  const blocks = useAppSelector(selectBlocks);
+
   const dispatch = useAppDispatch();
 
   const hasCollision = useCallback(
@@ -17,6 +24,27 @@ export const useCommitPosition = () => {
     },
     [board]
   );
+
+  useEffect(() => {
+    const newBlocks = blocks.filter((b) => b.block !== ("empty" as Block));
+    if (newBlocks.length) {
+      const collisions = [] as boolean[];
+      newBlocks.forEach((block) => {
+        board.forEach((row, index) => {
+          row.forEach((column, i) => {
+            if (column === EmptyCell.Empty) {
+              const isCollision = hasCollision(block.shape, index, i);
+              collisions.push(isCollision);
+            }
+          });
+        });
+      });
+
+      if (!collisions.filter((c) => !c).length) {
+        dispatch(setIsGameOver());
+      }
+    }
+  }, [blocks]);
 
   const commitPosition = useCallback(
     (block: Block, shape: BlockShape, row: number, column: number) => {
@@ -83,13 +111,14 @@ export const useCommitPosition = () => {
           const removedValues = Array.from(
             new Set([...rowsRemoved, ...columnsRemoved])
           );
+
           if (removedValues.length) {
             removedValues.forEach((values) => {
               const [row, column] = values.split("_");
               b[row][column] = EmptyCell.Empty;
             });
           }
-          console.log("b", b);
+          numCleared = removedValues.length * 2;
         });
 
         dispatch(setBoard(b));

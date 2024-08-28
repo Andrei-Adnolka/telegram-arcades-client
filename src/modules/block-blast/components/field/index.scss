@@ -7,8 +7,26 @@
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   overflow: hidden;
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 8px;
+  position: relative;
+  box-shadow: -1px -2px 2px 2px #314579, 2px 1px 0px 1px #5976ca;
+
+  &.inactive {
+    opacity: .5;
+  }
+  .block-blast-game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    width: max-content;
+    background-color: black;
+    padding: 4px 8px;
+    z-index: 1;
+    border-radius: 4px;
+  }
 }
 
 .blast-cell {
@@ -23,35 +41,68 @@
 
   &.Empty {
     background-color: #252c54;
+    animation: fade-in 0.5s linear;
   }
-  &.Z {
-    background-color: #da150a;
+
+  &.S,
+  &.S1,
+  &.Z,
+  &.Z1 {
+    background: linear-gradient(184deg, rgba(246,59,49,1) 49%, rgba(204,31,21,1) 100%);
+    border-top: 4px solid #f23a30;
+    border-left: 4px solid #f42318;
+    border-right: 4px solid #c40d03;
+    border-bottom: 4px solid #7d0802;
   }
-  &.S {
-    background-color: #da150a;
-  }
-  &.T {
-    background-color: #6f47a5;
-  }
-  &.L {
-    background-color: #e4b036;
-  }
-  &.I {
-    background-color: #4965e2;
-  }
-  &.A {
-    background-color: #4965e2;
-  }
-  &.J {
-    background-color: #e4b036;
-  }
+  &.T,
+  &.T1,
+  &.T2,
+  &.T3,
+  &.B,
+  &.B1,
   &.O {
-    background-color: #6f47a5;
+    background: linear-gradient(184deg, rgba(121,83,168,1) 49%, rgba(110,69,165,1) 100%);
+    border-top: 4px solid #ad88c1;
+    border-left: 4px solid #7d55ae;
+    border-right: 4px solid #593481;
+    border-bottom: 4px solid #462964;
   }
-  &.B {
-    background-color: #6f47a5;
+  &.L,
+  &.L1,
+  &.J,
+  &.J1 {
+    background: linear-gradient(49deg, rgba(235,191,60,1) 49%, rgba(226,169,53,1) 100%);
+    border-top: 4px solid #fbe474;
+    border-left: 4px solid #ffce46;
+    border-right: 4px solid #cb941f;
+    border-bottom: 4px solid #ae711a;
+  }
+  &.I,
+  &.I1,
+  &.D,
+  &.A,
+  &.A1 {
+    background: linear-gradient(51deg, rgba(77,109,225,1) 49%, rgba(65,90,222,1) 100%);
+    border-top: 4px solid #9eebff;
+    border-left: 4px solid #546ef1;
+    border-right: 4px solid #3952b3;
+    border-bottom: 4px solid #2b3e91;
   }
   &.C {
-    background-color: #a54781;
+    background: linear-gradient(184deg, rgba(219,149,192,1) 49%, rgba(172,71,134,1) 100%);
+    border-top: 4px solid #deabca;
+    border-left: 4px solid #d386b6;
+    border-right: 4px solid #b56295;
+    border-bottom: 4px solid #872d65;
+  }
+  &.G,
+  &.G1,
+  &.G2,
+  &.G3 {
+    background: linear-gradient(184deg, rgba(79,190,237,1) 49%, rgba(45,165,210,1) 100%);
+    border-top: 4px solid #96b8ff;
+    border-left: 4px solid #4ac8ec;
+    border-right: 4px solid #2e93cd;
+    border-bottom: 4px solid #1f72a5;
   }
 }

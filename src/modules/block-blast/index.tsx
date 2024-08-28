@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 
 import Field from "./components/field";
 import UpcomingBlocks from "./components/upcoming-blocks";
+import GameOverUI from "./components/game-over-popup";
 
 import { useBlockBlast } from "./hooks/useBlockBlast";
 import { store } from "./redux/store";
@@ -10,8 +11,8 @@ import { store } from "./redux/store";
 import "./style.scss";
 
 const BlockBlastGameUI = () => {
-  const { score } = useBlockBlast();
-  console.log("score");
+  const { score, isGameOver } = useBlockBlast();
+
   useEffect(() => {
     const root = document.getElementById("root");
     if (root?.style) {
@@ -23,6 +24,11 @@ const BlockBlastGameUI = () => {
   return (
     <>
       <div className="block-blast-score">{score}</div>
+      {isGameOver ? (
+        <div className="block-blast-game-over">
+          <GameOverUI />
+        </div>
+      ) : null}
       <Field />
       <UpcomingBlocks />
     </>

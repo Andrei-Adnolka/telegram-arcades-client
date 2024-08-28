@@ -1,18 +1,27 @@
 import { memo } from "react";
 
 import Cell from "../cell";
+import { useAppSelector } from "../../redux/hooks";
+import { selectBoard, selectIsGameOver } from "../../redux/gameSlice";
 
 import "./index.scss";
-import { useAppSelector } from "../../redux/hooks";
-import { selectBoard } from "../../redux/gameSlice";
 
 const Field = () => {
   const board = useAppSelector(selectBoard);
+  const isGameOver = useAppSelector(selectIsGameOver);
 
   return (
     <div className="block-blast-field" id="block-blast-field">
+      {isGameOver ? (
+        <div className="block-blast-game-over">
+          Свободного места не осталось
+        </div>
+      ) : null}
       {board.map((row, rowIndex) => (
-        <div className="row" key={`${rowIndex}`}>
+        <div
+          className={`row ${isGameOver ? " inactive" : ""}`}
+          key={`${rowIndex}`}
+        >
           {row.map((cell, colIndex) => (
             <Cell
               key={`${rowIndex}-${colIndex}`}

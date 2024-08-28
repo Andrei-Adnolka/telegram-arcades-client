@@ -1,13 +1,12 @@
 import { FC, useState } from "react";
 import trottle from "lodash.throttle";
 
-import { SHAPES } from "../../constants";
 import { Block, BlockShape } from "../../types";
 
 import { useCommitPosition } from "../../hooks/useCommitPosition";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { selectBlocks, updatedBlocks } from "../../redux/gameSlice";
-import { getNewBlockIds, rotateBlock } from "../../hooks/helpers";
+import { getNewBlockIds } from "../../hooks/helpers";
 
 import "./style.scss";
 
@@ -84,7 +83,6 @@ const BlockUI: FC<BlockProps> = ({
         const [row, column] = point.id.split("-");
         if (row && column) {
           const ids = getNewBlockIds(shape, +row, +column);
-
           let isCan = true;
           if (ids.length) {
             ids.forEach((id) => {
@@ -196,6 +194,8 @@ const BlockUI: FC<BlockProps> = ({
 const UpcomingBlocks = () => {
   const blocks = useAppSelector(selectBlocks);
   const dispatch = useAppDispatch();
+
+  const { hasCollision } = useCommitPosition();
 
   const onUpdated = (index: number) => {
     dispatch(updatedBlocks(index));
