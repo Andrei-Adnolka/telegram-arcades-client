@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import isEqual from "lodash.isequal";
 
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
@@ -9,11 +10,16 @@ import {
   setScore,
 } from "../redux/gameSlice";
 import { Block, BLOCK_L, BlockShape, BoardShape, EmptyCell } from "../types";
-import { addShapeToBoard, hasCollisions } from "./helpers";
+import { addShapeToBoard, getNewBlockIds, hasCollisions } from "./helpers";
+import { useTelegram } from "../../../provider/telegram";
+
+//@ts-ignore
+const onIsCanDrop = (el) => !!el.classList.contains("Empty");
 
 export const useCommitPosition = () => {
-  const board = useAppSelector(selectBoard);
-  const blocks = useAppSelector(selectBlocks);
+  const board = useAppSelector(selectBoard, isEqual);
+  const blocks = useAppSelector(selectBlocks, isEqual);
+  const { webApp } = useTelegram();
 
   const dispatch = useAppDispatch();
 
@@ -27,24 +33,42 @@ export const useCommitPosition = () => {
 
   useEffect(() => {
     const newBlocks = blocks.filter((b) => b.block !== ("empty" as Block));
+    const getAllBoardCells = document.querySelectorAll(".field-cell.Empty");
+
     if (newBlocks.length) {
       const collisions = [] as boolean[];
       newBlocks.forEach((block) => {
-        board.forEach((row, index) => {
-          row.forEach((column, i) => {
-            if (column === EmptyCell.Empty) {
-              const isCollision = hasCollision(block.shape, index, i);
-              collisions.push(isCollision);
+        const blockL = block.shape
+          .reduce((acc, next) => [...acc, ...next], [])
+          .filter((b) => b);
+
+        getAllBoardCells.forEach((cell) => {
+          let isCanDrop = false;
+          const [row, column] = cell.id.split("-");
+          const ids = getNewBlockIds(block.shape, +row, +column).filter(
+            (t) => !/[89]/.test(t)
+          );
+          if (!isCanDrop) {
+            if (blockL.length === ids.length) {
+              const isEmptyIds = [] as boolean[];
+              ids.forEach((id) => {
+                const isEmpty = onIsCanDrop(document.getElementById(id));
+                isEmptyIds.push(isEmpty);
+              });
+
+              if (isEmptyIds.filter((a) => a).length === blockL.length) {
+                collisions.push(true);
+                isCanDrop = true;
+              }
             }
-          });
+          }
         });
       });
-
-      if (!collisions.filter((c) => !c).length) {
+      if (!collisions.length) {
         dispatch(setIsGameOver());
       }
     }
-  }, [blocks]);
+  }, [blocks, dispatch]);
 
   const commitPosition = useCallback(
     (block: Block, shape: BlockShape, row: number, column: number) => {
@@ -119,6 +143,7 @@ export const useCommitPosition = () => {
             });
           }
           numCleared = removedValues.length * 2;
+          webApp?.HapticFeedback?.impactOccurred?.("soft");
         });
 
         dispatch(setBoard(b));
@@ -128,7 +153,7 @@ export const useCommitPosition = () => {
 
       return false;
     },
-    [board]
+    [board, dispatch, hasCollision, webApp]
   );
 
   return { hasCollision, commitPosition };

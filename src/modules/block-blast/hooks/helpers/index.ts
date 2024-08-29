@@ -70,6 +70,7 @@ export function getNewBlockIds(
         if (isSet) {
           const newRow = droppingRow + rowIndex;
           const newColumn = droppingColumn + colIndex;
+          // if(newRow < 8 && newColumn < 8)
           ids.push(`${newRow}-${newColumn}`);
         }
       });

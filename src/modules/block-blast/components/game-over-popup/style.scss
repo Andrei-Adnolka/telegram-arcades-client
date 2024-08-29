@@ -1,0 +1,16 @@
+.blast-game-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 20%;
+
+  &-count {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+  }
+}

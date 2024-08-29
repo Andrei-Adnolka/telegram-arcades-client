@@ -5,10 +5,16 @@ import { Block, BlockShape } from "../../types";
 
 import { useCommitPosition } from "../../hooks/useCommitPosition";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { selectBlocks, updatedBlocks } from "../../redux/gameSlice";
+import {
+  selectBlocks,
+  selectIsGameOver,
+  updatedBlocks,
+} from "../../redux/gameSlice";
 import { getNewBlockIds } from "../../hooks/helpers";
 
 import "./style.scss";
+import { useTelegram } from "../../../../provider/telegram";
+import isEqual from "lodash.isequal";
 
 type BlockProps = {
   block: Block;
@@ -16,6 +22,12 @@ type BlockProps = {
   index: number;
   id: string;
   updatedBlocks: (arg: number) => void;
+  commitPosition: (
+    block: Block,
+    shape: BlockShape,
+    row: number,
+    column: number
+  ) => boolean;
 };
 
 const getPoint = (cells: any[]) => {
@@ -27,14 +39,7 @@ const getPoint = (cells: any[]) => {
 };
 
 //@ts-ignore
-const isCanDrop = (el) => {
-  //@ts-ignore
-  if (el.classList.contains("Empty")) {
-    return true;
-  } else {
-    return false;
-  }
-};
+const isCanDrop = (el) => !!el.classList.contains("Empty");
 
 const BlockUI: FC<BlockProps> = ({
   block,
@@ -42,26 +47,54 @@ const BlockUI: FC<BlockProps> = ({
   index,
   id,
   updatedBlocks,
+  commitPosition,
 }) => {
-  const [isDrag, setIsDrag] = useState(false);
-  const { commitPosition } = useCommitPosition();
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  const [isLeft, setIsLeft] = useState(false);
+  const [isTop, setIsTop] = useState(false);
+
+  const { webApp } = useTelegram();
+  const isGameOver = useAppSelector(selectIsGameOver);
 
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    if (isGameOver) return;
+
     let { clientX, clientY } = e.changedTouches[0];
     const moving = e.currentTarget;
-
+    setX(clientX);
+    setY(clientY);
     if (moving) {
       moving.style.position = "fixed";
       moving.style.left = `${clientX - moving.clientWidth / 2}px`;
       moving.style.top = `${clientY - moving.clientHeight / 2 - 48}px`;
       moving.classList.add("full-size");
-
-      setIsDrag(true);
     }
+    webApp?.HapticFeedback?.impactOccurred?.("soft");
+  };
+
+  const getCells = (
+    mobingLeft: string,
+    movingTop: string,
+    left: number,
+    top: number
+  ) => {
+    return document.elementsFromPoint(
+      Math.round(+mobingLeft.replace("px", "") + left),
+      Math.round(+movingTop.replace("px", "") + top)
+    );
   };
 
   const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
     let { clientX, clientY } = e.changedTouches[0];
+    const isTop = y > clientY;
+    const isLeft = x >= clientX;
+
+    setIsTop(isTop);
+    setIsLeft(isLeft);
+    setX(clientX);
+    setY(clientY);
+
     const moving = e.currentTarget;
     if (!moving?.style) return;
 
@@ -70,12 +103,9 @@ const BlockUI: FC<BlockProps> = ({
       moving.style.left = `${clientX - moving.clientWidth / 2}px`;
       moving.style.top = `${clientY - moving.clientHeight / 2 - 48}px`;
       moving.classList.add("full-size");
-
-      const cells = document.elementsFromPoint(
-        Math.round(+moving.style.left.replace("px", "")),
-        Math.round(+moving.style.top.replace("px", ""))
-      );
-
+      const left = isLeft ? 0 : 20;
+      const top = isTop ? 0 : 20;
+      const cells = getCells(moving.style.left, moving.style.top, left, top);
       const point = getPoint(cells);
       const getAllBoardCells = document.querySelectorAll(".field-cell.Empty");
 
@@ -121,10 +151,9 @@ const BlockUI: FC<BlockProps> = ({
     const moving = e.currentTarget;
 
     if (moving) {
-      const cells = document.elementsFromPoint(
-        Math.round(+moving.style.left.replace("px", "")),
-        Math.round(+moving.style.top.replace("px", ""))
-      );
+      const left = isLeft ? 0 : 20;
+      const top = isTop ? 0 : 20;
+      const cells = getCells(moving.style.left, moving.style.top, left, top);
 
       if (cells.length) {
         const point = getPoint(cells);
@@ -157,7 +186,6 @@ const BlockUI: FC<BlockProps> = ({
       moving.style.width = "";
       moving.style.position = "";
     }
-    setIsDrag(false);
   };
 
   return (
@@ -184,18 +212,14 @@ const BlockUI: FC<BlockProps> = ({
           );
         })}
       </div>
-      {isDrag ? (
-        <div className="empty-block" key={`${id}_empty-block`} />
-      ) : null}
     </>
   );
 };
 
 const UpcomingBlocks = () => {
-  const blocks = useAppSelector(selectBlocks);
+  const blocks = useAppSelector(selectBlocks, isEqual);
   const dispatch = useAppDispatch();
-
-  const { hasCollision } = useCommitPosition();
+  const { commitPosition } = useCommitPosition();
 
   const onUpdated = (index: number) => {
     dispatch(updatedBlocks(index));
@@ -217,6 +241,7 @@ const UpcomingBlocks = () => {
             key={id}
             id={id}
             updatedBlocks={onUpdated}
+            commitPosition={commitPosition}
           />
         );
       })}
