@@ -107,7 +107,7 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
         <div className="battle_sea_wrapper__boards">
           {isGameReady || isShowEndGameBlock ? null : (
             <>
-              <p>{`${localStorage.nickname.toUpperCase()} (${you})`}</p>
+              <p>{`${localStorage.nickname} (${you})`}</p>
               <SystemTextUI
                 isRivalReady={isRivalReady}
                 isUserReady={isUserReady}
@@ -120,16 +120,14 @@ const GamePageUI = ({ gameId }: { gameId: string }) => {
           {isGameReady || isShowEndGameBlock ? (
             <>
               <div style={{ marginTop: "32px" }}>
-                <p>{`${localStorage.nickname.toUpperCase()} (${you})`}</p>
+                <p>{`${localStorage.nickname} (${you})`}</p>
                 <Field isRival={false} isOnline isUserBoard />
               </div>
               <div style={{ marginTop: "32px", marginBottom: "32px" }}>
                 {rivalName ? (
                   <>
                     <p>{`${
-                      rivalName
-                        ? `${rivalName.toUpperCase()} (${rival})`
-                        : rivalBoard
+                      rivalName ? `${rivalName} (${rival})` : rivalBoard
                     }`}</p>
                     <Field isRival isOnline sendSocket={onShoot} />
                   </>
