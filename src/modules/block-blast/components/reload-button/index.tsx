@@ -1,6 +1,8 @@
 import { FC, MouseEventHandler, useCallback } from "react";
 
 import "./style.scss";
+import { STORAGE_NAME } from "../../constants";
+import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 
 const RotateSvg = (
   <svg
@@ -22,10 +24,16 @@ type Props = {
   isShowText?: boolean;
 };
 export const ReloadButton: FC<Props> = ({ isShowText = false }) => {
-  const handleClick: MouseEventHandler<HTMLDivElement> = useCallback((e) => {
-    e.preventDefault();
-    window.location.reload();
-  }, []);
+  const { removeItem } = useLocalStorage(STORAGE_NAME);
+
+  const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      e.preventDefault();
+      window.location.reload();
+      removeItem();
+    },
+    [removeItem]
+  );
 
   return (
     <div className="blast-reload-button" onClick={handleClick}>

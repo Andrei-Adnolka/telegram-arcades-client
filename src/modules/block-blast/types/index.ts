@@ -19,7 +19,10 @@ export enum Block {
   B = "B",
   B1 = "B1",
   C = "C",
+  C1 = "C1",
   D = "D",
+  D1 = "D1",
+  D2 = "D2",
   G = "G",
   G1 = "G1",
   G2 = "G2",
@@ -56,7 +59,10 @@ export const BLOCK_L = {
   [Block.B]: 6,
   [Block.B1]: 6,
   [Block.C]: 3,
+  [Block.C1]: 3,
   [Block.D]: 2,
+  [Block.D1]: 1,
+  [Block.D2]: 2,
   [Block.G]: 4,
   [Block.G1]: 4,
   [Block.G2]: 4,
@@ -67,15 +73,15 @@ export const SHAPES = {
   I: {
     shape: [[true, true, true, true]],
   },
-  I1: {
-    shape: [[true], [true], [true], [true]],
-  },
   J: {
     shape: [
       [true, false, false],
       [true, true, true],
       // [false, false, false],
     ],
+  },
+  I1: {
+    shape: [[true], [true], [true], [true]],
   },
   J1: {
     shape: [
@@ -90,6 +96,13 @@ export const SHAPES = {
       [true, true, true],
     ],
   },
+  G2: {
+    shape: [
+      [true, true],
+      [true, false],
+      [true, true],
+    ],
+  },
   L1: {
     shape: [
       [true, true, true],
@@ -102,17 +115,16 @@ export const SHAPES = {
       [true, true],
     ],
   },
+  G3: {
+    shape: [
+      [true, false, true],
+      [true, true, true],
+    ],
+  },
   S: {
     shape: [
       [false, true, true],
       [true, true, false],
-    ],
-  },
-  S1: {
-    shape: [
-      [true, false],
-      [true, true],
-      [false, true],
     ],
   },
   Z: {
@@ -122,6 +134,19 @@ export const SHAPES = {
       [false, false, false],
     ],
   },
+  T: {
+    shape: [
+      [false, true, false],
+      [true, true, true],
+    ],
+  },
+  S1: {
+    shape: [
+      [true, false],
+      [true, true],
+      [false, true],
+    ],
+  },
   Z1: {
     shape: [
       [false, true],
@@ -129,17 +154,18 @@ export const SHAPES = {
       [true, false],
     ],
   },
-  T: {
-    shape: [
-      [false, true, false],
-      [true, true, true],
-    ],
-  },
   T1: {
     shape: [
       [true, false],
       [true, true],
       [true, false],
+    ],
+  },
+  G1: {
+    shape: [
+      [true, true],
+      [false, true],
+      [true, true],
     ],
   },
   T2: {
@@ -155,11 +181,15 @@ export const SHAPES = {
       [false, true],
     ],
   },
+  C: {
+    shape: [
+      [false, false, true],
+      [false, true, false],
+      [true, false, false],
+    ],
+  },
   A: {
     shape: [[true], [true], [true]],
-  },
-  A1: {
-    shape: [[true, true, true]],
   },
   B: {
     shape: [
@@ -174,40 +204,29 @@ export const SHAPES = {
       [true, true],
     ],
   },
-  C: {
-    shape: [
-      [false, false, true],
-      [false, true, false],
-      [true, false, false],
-    ],
-  },
   D: {
     shape: [[true, true]],
+  },
+  C1: {
+    shape: [
+      [true, false, false],
+      [false, true, false],
+      [false, false, true],
+    ],
+  },
+  D1: {
+    shape: [[true]],
+  },
+  A1: {
+    shape: [[true, true, true]],
+  },
+  D2: {
+    shape: [[true], [true]],
   },
   G: {
     shape: [
       [true, true, true],
       [true, false, true],
-    ],
-  },
-  G1: {
-    shape: [
-      [true, true],
-      [false, true],
-      [true, true],
-    ],
-  },
-  G2: {
-    shape: [
-      [true, true],
-      [true, false],
-      [true, true],
-    ],
-  },
-  G3: {
-    shape: [
-      [true, false, true],
-      [true, true, true],
     ],
   },
 };

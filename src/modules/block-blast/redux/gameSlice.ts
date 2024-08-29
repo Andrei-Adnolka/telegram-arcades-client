@@ -55,11 +55,22 @@ export const gameSlice = createSlice({
     setIsGameOver: (state) => {
       state.isGameOver = true;
     },
+    setState: (state, { payload }: PayloadAction<GameState>) => {
+      state.blocks = payload.blocks;
+      state.board = payload.board;
+      state.score = payload.score;
+    },
   },
 });
 
-export const { setBoard, startGame, updatedBlocks, setScore, setIsGameOver } =
-  gameSlice.actions;
+export const {
+  setBoard,
+  startGame,
+  updatedBlocks,
+  setScore,
+  setState,
+  setIsGameOver,
+} = gameSlice.actions;
 
 export const selectBoard = (state: RootState) => state[GAME_PATH].board;
 export const selectBlocks = (state: RootState) => state[GAME_PATH].blocks;

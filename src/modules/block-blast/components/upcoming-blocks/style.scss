@@ -16,20 +16,20 @@
     top: 10px;
 
     &:nth-child(1){
-      left: 5%;
+      left: 7%;
     }
     &:nth-child(2){
-      left: 38%;
+      left: 40%;
     }
     &:nth-child(3){
-      left: 74%;
+      left: 76%;
     }
   }
 
   .block-row {
     display: flex;
     .blast-cell {
-      transition: all 0.1s ease;
+      transition: all 0.5s ease;
       width: 28px;
       height: 28px;
     }

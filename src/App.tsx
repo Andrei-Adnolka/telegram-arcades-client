@@ -44,6 +44,7 @@ function App() {
             <div className="home_page_links">
               <a href="/flappy">01 FLAPPY BIRD</a>
               <a href="/battle-sea-online">02 BATTLESHIP ONLINE</a>
+              <a href="/block-blast">03 BLOCK BLAST</a>
             </div>
           </div>
         </div>

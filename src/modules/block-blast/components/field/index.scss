@@ -80,6 +80,8 @@
   &.I,
   &.I1,
   &.D,
+  &.D1,
+  &.D2,
   &.A,
   &.A1 {
     background: linear-gradient(51deg, rgba(77,109,225,1) 49%, rgba(65,90,222,1) 100%);
@@ -88,7 +90,8 @@
     border-right: 4px solid #3952b3;
     border-bottom: 4px solid #2b3e91;
   }
-  &.C {
+  &.C,
+  &.C1 {
     background: linear-gradient(184deg, rgba(219,149,192,1) 49%, rgba(172,71,134,1) 100%);
     border-top: 4px solid #deabca;
     border-left: 4px solid #d386b6;

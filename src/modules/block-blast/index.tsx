@@ -126,7 +126,7 @@ const BlockBlastGameUI = () => {
       ) : null}
       {isShowPopup && isGameOver ? (
         <div className="block-blast-game-over-popup">
-          <GameOverUI />
+          <GameOverUI hightScore={hightScore} />
         </div>
       ) : null}
       <Field />

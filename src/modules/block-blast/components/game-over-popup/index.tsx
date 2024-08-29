@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 
 import { ReloadButton } from "../reload-button";
 
@@ -9,7 +9,11 @@ import "./style.scss";
 
 const ID = "blast-game-over-over-popup";
 
-const GameOverUI = () => {
+type Props = {
+  hightScore: number;
+};
+
+const GameOverUI: FC<Props> = ({ hightScore }) => {
   const score = useAppSelector(selectScore);
 
   useEffect(() => {
@@ -30,6 +34,8 @@ const GameOverUI = () => {
   return (
     <div className="blast-game-over">
       <div className="blast-game-over-count">
+        <span>Лучший счет</span>
+        <span>{hightScore}</span>
         <span>Ваш счет</span>
         <span id={ID} />
       </div>
