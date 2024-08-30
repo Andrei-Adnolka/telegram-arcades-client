@@ -7,6 +7,7 @@
   box-sizing: border-box;
   transition: left 0.01s ease-out;
   transition: top 0.01s ease-out;
+  touch-action: none;
 }
 
 .one-deck {

@@ -67,7 +67,6 @@ const BlockBlastGameUI = () => {
     const root = document.getElementById("root");
     if (root?.style) {
       root.style.backgroundColor = "#4a60a6";
-      root.style.overflow = "hidden";
     }
     document.body.style.overflow = "hidden";
   }, []);
