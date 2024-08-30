@@ -11,7 +11,6 @@ import {
   updatedBlocks,
 } from "../../redux/gameSlice";
 import { getNewBlockIds } from "../../hooks/helpers";
-import { disableScroll } from "../../../../hooks/useDisableScroll";
 
 import "./style.scss";
 import { useTelegram } from "../../../../provider/telegram";
@@ -60,15 +59,15 @@ const BlockUI: FC<BlockProps> = ({
 
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (isGameOver) return;
-    disableScroll();
-    let { clientX, clientY } = e.changedTouches[0];
+
+    let { pageX, pageY } = e.changedTouches[0];
     const moving = e.currentTarget;
-    setX(clientX);
-    setY(clientY);
+    setX(pageX);
+    setY(pageY);
     if (moving) {
       moving.style.position = "fixed";
-      moving.style.left = `${clientX - moving.clientWidth / 2}px`;
-      moving.style.top = `${clientY - moving.clientHeight / 2 - 48}px`;
+      moving.style.left = `${pageX - moving.clientWidth / 2}px`;
+      moving.style.top = `${pageY - moving.clientHeight / 2 - 48}px`;
       moving.classList.add("full-size");
     }
     webApp?.HapticFeedback?.impactOccurred?.("soft");
@@ -87,22 +86,23 @@ const BlockUI: FC<BlockProps> = ({
   };
 
   const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
-    let { clientX, clientY } = e.changedTouches[0];
-    const isTop = y > clientY;
-    const isLeft = x >= clientX;
+    let { pageX, pageY } = e.changedTouches[0];
+
+    const isTop = y > pageY;
+    const isLeft = x >= pageX;
 
     setIsTop(isTop);
     setIsLeft(isLeft);
-    setX(clientX);
-    setY(clientY);
+    setX(pageX);
+    setY(pageY);
 
     const moving = e.currentTarget;
     if (!moving?.style) return;
 
     if (moving) {
       moving.style.position = "fixed";
-      moving.style.left = `${clientX - moving.clientWidth / 2}px`;
-      moving.style.top = `${clientY - moving.clientHeight / 2 - 48}px`;
+      moving.style.left = `${pageX - moving.clientWidth / 2}px`;
+      moving.style.top = `${pageY - moving.clientHeight / 2 - 48}px`;
       moving.classList.add("full-size");
       const left = isLeft ? 10 : 30;
       const top = isTop ? 10 : 30;
