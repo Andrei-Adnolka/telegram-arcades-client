@@ -4,6 +4,7 @@
   position: relative;
   width: 100%;
   justify-content: space-between;
+  overflow: hidden;
 
   margin-top: 24px;
   height: 128px;
@@ -20,10 +21,10 @@
       left: 5%;
     }
     &:nth-child(2){
-      left: 38%;
+      left: 37%;
     }
     &:nth-child(3){
-      left: 74%;
+      left: 70%;
     }
   }
 
@@ -31,8 +32,8 @@
     display: flex;
     .blast-cell {
       transition: all 0.5s ease;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
 
     }
 
@@ -46,8 +47,8 @@
 
 .full-size {
   .blast-cell {
-    width: 36px !important;
-    height: 36px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
 }
 
