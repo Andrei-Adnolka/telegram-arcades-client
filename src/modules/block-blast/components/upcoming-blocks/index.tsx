@@ -86,6 +86,8 @@ const BlockUI: FC<BlockProps> = ({
   };
 
   const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+
     let { clientX, clientY } = e.changedTouches[0];
     const isTop = y > clientY;
     const isLeft = x >= clientX;
