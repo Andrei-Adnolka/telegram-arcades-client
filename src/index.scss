@@ -1,5 +1,4 @@
-$main-background-color: #FF5722;
-
+$main-background-color: rgb(74, 96, 166);
 // @mixin logo($text, $bottom, $right) {
 //   content: $text;
 //   position: absolute;
@@ -27,7 +26,7 @@ $main-background-color: #FF5722;
 body {
   margin: 0px;
   overflow: hidden;
-  touch-action: pan-x pan-y;
+  touch-action: none;
   position: relative;
 }
 

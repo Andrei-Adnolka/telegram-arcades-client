@@ -11,6 +11,7 @@ import {
   updatedBlocks,
 } from "../../redux/gameSlice";
 import { getNewBlockIds } from "../../hooks/helpers";
+import { disableScroll } from "../../../../hooks/useDisableScroll";
 
 import "./style.scss";
 import { useTelegram } from "../../../../provider/telegram";
@@ -59,7 +60,7 @@ const BlockUI: FC<BlockProps> = ({
 
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (isGameOver) return;
-
+    disableScroll();
     let { clientX, clientY } = e.changedTouches[0];
     const moving = e.currentTarget;
     setX(clientX);
@@ -86,8 +87,6 @@ const BlockUI: FC<BlockProps> = ({
   };
 
   const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
-    e.stopPropagation();
-
     let { clientX, clientY } = e.changedTouches[0];
     const isTop = y > clientY;
     const isLeft = x >= clientX;
