@@ -101,7 +101,7 @@ const BlockBlastGameUI = () => {
   }, [onOutsideClick]);
 
   return (
-    <>
+    <div className="block-blast">
       <div className="block-blast-header">
         <div>
           {CrownSvg}
@@ -131,7 +131,7 @@ const BlockBlastGameUI = () => {
       ) : null}
       <Field />
       <UpcomingBlocks />
-    </>
+    </div>
   );
 };
 
