@@ -103,8 +103,8 @@ const BlockUI: FC<BlockProps> = ({
       moving.style.left = `${clientX - moving.clientWidth / 2}px`;
       moving.style.top = `${clientY - moving.clientHeight / 2 - 48}px`;
       moving.classList.add("full-size");
-      const left = isLeft ? 0 : 20;
-      const top = isTop ? 0 : 20;
+      const left = isLeft ? 10 : 30;
+      const top = isTop ? 10 : 30;
       const cells = getCells(moving.style.left, moving.style.top, left, top);
       const point = getPoint(cells);
       const getAllBoardCells = document.querySelectorAll(".field-cell.Empty");
@@ -145,14 +145,14 @@ const BlockUI: FC<BlockProps> = ({
     }
   };
 
-  const onTouchTrottle = trottle((e) => onTouchMove(e), 10);
+  const onTouchTrottle = trottle((e) => onTouchMove(e), 5);
 
   const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = (e) => {
     const moving = e.currentTarget;
 
     if (moving) {
-      const left = isLeft ? 0 : 20;
-      const top = isTop ? 0 : 20;
+      const left = isLeft ? 10 : 30;
+      const top = isTop ? 10 : 30;
       const cells = getCells(moving.style.left, moving.style.top, left, top);
 
       if (cells.length) {
