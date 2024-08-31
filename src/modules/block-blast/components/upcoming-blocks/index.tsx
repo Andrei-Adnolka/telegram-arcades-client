@@ -15,7 +15,6 @@ import { getNewBlockIds } from "../../hooks/helpers";
 
 import "./style.scss";
 import { useTelegram } from "../../../../provider/telegram";
-import { useDisabledScroll } from "../../../../hooks/useDisabledScroll";
 
 type BlockProps = {
   block: Block;
@@ -54,16 +53,12 @@ const BlockUI: FC<BlockProps> = ({
   const [y, setY] = useState(0);
   const [isLeft, setIsLeft] = useState(false);
   const [isTop, setIsTop] = useState(false);
-  const [isDrag, setIsDrag] = useState(false);
-
-  useDisabledScroll(isDrag);
 
   const { webApp } = useTelegram();
   const isGameOver = useAppSelector(selectIsGameOver);
 
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (isGameOver) return;
-    setIsDrag(true);
     let { pageX, pageY } = e.changedTouches[0];
     const moving = e.currentTarget;
     setX(pageX);
@@ -191,7 +186,6 @@ const BlockUI: FC<BlockProps> = ({
       moving.style.width = "";
       moving.style.position = "";
     }
-    setIsDrag(false);
   };
 
   return (
