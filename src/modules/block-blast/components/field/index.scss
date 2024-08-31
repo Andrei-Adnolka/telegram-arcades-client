@@ -67,8 +67,12 @@
   }
   &.L,
   &.L1,
+  &.L2,
+  &.L3,
   &.J,
-  &.J1 {
+  &.J1,
+  &.J2,
+  &.J3 {
     background: linear-gradient(49deg, rgba(235,191,60,1) 49%, rgba(226,169,53,1) 100%);
     border-top: 4px solid #fbe474;
     border-left: 4px solid #ffce46;
@@ -89,7 +93,13 @@
     border-bottom: 4px solid #2b3e91;
   }
   &.C,
-  &.C1 {
+  &.C1,
+  &.C2,
+  &.C3,
+  &.C4,
+  &.C5,
+  &.C6,
+  &.C7 {
     background: linear-gradient(184deg, rgba(219,149,192,1) 49%, rgba(172,71,134,1) 100%);
     border-top: 4px solid #deabca;
     border-left: 4px solid #d386b6;

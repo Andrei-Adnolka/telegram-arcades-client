@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import trottle from "lodash.throttle";
+import isEqual from "lodash.isequal";
 
 import { Block, BlockShape } from "../../types";
 
@@ -14,7 +15,7 @@ import { getNewBlockIds } from "../../hooks/helpers";
 
 import "./style.scss";
 import { useTelegram } from "../../../../provider/telegram";
-import isEqual from "lodash.isequal";
+import { useDisabledScroll } from "../../../../hooks/useDisabledScroll";
 
 type BlockProps = {
   block: Block;
@@ -53,13 +54,16 @@ const BlockUI: FC<BlockProps> = ({
   const [y, setY] = useState(0);
   const [isLeft, setIsLeft] = useState(false);
   const [isTop, setIsTop] = useState(false);
+  const [isDrag, setIsDrag] = useState(false);
+
+  useDisabledScroll(isDrag);
 
   const { webApp } = useTelegram();
   const isGameOver = useAppSelector(selectIsGameOver);
 
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (isGameOver) return;
-
+    setIsDrag(true);
     let { pageX, pageY } = e.changedTouches[0];
     const moving = e.currentTarget;
     setX(pageX);
@@ -187,33 +191,32 @@ const BlockUI: FC<BlockProps> = ({
       moving.style.width = "";
       moving.style.position = "";
     }
+    setIsDrag(false);
   };
 
   return (
-    <>
-      <div
-        id={id}
-        onTouchStart={onStart}
-        onTouchMove={onTouchTrottle}
-        onTouchEnd={onTouchEnd}
-      >
-        {shape.map((row, rowIndex) => {
-          return (
-            <div key={rowIndex} className="block-row">
-              {row.map((isSet, cellIndex) => {
-                const cellClass = isSet ? block : "hidden";
-                return (
-                  <div
-                    key={`${index}-${rowIndex}-${cellIndex}`}
-                    className={`blast-cell ${cellClass}`}
-                  ></div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-    </>
+    <div
+      id={id}
+      onTouchStart={onStart}
+      onTouchMove={onTouchTrottle}
+      onTouchEnd={onTouchEnd}
+    >
+      {shape.map((row, rowIndex) => {
+        return (
+          <div key={rowIndex} className="block-row">
+            {row.map((isSet, cellIndex) => {
+              const cellClass = isSet ? block : "hidden";
+              return (
+                <div
+                  key={`${index}-${rowIndex}-${cellIndex}`}
+                  className={`blast-cell ${cellClass}`}
+                ></div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

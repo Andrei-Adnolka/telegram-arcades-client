@@ -33,7 +33,7 @@ export const useCommitPosition = () => {
 
   useEffect(() => {
     const newBlocks = blocks.filter((b) => b.block !== ("empty" as Block));
-    const getAllBoardCells = document.querySelectorAll(".field-cell.Empty");
+    const getAllBoardCells = document.querySelectorAll(".field-cell");
 
     if (newBlocks.length) {
       const collisions = [] as boolean[];
