@@ -49,4 +49,5 @@ export interface IWebApp {
   HapticFeedback: any;
   onEvent: (arg: string, callback: () => void) => void;
   offEvent: (arg: string, callback: () => void) => void;
+  disableVerticalSwipes: () => void;
 }

@@ -1,17 +1,20 @@
 .row {
   &:first-of-type {
-    &> div:first-of-type{
+    &>div:first-of-type {
       border-top-left-radius: 6px;
     }
-    &> div:last-of-type {
+
+    &>div:last-of-type {
       border-top-right-radius: 6px;
     }
   }
+
   &:last-of-type {
-    &> div:first-of-type{
+    &>div:first-of-type {
       border-bottom-left-radius: 6px;
     }
-    &> div:last-of-type {
+
+    &>div:last-of-type {
       border-bottom-right-radius: 6px;
     }
   }
@@ -28,6 +31,7 @@
   &.inactive {
     opacity: .5;
   }
+
   .block-blast-game-over {
     position: absolute;
     top: 50%;
@@ -67,6 +71,7 @@
     border-right: 4px solid #a72829;
     border-bottom: 4px solid #851f23;
   }
+
   &.T,
   &.T1,
   &.T2,
@@ -74,12 +79,13 @@
   &.B,
   &.B1,
   &.O {
-    background: linear-gradient(184deg, rgba(121,83,168,1) 49%, rgba(110,69,165,1) 100%);
+    background: linear-gradient(184deg, rgba(121, 83, 168, 1) 49%, rgba(110, 69, 165, 1) 100%);
     border-top: 4px solid #ad88c1;
     border-left: 4px solid #7d55ae;
     border-right: 4px solid #593481;
     border-bottom: 4px solid #462964;
   }
+
   &.L,
   &.L1,
   &.L2,
@@ -88,12 +94,13 @@
   &.J1,
   &.J2,
   &.J3 {
-    background: linear-gradient(49deg, rgba(235,191,60,1) 49%, rgba(226,169,53,1) 100%);
+    background: linear-gradient(49deg, rgba(235, 191, 60, 1) 49%, rgba(226, 169, 53, 1) 100%);
     border-top: 4px solid #fbe474;
     border-left: 4px solid #ffce46;
     border-right: 4px solid #cb941f;
     border-bottom: 4px solid #ae711a;
   }
+
   &.I,
   &.I1,
   &.D,
@@ -101,12 +108,13 @@
   &.D2,
   &.A,
   &.A1 {
-    background: linear-gradient(51deg, rgba(77,109,225,1) 49%, rgba(65,90,222,1) 100%);
+    background: linear-gradient(51deg, rgba(77, 109, 225, 1) 49%, rgba(65, 90, 222, 1) 100%);
     border-top: 4px solid #9eebff;
     border-left: 4px solid #546ef1;
     border-right: 4px solid #3952b3;
     border-bottom: 4px solid #2b3e91;
   }
+
   &.C,
   &.C1,
   &.C2,
@@ -115,17 +123,18 @@
   &.C5,
   &.C6,
   &.C7 {
-    background: linear-gradient(184deg, rgba(219,149,192,1) 49%, rgba(172,71,134,1) 100%);
+    background: linear-gradient(184deg, rgba(219, 149, 192, 1) 49%, rgba(172, 71, 134, 1) 100%);
     border-top: 4px solid #deabca;
     border-left: 4px solid #d386b6;
     border-right: 4px solid #b56295;
     border-bottom: 4px solid #872d65;
   }
+
   &.G,
   &.G1,
   &.G2,
   &.G3 {
-    background: linear-gradient(184deg, rgba(79,190,237,1) 49%, rgba(45,165,210,1) 100%);
+    background: linear-gradient(184deg, rgba(79, 190, 237, 1) 49%, rgba(45, 165, 210, 1) 100%);
     border-top: 4px solid #96b8ff;
     border-left: 4px solid #4ac8ec;
     border-right: 4px solid #2e93cd;

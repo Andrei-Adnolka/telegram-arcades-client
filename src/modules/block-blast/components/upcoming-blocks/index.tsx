@@ -57,6 +57,8 @@ const BlockUI: FC<BlockProps> = ({
   const { webApp } = useTelegram();
   const isGameOver = useAppSelector(selectIsGameOver);
 
+  webApp?.disableVerticalSwipes?.();
+
   const onStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     if (isGameOver) return;
     let { pageX, pageY } = e.changedTouches[0];
