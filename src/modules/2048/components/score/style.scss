@@ -19,3 +19,8 @@ $secondary-text-color: #f9f6f2;
   font-size: calc($pixel-size * 2.5);
   color: $secondary-text-color;
 }
+
+.new-game {
+  padding: 2px 0px;
+  z-index: 101;
+}

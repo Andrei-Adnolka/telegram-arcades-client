@@ -8,13 +8,14 @@ type Props = {
 export default function NewGameUI({ text }: Props) {
   const { removeItem } = useLocalStorage(STORAGE_NAME);
 
-  const handleClick = () => {
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
     window.location.reload();
     removeItem();
   };
 
   return (
-    <div className="score" onClick={handleClick}>
+    <div className="score new-game" onClick={handleClick}>
       {text || "New Game"}
     </div>
   );
