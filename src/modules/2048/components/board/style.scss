@@ -5,6 +5,7 @@ $secondary-background: #314579;
 .board-2048 {
   position: relative;
   width: calc($pixel-size * 8 * 4 + $pixel-size * 5);
+  margin-top: 24px;
 
   .tiles {
     position: absolute;

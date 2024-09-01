@@ -30,7 +30,7 @@ export const GameContext = createContext({
 export default function GameProvider({ children }: PropsWithChildren) {
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-  const { setItem } = useLocalStorage(STORAGE_NAME);
+  const { setItem, removeItem } = useLocalStorage(STORAGE_NAME);
 
   const getEmptyCells = () => {
     const results: [number, number][] = [];
@@ -87,7 +87,11 @@ export default function GameProvider({ children }: PropsWithChildren) {
         appendRandomTile();
       }, mergeAnimationDuration);
     }
-    setItem(gameState);
+    if (gameState.isGameOver) {
+      removeItem();
+    } else {
+      setItem(gameState);
+    }
     // eslint-disable-next-line
   }, [gameState]);
 

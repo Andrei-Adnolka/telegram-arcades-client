@@ -15,6 +15,8 @@ export default function Board() {
 
   const handleSwipe = useCallback(
     ({ deltaX, deltaY }: SwipeInput) => {
+      if (isGameOver) return;
+
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         if (deltaX > 0) {
           moveTiles("move_right");
@@ -29,7 +31,7 @@ export default function Board() {
         }
       }
     },
-    [moveTiles]
+    [moveTiles, isGameOver]
   );
 
   const renderGrid = () => {
@@ -50,19 +52,19 @@ export default function Board() {
   };
 
   return (
-    <MobileSwiper onSwipe={handleSwipe}>
-      <div className="board-2048">
+    <div className="board-2048">
+      <MobileSwiper onSwipe={handleSwipe}>
         <div className="tiles">{renderTiles()}</div>
         <div className="grid">{renderGrid()}</div>
-        <div
-          className={`game-over-message ${
-            isGameOver ? "game-over-message-show" : ""
-          }`}
-        >
-          <p>Game Over</p>
-          <NewGameButton text="try again" />
-        </div>
+      </MobileSwiper>
+      <div
+        className={`game-over-message ${
+          isGameOver ? "game-over-message-show" : ""
+        }`}
+      >
+        <p>Game Over</p>
+        <NewGameButton text="try again" />
       </div>
-    </MobileSwiper>
+    </div>
   );
 }

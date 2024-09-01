@@ -3,8 +3,10 @@ import { uid } from "uid";
 import { tileCountPerDimension } from "../constants";
 import { Tile, TileMap } from "../models/tile";
 
+type Board = string[][];
+
 export type State = {
-  board: string[][];
+  board: Board;
   tiles: TileMap;
   tilesByIds: string[];
   hasChanged: boolean;
@@ -37,6 +39,46 @@ export const initialState: State = {
   hasChanged: false,
   isGameOver: false,
   score: 0,
+};
+
+const getIsCanChange = (board: Board, tiles: TileMap, boardSize: number) => {
+  const canChangesIds = [] as string[];
+
+  for (let x = 0; x < tileCountPerDimension; x++) {
+    for (let y = 0; y < tileCountPerDimension; y++) {
+      const el = board[x][y];
+      let rightEl = board?.[x]?.[y + 1];
+      let leftEl = board?.[x]?.[y - 1];
+      let topEl = board?.[x - 1]?.[y];
+      let bottomEl = board?.[x + 1]?.[y];
+
+      const elValue = tiles[el].value;
+      const a = [rightEl, leftEl, topEl, bottomEl]
+        .filter((el) => el)
+        .map((id) => tiles[id].value);
+
+      if (!a.includes(elValue)) {
+        canChangesIds.push(el);
+      }
+    }
+  }
+
+  return { isCanChange: canChangesIds.length < boardSize };
+};
+
+const checkIsGameOver = (prevBoard: Board, newBoard: Board, tiles: TileMap) => {
+  if (isEqual(prevBoard, newBoard)) {
+    const flattenBoard = flattenDeep(newBoard).filter((cell) => cell);
+    const boardSize = tileCountPerDimension * tileCountPerDimension;
+    if (
+      flattenBoard.length === boardSize &&
+      !getIsCanChange(newBoard, tiles, boardSize)?.isCanChange
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 export default function gameReducer(
@@ -104,8 +146,6 @@ export default function gameReducer(
               hasChanged = true;
               continue;
             }
-            console.log("state", state.board);
-            console.log("newBoard", newBoard);
 
             newBoard[newY][x] = tileId;
             newTiles[tileId] = { ...currentTile, position: [x, newY] };
@@ -120,7 +160,7 @@ export default function gameReducer(
 
       return {
         ...state,
-        isGameOver: isEqual(state.board, newBoard),
+        isGameOver: checkIsGameOver(state.board, newBoard, newTiles),
         board: newBoard,
         tiles: newTiles,
         hasChanged,
@@ -164,7 +204,7 @@ export default function gameReducer(
       }
       return {
         ...state,
-        isGameOver: isEqual(state.board, newBoard),
+        isGameOver: checkIsGameOver(state.board, newBoard, newTiles),
         board: newBoard,
         tiles: newTiles,
         hasChanged,
@@ -209,7 +249,7 @@ export default function gameReducer(
 
       return {
         ...state,
-        isGameOver: isEqual(state.board, newBoard),
+        isGameOver: checkIsGameOver(state.board, newBoard, newTiles),
         board: newBoard,
         tiles: newTiles,
         hasChanged,
@@ -253,7 +293,7 @@ export default function gameReducer(
       }
       return {
         ...state,
-        isGameOver: isEqual(state.board, newBoard),
+        isGameOver: checkIsGameOver(state.board, newBoard, newTiles),
         board: newBoard,
         tiles: newTiles,
         hasChanged,
