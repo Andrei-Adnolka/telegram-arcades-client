@@ -1,8 +1,11 @@
 import { useLocalStorage } from "../../../../hooks/useLocalStorage";
 import { STORAGE_NAME } from "../../constants";
-import "./style.scss";
 
-export default function NewGameUI() {
+type Props = {
+  text?: string;
+};
+
+export default function NewGameUI({ text }: Props) {
   const { removeItem } = useLocalStorage(STORAGE_NAME);
 
   const handleClick = () => {
@@ -12,7 +15,7 @@ export default function NewGameUI() {
 
   return (
     <div className="score" onClick={handleClick}>
-      New Game
+      {text || "New Game"}
     </div>
   );
 }

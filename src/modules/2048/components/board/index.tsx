@@ -3,12 +3,13 @@ import { Tile as TileModel } from "../../models/tile";
 import Tile from "../tile";
 import { GameContext } from "../../context/game-context";
 import MobileSwiper, { SwipeInput } from "../mobile-swiper";
+import NewGameButton from "../new-game-button";
 import { useInitStartGame } from "../../hooks/useInitStartGame";
 
 import "./style.scss";
 
 export default function Board() {
-  const { getTiles, moveTiles } = useContext(GameContext);
+  const { getTiles, moveTiles, isGameOver } = useContext(GameContext);
 
   useInitStartGame();
 
@@ -53,6 +54,14 @@ export default function Board() {
       <div className="board-2048">
         <div className="tiles">{renderTiles()}</div>
         <div className="grid">{renderGrid()}</div>
+        <div
+          className={`game-over-message ${
+            isGameOver ? "game-over-message-show" : ""
+          }`}
+        >
+          <p>Game Over</p>
+          <NewGameButton text="try again" />
+        </div>
       </div>
     </MobileSwiper>
   );

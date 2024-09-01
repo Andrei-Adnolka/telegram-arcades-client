@@ -8,6 +8,7 @@ export type State = {
   tiles: TileMap;
   tilesByIds: string[];
   hasChanged: boolean;
+  isGameOver: boolean;
   score: number;
 };
 type Action =
@@ -34,6 +35,7 @@ export const initialState: State = {
   tiles: {},
   tilesByIds: [],
   hasChanged: false,
+  isGameOver: false,
   score: 0,
 };
 
@@ -102,6 +104,8 @@ export default function gameReducer(
               hasChanged = true;
               continue;
             }
+            console.log("state", state.board);
+            console.log("newBoard", newBoard);
 
             newBoard[newY][x] = tileId;
             newTiles[tileId] = { ...currentTile, position: [x, newY] };
@@ -113,8 +117,10 @@ export default function gameReducer(
           }
         }
       }
+
       return {
         ...state,
+        isGameOver: isEqual(state.board, newBoard),
         board: newBoard,
         tiles: newTiles,
         hasChanged,
@@ -156,7 +162,14 @@ export default function gameReducer(
           }
         }
       }
-      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
+      return {
+        ...state,
+        isGameOver: isEqual(state.board, newBoard),
+        board: newBoard,
+        tiles: newTiles,
+        hasChanged,
+        score,
+      };
     }
     case "move_left": {
       const newBoard = createBoard();
@@ -193,7 +206,15 @@ export default function gameReducer(
           }
         }
       }
-      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
+
+      return {
+        ...state,
+        isGameOver: isEqual(state.board, newBoard),
+        board: newBoard,
+        tiles: newTiles,
+        hasChanged,
+        score,
+      };
     }
     case "move_right": {
       const newBoard = createBoard();
@@ -230,7 +251,14 @@ export default function gameReducer(
           }
         }
       }
-      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
+      return {
+        ...state,
+        isGameOver: isEqual(state.board, newBoard),
+        board: newBoard,
+        tiles: newTiles,
+        hasChanged,
+        score,
+      };
     }
     default:
       return state;

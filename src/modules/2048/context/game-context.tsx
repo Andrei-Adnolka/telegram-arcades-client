@@ -20,6 +20,7 @@ type MoveDirection = "move_up" | "move_down" | "move_left" | "move_right";
 
 export const GameContext = createContext({
   score: 0,
+  isGameOver: false,
   moveTiles: (_: MoveDirection) => {},
   getTiles: () => [] as Tile[],
   startGame: () => {},
@@ -85,15 +86,16 @@ export default function GameProvider({ children }: PropsWithChildren) {
         dispatch({ type: "clean_up" });
         appendRandomTile();
       }, mergeAnimationDuration);
-      setItem(gameState);
     }
+    setItem(gameState);
     // eslint-disable-next-line
-  }, [gameState.hasChanged]);
+  }, [gameState]);
 
   return (
     <GameContext.Provider
       value={{
         score: gameState.score,
+        isGameOver: gameState.isGameOver,
         getTiles,
         moveTiles,
         startGame,
