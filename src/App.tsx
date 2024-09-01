@@ -11,6 +11,7 @@ import BattleSea from "./modules/battle-sea-online";
 import { AudioComponent } from "./components/audio";
 import { useBackButton } from "./hooks/useBackButton";
 import BlockBlast from "./modules/block-blast";
+import Game2048 from "./modules/2048";
 
 function App() {
   const { pathname } = useLocation();
@@ -45,6 +46,7 @@ function App() {
               <a href="/flappy">01 FLAPPY BIRD</a>
               <a href="/battle-sea-online">02 BATTLESHIP ONLINE</a>
               <a href="/block-blast">03 BLOCK BLAST</a>
+              <a href="/2048">04 2048</a>
             </div>
           </div>
         </div>
@@ -57,6 +59,7 @@ function App() {
         <Route path="/shot" element={<Shot />} />
         <Route path="/flappy" element={<FlappyBird />} />
         <Route path="/block-blast" element={<BlockBlast />} />
+        <Route path="/2048" element={<Game2048 />} />
         <Route path="/battle-sea-online" element={<BattleSea />}>
           <Route path=":gameId" element={null} />
         </Route>

@@ -1,0 +1,34 @@
+$pixel-size: 8px;
+$cell-background: #cac1b5;
+$secondary-background: #bbada0;
+
+.board-2048 {
+  position: relative;
+  width: calc($pixel-size * 8 * 4 + $pixel-size * 5);
+
+  .tiles {
+    position: absolute;
+    z-index: 2;
+    margin: 4px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    background: $secondary-background;
+    border: 4px solid $secondary-background;
+    border-radius: calc($pixel-size * 0.75);
+  }
+}
+
+.cell-2048 {
+  width: 64px;
+  height: 64px;
+  margin: 4px;
+  border-radius: 4px;
+  background: $cell-background;
+}

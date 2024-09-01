@@ -1,0 +1,21 @@
+$pixel-size: 8px;
+
+.twenty48 {
+  margin: calc($pixel-size * 0) auto;
+  padding-top: 16px;
+  width: 100%;
+  max-width: calc($pixel-size * 37);
+  > header {
+    display: flex;
+    align-items: center;
+    margin: calc($pixel-size) * 1 calc($pixel-size * 0);
+    > * {
+      flex: 1;
+    }
+    h1 {
+      font-size: calc($pixel-size * 5);
+      line-height: calc($pixel-size * 5);
+      margin: calc($pixel-size * 1.5) calc($pixel-size * 0);
+    }
+  }
+}
