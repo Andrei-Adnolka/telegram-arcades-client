@@ -7,9 +7,14 @@ import {
 } from "react";
 import isNil from "lodash/isNil";
 import throttle from "lodash/throttle";
-import { mergeAnimationDuration, tileCountPerDimension } from "../constants";
+import {
+  mergeAnimationDuration,
+  tileCountPerDimension,
+  STORAGE_NAME,
+} from "../constants";
 import { Tile } from "../models/tile";
-import gameReducer, { initialState } from "../reducers/game-reducer";
+import gameReducer, { initialState, State } from "../reducers/game-reducer";
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
 
 type MoveDirection = "move_up" | "move_down" | "move_left" | "move_right";
 
@@ -18,10 +23,13 @@ export const GameContext = createContext({
   moveTiles: (_: MoveDirection) => {},
   getTiles: () => [] as Tile[],
   startGame: () => {},
+  setOldState: (_: State) => {},
 });
 
 export default function GameProvider({ children }: PropsWithChildren) {
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
+
+  const { setItem } = useLocalStorage(STORAGE_NAME);
 
   const getEmptyCells = () => {
     const results: [number, number][] = [];
@@ -52,6 +60,11 @@ export default function GameProvider({ children }: PropsWithChildren) {
     return gameState.tilesByIds.map((tileId) => gameState.tiles[tileId]);
   };
 
+  const setOldState = (state: State) => {
+    dispatch({ type: "set_state", state });
+  };
+
+  // eslint-disable-next-line
   const moveTiles = useCallback(
     throttle(
       (type: MoveDirection) => dispatch({ type }),
@@ -72,7 +85,9 @@ export default function GameProvider({ children }: PropsWithChildren) {
         dispatch({ type: "clean_up" });
         appendRandomTile();
       }, mergeAnimationDuration);
+      setItem(gameState);
     }
+    // eslint-disable-next-line
   }, [gameState.hasChanged]);
 
   return (
@@ -82,6 +97,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
         getTiles,
         moveTiles,
         startGame,
+        setOldState,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import Board from "./components/board";
 import Score from "./components/score";
+import NewGameUI from "./components/new-game-button";
 
 import GameProvider from "./context/game-context";
 
@@ -11,7 +12,10 @@ export default function Home() {
       <div className="twenty48">
         <header>
           <h1>2048</h1>
-          <Score />
+          <div>
+            <Score />
+            <NewGameUI />
+          </div>
         </header>
         <main>
           <Board />

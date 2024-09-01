@@ -1,4 +1,5 @@
 $pixel-size: 8px;
+$secondary-text-color: #eee4da;
 
 .twenty48 {
   margin: calc($pixel-size * 0) auto;
@@ -16,6 +17,13 @@ $pixel-size: 8px;
       font-size: calc($pixel-size * 5);
       line-height: calc($pixel-size * 5);
       margin: calc($pixel-size * 1.5) calc($pixel-size * 0);
+      color: $secondary-text-color;
+      text-align: center;
+    }
+    > div > div {
+      &:first-child {
+        margin-bottom: 8px;
+      }
     }
   }
 }

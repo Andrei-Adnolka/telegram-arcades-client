@@ -1,14 +1,16 @@
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext } from "react";
 import { Tile as TileModel } from "../../models/tile";
 import Tile from "../tile";
 import { GameContext } from "../../context/game-context";
 import MobileSwiper, { SwipeInput } from "../mobile-swiper";
+import { useInitStartGame } from "../../hooks/useInitStartGame";
 
 import "./style.scss";
 
 export default function Board() {
-  const { getTiles, moveTiles, startGame } = useContext(GameContext);
-  const initialized = useRef(false);
+  const { getTiles, moveTiles } = useContext(GameContext);
+
+  useInitStartGame();
 
   const handleSwipe = useCallback(
     ({ deltaX, deltaY }: SwipeInput) => {
@@ -45,13 +47,6 @@ export default function Board() {
       <Tile key={`${tile.id}`} {...tile} />
     ));
   };
-
-  useEffect(() => {
-    if (initialized.current === false) {
-      startGame();
-      initialized.current = true;
-    }
-  }, [startGame]);
 
   return (
     <MobileSwiper onSwipe={handleSwipe}>

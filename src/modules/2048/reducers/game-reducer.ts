@@ -3,7 +3,7 @@ import { uid } from "uid";
 import { tileCountPerDimension } from "../constants";
 import { Tile, TileMap } from "../models/tile";
 
-type State = {
+export type State = {
   board: string[][];
   tiles: TileMap;
   tilesByIds: string[];
@@ -12,6 +12,7 @@ type State = {
 };
 type Action =
   | { type: "create_tile"; tile: Tile }
+  | { type: "set_state"; state: State }
   | { type: "clean_up" }
   | { type: "move_up" }
   | { type: "move_down" }
@@ -41,6 +42,9 @@ export default function gameReducer(
   action: Action
 ) {
   switch (action.type) {
+    case "set_state": {
+      return { ...action.state };
+    }
     case "clean_up": {
       const flattenBoard = flattenDeep(state.board);
       const newTiles: TileMap = flattenBoard.reduce(
@@ -49,10 +53,7 @@ export default function gameReducer(
             return result;
           }
 
-          return {
-            ...result,
-            [tileId]: state.tiles[tileId],
-          };
+          return { ...result, [tileId]: state.tiles[tileId] };
         },
         {}
       );
@@ -73,13 +74,7 @@ export default function gameReducer(
       return {
         ...state,
         board: newBoard,
-        tiles: {
-          ...state.tiles,
-          [tileId]: {
-            id: tileId,
-            ...action.tile,
-          },
-        },
+        tiles: { ...state.tiles, [tileId]: { id: tileId, ...action.tile } },
         tilesByIds: [...state.tilesByIds, tileId],
       };
     }
@@ -99,25 +94,17 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
-              score += previousTile.value * 2;
-              newTiles[previousTile.id as string] = {
-                ...previousTile,
-                value: previousTile.value * 2,
-              };
-              newTiles[tileId] = {
-                ...currentTile,
-                position: [x, newY - 1],
-              };
+              const value = previousTile.value * 2;
+              score += value;
+              newTiles[previousTile.id as string] = { ...previousTile, value };
+              newTiles[tileId] = { ...currentTile, position: [x, newY - 1] };
               previousTile = undefined;
               hasChanged = true;
               continue;
             }
 
             newBoard[newY][x] = tileId;
-            newTiles[tileId] = {
-              ...currentTile,
-              position: [x, newY],
-            };
+            newTiles[tileId] = { ...currentTile, position: [x, newY] };
             previousTile = newTiles[tileId];
             if (!isEqual(currentTile.position, [x, newY])) {
               hasChanged = true;
@@ -150,25 +137,17 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
-              score += previousTile.value * 2;
-              newTiles[previousTile.id as string] = {
-                ...previousTile,
-                value: previousTile.value * 2,
-              };
-              newTiles[tileId] = {
-                ...currentTile,
-                position: [x, newY + 1],
-              };
+              const value = previousTile.value * 2;
+              score += value;
+              newTiles[previousTile.id as string] = { ...previousTile, value };
+              newTiles[tileId] = { ...currentTile, position: [x, newY + 1] };
               previousTile = undefined;
               hasChanged = true;
               continue;
             }
 
             newBoard[newY][x] = tileId;
-            newTiles[tileId] = {
-              ...currentTile,
-              position: [x, newY],
-            };
+            newTiles[tileId] = { ...currentTile, position: [x, newY] };
             previousTile = newTiles[tileId];
             if (!isEqual(currentTile.position, [x, newY])) {
               hasChanged = true;
@@ -177,13 +156,7 @@ export default function gameReducer(
           }
         }
       }
-      return {
-        ...state,
-        board: newBoard,
-        tiles: newTiles,
-        hasChanged,
-        score,
-      };
+      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
     }
     case "move_left": {
       const newBoard = createBoard();
@@ -201,25 +174,17 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
-              score += previousTile.value * 2;
-              newTiles[previousTile.id as string] = {
-                ...previousTile,
-                value: previousTile.value * 2,
-              };
-              newTiles[tileId] = {
-                ...currentTile,
-                position: [newX - 1, y],
-              };
+              const value = previousTile.value * 2;
+              score += value;
+              newTiles[previousTile.id as string] = { ...previousTile, value };
+              newTiles[tileId] = { ...currentTile, position: [newX - 1, y] };
               previousTile = undefined;
               hasChanged = true;
               continue;
             }
 
             newBoard[y][newX] = tileId;
-            newTiles[tileId] = {
-              ...currentTile,
-              position: [newX, y],
-            };
+            newTiles[tileId] = { ...currentTile, position: [newX, y] };
             previousTile = newTiles[tileId];
             if (!isEqual(currentTile.position, [newX, y])) {
               hasChanged = true;
@@ -228,13 +193,7 @@ export default function gameReducer(
           }
         }
       }
-      return {
-        ...state,
-        board: newBoard,
-        tiles: newTiles,
-        hasChanged,
-        score,
-      };
+      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
     }
     case "move_right": {
       const newBoard = createBoard();
@@ -252,25 +211,17 @@ export default function gameReducer(
 
           if (!isNil(tileId)) {
             if (previousTile?.value === currentTile.value) {
-              score += previousTile.value * 2;
-              newTiles[previousTile.id as string] = {
-                ...previousTile,
-                value: previousTile.value * 2,
-              };
-              newTiles[tileId] = {
-                ...currentTile,
-                position: [newX + 1, y],
-              };
+              const value = previousTile.value * 2;
+              score += value;
+              newTiles[previousTile.id as string] = { ...previousTile, value };
+              newTiles[tileId] = { ...currentTile, position: [newX + 1, y] };
               previousTile = undefined;
               hasChanged = true;
               continue;
             }
 
             newBoard[y][newX] = tileId;
-            newTiles[tileId] = {
-              ...state.tiles[tileId],
-              position: [newX, y],
-            };
+            newTiles[tileId] = { ...state.tiles[tileId], position: [newX, y] };
             previousTile = newTiles[tileId];
             if (!isEqual(currentTile.position, [newX, y])) {
               hasChanged = true;
@@ -279,13 +230,7 @@ export default function gameReducer(
           }
         }
       }
-      return {
-        ...state,
-        board: newBoard,
-        tiles: newTiles,
-        hasChanged,
-        score,
-      };
+      return { ...state, board: newBoard, tiles: newTiles, hasChanged, score };
     }
     default:
       return state;
